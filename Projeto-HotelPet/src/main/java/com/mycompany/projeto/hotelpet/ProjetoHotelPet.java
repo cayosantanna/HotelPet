@@ -4,6 +4,8 @@
 
 package com.mycompany.projeto.hotelpet;
 
+import com.mycompany.projeto.hotelpet.view.FrTelaInicial;
+
 /**
  *
  * @author thais
@@ -11,6 +13,7 @@ package com.mycompany.projeto.hotelpet;
 public class ProjetoHotelPet {
 
     public static void main(String[] args) {
-        System.out.println("Hello World!");
+        FrTelaInicial telaInicial = new FrTelaInicial();
+        telaInicial.setVisible(true);
     }
 }
