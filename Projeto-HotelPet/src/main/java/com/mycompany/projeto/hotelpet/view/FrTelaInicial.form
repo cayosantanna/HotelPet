@@ -43,13 +43,13 @@
                       <EmptySpace min="-2" pref="83" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Component id="lblCadastroCliente" min="-2" pref="469" max="-2" attributes="0"/>
-                          <Component id="jLabel1" alignment="0" min="-2" pref="456" max="-2" attributes="0"/>
-                          <Component id="jButton1" alignment="0" min="-2" pref="143" max="-2" attributes="0"/>
+                          <Component id="lblLoginCliente" alignment="0" min="-2" pref="456" max="-2" attributes="0"/>
+                          <Component id="btnLoginCliente" alignment="0" min="-2" pref="143" max="-2" attributes="0"/>
+                          <Component id="lblLoginGerente" alignment="0" min="-2" max="-2" attributes="0"/>
                           <Component id="lblLoginFuncionário" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Component id="lblLoginFuncionário1" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Component id="jButton3" alignment="0" min="-2" pref="141" max="-2" attributes="0"/>
+                          <Component id="btnLoginGerente" alignment="0" min="-2" pref="141" max="-2" attributes="0"/>
                           <Component id="btnCadastrarCliente" alignment="0" min="-2" pref="147" max="-2" attributes="0"/>
-                          <Component id="jButton2" alignment="0" min="-2" pref="145" max="-2" attributes="0"/>
+                          <Component id="btnLoginFuncionario" alignment="0" min="-2" pref="145" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                   </Group>
@@ -68,17 +68,17 @@
               <EmptySpace max="-2" attributes="0"/>
               <Component id="btnCadastrarCliente" min="-2" pref="52" max="-2" attributes="0"/>
               <EmptySpace type="unrelated" max="-2" attributes="0"/>
-              <Component id="jLabel1" min="-2" pref="39" max="-2" attributes="0"/>
+              <Component id="lblLoginCliente" min="-2" pref="39" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="jButton1" min="-2" pref="47" max="-2" attributes="0"/>
+              <Component id="btnLoginCliente" min="-2" pref="47" max="-2" attributes="0"/>
+              <EmptySpace type="separate" max="-2" attributes="0"/>
+              <Component id="lblLoginGerente" min="-2" max="-2" attributes="0"/>
+              <EmptySpace type="separate" max="-2" attributes="0"/>
+              <Component id="btnLoginGerente" min="-2" pref="52" max="-2" attributes="0"/>
               <EmptySpace type="separate" max="-2" attributes="0"/>
               <Component id="lblLoginFuncionário" min="-2" max="-2" attributes="0"/>
-              <EmptySpace type="separate" max="-2" attributes="0"/>
-              <Component id="jButton3" min="-2" pref="52" max="-2" attributes="0"/>
-              <EmptySpace type="separate" max="-2" attributes="0"/>
-              <Component id="lblLoginFuncionário1" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="jButton2" min="-2" pref="51" max="-2" attributes="0"/>
+              <Component id="btnLoginFuncionario" min="-2" pref="51" max="-2" attributes="0"/>
               <EmptySpace pref="45" max="32767" attributes="0"/>
           </Group>
       </Group>
@@ -114,7 +114,7 @@
         <Property name="text" type="java.lang.String" value="Para realizar o cadastro do cliente clique no bot&#xe3;o abaixo:"/>
       </Properties>
     </Component>
-    <Component class="javax.swing.JLabel" name="jLabel1">
+    <Component class="javax.swing.JLabel" name="lblLoginCliente">
       <Properties>
         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
           <Font name="Liberation Sans" size="18" style="0"/>
@@ -122,12 +122,28 @@
         <Property name="text" type="java.lang.String" value="Para realizar o login do cliente clique no bot&#xe3;o abaixo:"/>
       </Properties>
     </Component>
-    <Component class="javax.swing.JButton" name="jButton1">
+    <Component class="javax.swing.JButton" name="btnLoginCliente">
       <Properties>
         <Property name="text" type="java.lang.String" value="Login Cliente"/>
       </Properties>
       <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButton1ActionPerformed"/>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnLoginClienteActionPerformed"/>
+      </Events>
+    </Component>
+    <Component class="javax.swing.JLabel" name="lblLoginGerente">
+      <Properties>
+        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+          <Font name="Liberation Sans" size="18" style="0"/>
+        </Property>
+        <Property name="text" type="java.lang.String" value="Para realizar o login do funcion&#xe1;rio, clique no bot&#xe3;o abaixo:"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JButton" name="btnLoginFuncionario">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Login Funcion&#xe1;rio"/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnLoginFuncionarioActionPerformed"/>
       </Events>
     </Component>
     <Component class="javax.swing.JLabel" name="lblLoginFuncion&#xe1;rio">
@@ -138,28 +154,12 @@
         <Property name="text" type="java.lang.String" value="Para realizar o login do funcion&#xe1;rio, clique no bot&#xe3;o abaixo:"/>
       </Properties>
     </Component>
-    <Component class="javax.swing.JButton" name="jButton2">
-      <Properties>
-        <Property name="text" type="java.lang.String" value="Login Funcion&#xe1;rio"/>
-      </Properties>
-      <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButton2ActionPerformed"/>
-      </Events>
-    </Component>
-    <Component class="javax.swing.JLabel" name="lblLoginFuncion&#xe1;rio1">
-      <Properties>
-        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-          <Font name="Liberation Sans" size="18" style="0"/>
-        </Property>
-        <Property name="text" type="java.lang.String" value="Para realizar o login do funcion&#xe1;rio, clique no bot&#xe3;o abaixo:"/>
-      </Properties>
-    </Component>
-    <Component class="javax.swing.JButton" name="jButton3">
+    <Component class="javax.swing.JButton" name="btnLoginGerente">
       <Properties>
         <Property name="text" type="java.lang.String" value="Login Gerente"/>
       </Properties>
       <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButton3ActionPerformed"/>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnLoginGerenteActionPerformed"/>
       </Events>
     </Component>
   </SubComponents>

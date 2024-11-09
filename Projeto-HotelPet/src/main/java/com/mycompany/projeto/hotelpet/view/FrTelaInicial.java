@@ -30,12 +30,12 @@ public class FrTelaInicial extends javax.swing.JFrame {
         lblTitulo = new javax.swing.JLabel();
         btnCadastrarCliente = new javax.swing.JButton();
         lblCadastroCliente = new javax.swing.JLabel();
-        jLabel1 = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
+        lblLoginCliente = new javax.swing.JLabel();
+        btnLoginCliente = new javax.swing.JButton();
+        lblLoginGerente = new javax.swing.JLabel();
+        btnLoginFuncionario = new javax.swing.JButton();
         lblLoginFuncionário = new javax.swing.JLabel();
-        jButton2 = new javax.swing.JButton();
-        lblLoginFuncionário1 = new javax.swing.JLabel();
-        jButton3 = new javax.swing.JButton();
+        btnLoginGerente = new javax.swing.JButton();
 
         lblCadastroCliente1.setFont(new java.awt.Font("Liberation Sans", 0, 18)); // NOI18N
         lblCadastroCliente1.setText("Para realizar o cadastro do cliente clique no botão abaixo:");
@@ -58,33 +58,33 @@ public class FrTelaInicial extends javax.swing.JFrame {
         lblCadastroCliente.setFont(new java.awt.Font("Liberation Sans", 0, 18)); // NOI18N
         lblCadastroCliente.setText("Para realizar o cadastro do cliente clique no botão abaixo:");
 
-        jLabel1.setFont(new java.awt.Font("Liberation Sans", 0, 18)); // NOI18N
-        jLabel1.setText("Para realizar o login do cliente clique no botão abaixo:");
+        lblLoginCliente.setFont(new java.awt.Font("Liberation Sans", 0, 18)); // NOI18N
+        lblLoginCliente.setText("Para realizar o login do cliente clique no botão abaixo:");
 
-        jButton1.setText("Login Cliente");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        btnLoginCliente.setText("Login Cliente");
+        btnLoginCliente.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                btnLoginClienteActionPerformed(evt);
+            }
+        });
+
+        lblLoginGerente.setFont(new java.awt.Font("Liberation Sans", 0, 18)); // NOI18N
+        lblLoginGerente.setText("Para realizar o login do funcionário, clique no botão abaixo:");
+
+        btnLoginFuncionario.setText("Login Funcionário");
+        btnLoginFuncionario.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnLoginFuncionarioActionPerformed(evt);
             }
         });
 
         lblLoginFuncionário.setFont(new java.awt.Font("Liberation Sans", 0, 18)); // NOI18N
         lblLoginFuncionário.setText("Para realizar o login do funcionário, clique no botão abaixo:");
 
-        jButton2.setText("Login Funcionário");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
+        btnLoginGerente.setText("Login Gerente");
+        btnLoginGerente.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
-            }
-        });
-
-        lblLoginFuncionário1.setFont(new java.awt.Font("Liberation Sans", 0, 18)); // NOI18N
-        lblLoginFuncionário1.setText("Para realizar o login do funcionário, clique no botão abaixo:");
-
-        jButton3.setText("Login Gerente");
-        jButton3.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton3ActionPerformed(evt);
+                btnLoginGerenteActionPerformed(evt);
             }
         });
 
@@ -101,13 +101,13 @@ public class FrTelaInicial extends javax.swing.JFrame {
                         .addGap(83, 83, 83)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(lblCadastroCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 469, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 456, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 143, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(lblLoginCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 456, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btnLoginCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 143, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(lblLoginGerente)
                             .addComponent(lblLoginFuncionário)
-                            .addComponent(lblLoginFuncionário1)
-                            .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btnLoginGerente, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(btnCadastrarCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(btnLoginFuncionario, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
@@ -121,17 +121,17 @@ public class FrTelaInicial extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnCadastrarCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(lblLoginCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(btnLoginCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(lblLoginGerente)
+                .addGap(18, 18, 18)
+                .addComponent(btnLoginGerente, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(lblLoginFuncionário)
-                .addGap(18, 18, 18)
-                .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(lblLoginFuncionário1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(btnLoginFuncionario, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(45, Short.MAX_VALUE))
         );
 
@@ -144,17 +144,21 @@ public class FrTelaInicial extends javax.swing.JFrame {
         telaCadastroCliente.setVisible(true);                                           
     }//GEN-LAST:event_btnCadastrarClienteActionPerformed
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton1ActionPerformed
+    private void btnLoginClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoginClienteActionPerformed
+        /*Provisório*/
+        DlgMenuCliente telaMenuCliente = new DlgMenuCliente(this, true);
+        telaMenuCliente.setVisible(true);  
+    }//GEN-LAST:event_btnLoginClienteActionPerformed
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+    private void btnLoginFuncionarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoginFuncionarioActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jButton2ActionPerformed
+    }//GEN-LAST:event_btnLoginFuncionarioActionPerformed
 
-    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton3ActionPerformed
+    private void btnLoginGerenteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoginGerenteActionPerformed
+         /*Provisório*/
+        DlgMenuGerente telaMenuGerente = new DlgMenuGerente(this, true);
+        telaMenuGerente.setVisible(true);  
+    }//GEN-LAST:event_btnLoginGerenteActionPerformed
 
     /**
      * @param args the command line arguments
@@ -194,14 +198,14 @@ public class FrTelaInicial extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCadastrarCliente;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
-    private javax.swing.JLabel jLabel1;
+    private javax.swing.JButton btnLoginCliente;
+    private javax.swing.JButton btnLoginFuncionario;
+    private javax.swing.JButton btnLoginGerente;
     private javax.swing.JLabel lblCadastroCliente;
     private javax.swing.JLabel lblCadastroCliente1;
+    private javax.swing.JLabel lblLoginCliente;
     private javax.swing.JLabel lblLoginFuncionário;
-    private javax.swing.JLabel lblLoginFuncionário1;
+    private javax.swing.JLabel lblLoginGerente;
     private javax.swing.JLabel lblTitulo;
     // End of variables declaration//GEN-END:variables
 }
