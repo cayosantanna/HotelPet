@@ -27,21 +27,205 @@ public class DlgCadCliente extends javax.swing.JDialog {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        lblTitulo = new javax.swing.JLabel();
+        lblNome = new javax.swing.JLabel();
+        edtNome = new javax.swing.JTextField();
+        lbEmail = new javax.swing.JLabel();
+        edtEmail = new javax.swing.JTextField();
+        lblTelefone = new javax.swing.JLabel();
+        edtTelefone = new javax.swing.JTextField();
+        lblCEP = new javax.swing.JLabel();
+        edtCEP = new javax.swing.JTextField();
+        lblCPF = new javax.swing.JLabel();
+        edtCPF = new javax.swing.JTextField();
+        lblEndereço = new javax.swing.JLabel();
+        edtEndereço = new javax.swing.JTextField();
+        lblSenha = new javax.swing.JLabel();
+        jPasswordField1 = new javax.swing.JPasswordField();
+        jLabel7 = new javax.swing.JLabel();
+        btnConfirma = new javax.swing.JButton();
+        btnCancel = new javax.swing.JButton();
+
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+
+        lblTitulo.setFont(new java.awt.Font("Liberation Sans", 1, 36)); // NOI18N
+        lblTitulo.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblTitulo.setText("Cadastro Cliente");
+
+        lblNome.setText("Nome:");
+
+        edtNome.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                edtNomeActionPerformed(evt);
+            }
+        });
+
+        lbEmail.setText("Email:");
+
+        edtEmail.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                edtEmailActionPerformed(evt);
+            }
+        });
+
+        lblTelefone.setText("Telefone:");
+
+        lblCEP.setText("CEP:");
+
+        edtCEP.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                edtCEPActionPerformed(evt);
+            }
+        });
+
+        lblCPF.setText("CPF:");
+
+        edtCPF.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                edtCPFActionPerformed(evt);
+            }
+        });
+
+        lblEndereço.setText("Endereço:");
+
+        edtEndereço.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                edtEndereçoActionPerformed(evt);
+            }
+        });
+
+        lblSenha.setText("Digite sua senha:");
+
+        jPasswordField1.setText("jPasswordField1");
+
+        btnConfirma.setText("Confirma");
+        btnConfirma.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnConfirmaActionPerformed(evt);
+            }
+        });
+
+        btnCancel.setText("Cancela");
+        btnCancel.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCancelActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
+            .addComponent(lblTitulo, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap(50, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                        .addComponent(edtCPF, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 300, Short.MAX_VALUE)
+                        .addComponent(lbEmail, javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(lblNome, javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(edtEmail, javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(edtNome, javax.swing.GroupLayout.Alignment.LEADING))
+                    .addComponent(lblCPF))
+                .addGap(53, 53, 53)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(lblEndereço)
+                    .addComponent(lblTelefone)
+                    .addComponent(edtTelefone, javax.swing.GroupLayout.DEFAULT_SIZE, 300, Short.MAX_VALUE)
+                    .addComponent(lblCEP)
+                    .addComponent(edtCEP)
+                    .addComponent(edtEndereço))
+                .addContainerGap(50, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(231, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel7)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(0, 0, 0)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(btnConfirma)
+                            .addComponent(lblSenha))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(18, 18, 18)
+                                .addComponent(jPasswordField1, javax.swing.GroupLayout.PREFERRED_SIZE, 199, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(70, 70, 70)
+                                .addComponent(btnCancel)))))
+                .addGap(192, 192, 192))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(lblTitulo)
+                .addGap(10, 10, 10)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblNome)
+                    .addComponent(lblTelefone))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(edtNome, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(edtTelefone, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(31, 31, 31)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lbEmail)
+                    .addComponent(lblCEP))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(edtEmail, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(edtCEP, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(31, 31, 31)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblCPF)
+                    .addComponent(lblEndereço))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(edtCPF, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(edtEndereço, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 50, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jPasswordField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblSenha))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel7)
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnConfirma)
+                    .addComponent(btnCancel))
+                .addGap(0, 46, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void edtNomeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_edtNomeActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_edtNomeActionPerformed
+
+    private void btnConfirmaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnConfirmaActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnConfirmaActionPerformed
+
+    private void btnCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnCancelActionPerformed
+
+    private void edtEmailActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_edtEmailActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_edtEmailActionPerformed
+
+    private void edtCPFActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_edtCPFActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_edtCPFActionPerformed
+
+    private void edtEndereçoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_edtEndereçoActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_edtEndereçoActionPerformed
+
+    private void edtCEPActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_edtCEPActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_edtCEPActionPerformed
 
     /**
      * @param args the command line arguments
@@ -86,5 +270,23 @@ public class DlgCadCliente extends javax.swing.JDialog {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnCancel;
+    private javax.swing.JButton btnConfirma;
+    private javax.swing.JTextField edtCEP;
+    private javax.swing.JTextField edtCPF;
+    private javax.swing.JTextField edtEmail;
+    private javax.swing.JTextField edtEndereço;
+    private javax.swing.JTextField edtNome;
+    private javax.swing.JTextField edtTelefone;
+    private javax.swing.JLabel jLabel7;
+    private javax.swing.JPasswordField jPasswordField1;
+    private javax.swing.JLabel lbEmail;
+    private javax.swing.JLabel lblCEP;
+    private javax.swing.JLabel lblCPF;
+    private javax.swing.JLabel lblEndereço;
+    private javax.swing.JLabel lblNome;
+    private javax.swing.JLabel lblSenha;
+    private javax.swing.JLabel lblTelefone;
+    private javax.swing.JLabel lblTitulo;
     // End of variables declaration//GEN-END:variables
 }

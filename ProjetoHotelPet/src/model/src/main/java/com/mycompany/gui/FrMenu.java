@@ -5,6 +5,8 @@
 
 package com.mycompany.gui;
 
+import com.mycompany.gui.DlgBuscaUsuario;
+
 /**
  *
  * @author cayo
@@ -140,7 +142,8 @@ public class FrMenu extends javax.swing.JDialog {
     }//GEN-LAST:event_ReservaActionPerformed
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
-        DlgBuscaUsuario telaBuscaUsuario = new DlgBuscaUsuario(new javax.swing.JFrame(), true);
+        DlgBuscaUsuario telaBuscaUsuario;
+        telaBuscaUsuario = new DlgBuscaUsuario(new javax.swing.JFrame(), true);
         telaBuscaUsuario.setVisible(true);         // TODO add your handling code here:
     }//GEN-LAST:event_jButton5ActionPerformed
 
