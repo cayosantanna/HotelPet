@@ -3,7 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JDialog.java to edit this template
  */
 
-package com.mycompany.Gui;
+package com.mycompany.gui;
 
 /**
  *
@@ -78,7 +78,7 @@ public class FrMenu extends javax.swing.JDialog {
             }
         });
 
-        jLabel1.setFont(new java.awt.Font("Liberation Sans", 0, 36)); // NOI18N
+        jLabel1.setFont(new java.awt.Font("Liberation Sans", 1, 36)); // NOI18N
         jLabel1.setText("Hotel Pet");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());

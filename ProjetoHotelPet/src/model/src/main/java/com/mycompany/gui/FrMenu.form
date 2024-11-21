@@ -128,7 +128,7 @@
     <Component class="javax.swing.JLabel" name="jLabel1">
       <Properties>
         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-          <Font name="Liberation Sans" size="36" style="0"/>
+          <Font name="Liberation Sans" size="36" style="1"/>
         </Property>
         <Property name="text" type="java.lang.String" value="Hotel Pet"/>
       </Properties>

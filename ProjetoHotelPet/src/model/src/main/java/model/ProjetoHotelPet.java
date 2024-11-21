@@ -4,7 +4,7 @@
  */
 package model;
 
-import com.mycompany.Gui.FrTelaInicial;
+import com.mycompany.gui.FrTelaInicial;
 
 /**
  *
