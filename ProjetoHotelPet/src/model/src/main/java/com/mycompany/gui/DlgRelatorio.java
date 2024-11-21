@@ -140,7 +140,7 @@ public class DlgRelatorio extends javax.swing.JDialog {
         lblEdtCheckOut.setText("-");
 
         lblValorPago.setFont(new java.awt.Font("Liberation Sans", 0, 18)); // NOI18N
-        lblValorPago.setText("Valor Pago:");
+        lblValorPago.setText("Valor a ser Pago:");
 
         edtLblValorPago.setText("-");
 
