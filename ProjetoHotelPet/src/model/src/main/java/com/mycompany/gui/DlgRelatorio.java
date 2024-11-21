@@ -147,8 +147,6 @@ public class DlgRelatorio extends javax.swing.JDialog {
         jLabel1.setFont(new java.awt.Font("Liberation Sans", 0, 18)); // NOI18N
         jLabel1.setText("Realizar FeedBack:");
 
-        jLabel4.setIcon(new javax.swing.ImageIcon("/home/thais/Downloads/Design sem nome (2).png")); // NOI18N
-
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
