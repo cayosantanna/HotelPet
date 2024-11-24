@@ -4,6 +4,9 @@
  */
 package com.mycompany.gui;
 
+import java.awt.Frame;
+import model.Cliente;
+
 /**
  *
  * @author cayo
@@ -13,7 +16,7 @@ public class DlgReservas extends javax.swing.JDialog {
     /**
      * Creates new form DlgReservas
      */
-    public DlgReservas(java.awt.Frame parent, boolean modal) {
+    public DlgReservas(Frame parent, boolean modal, Cliente cliente) {
         super(parent, modal);
         initComponents();
     }
@@ -419,8 +422,9 @@ public class DlgReservas extends javax.swing.JDialog {
 
         /* Create and display the dialog */
         java.awt.EventQueue.invokeLater(new Runnable() {
+            private Cliente cliente;
             public void run() {
-                DlgReservas dialog = new DlgReservas(new javax.swing.JFrame(), true);
+                DlgReservas dialog = new DlgReservas(new javax.swing.JFrame(), true, cliente);
                 dialog.addWindowListener(new java.awt.event.WindowAdapter() {
                     @Override
                     public void windowClosing(java.awt.event.WindowEvent e) {

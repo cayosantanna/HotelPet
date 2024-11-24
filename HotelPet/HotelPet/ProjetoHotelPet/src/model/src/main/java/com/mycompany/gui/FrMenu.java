@@ -5,11 +5,15 @@
 
 package com.mycompany.gui;
 
+import model.Cliente;
+
 /**
  *
  * @author cayo
  */
 public class FrMenu extends javax.swing.JDialog {
+
+    private Cliente cliente;
 
     /** Creates new form FrMenu */
     public FrMenu(java.awt.Frame parent, boolean modal) {
@@ -131,12 +135,12 @@ public class FrMenu extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
-        DlgCadCliente telaCadCliente = new DlgCadCliente(new javax.swing.JFrame(), true);
+        DlgCadCliente telaCadCliente = new DlgCadCliente(new javax.swing.JFrame(), true, cliente);
         telaCadCliente.setVisible(true);         // TODO add your handling code here:
     }//GEN-LAST:event_jButton4ActionPerformed
 
     private void ReservaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ReservaActionPerformed
-         DlgReservas telaReservas = new DlgReservas(new javax.swing.JFrame(), true);
+         DlgReservas telaReservas = new DlgReservas(new javax.swing.JFrame(), true, cliente);
         telaReservas.setVisible(true);         // TODO add your handling code here:
     }//GEN-LAST:event_ReservaActionPerformed
 

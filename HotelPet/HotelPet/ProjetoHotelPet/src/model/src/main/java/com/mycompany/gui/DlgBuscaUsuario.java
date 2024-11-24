@@ -3,21 +3,58 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JDialog.java to edit this template
  */
 package com.mycompany.gui;
+import controller.ClienteController;
+import java.util.ArrayList;
+import java.util.List;
+import javax.swing.DefaultListModel;
+import javax.swing.JOptionPane;
+import model.Cliente;
+import java.awt.Frame;
+import javax.swing.JList;
 
 /**
  *
  * @author cayo
  */
 public class DlgBuscaUsuario extends javax.swing.JDialog {
-
+ private ClienteController clienteController = new ClienteController();
     /**
-     * Creates new form DlgBuscaUsuario
+     * @param parent
+     * @param modal
      */
-    public DlgBuscaUsuario(java.awt.Frame parent, boolean modal) {
-        super(parent, modal);
-        initComponents();
-    }
+ public DlgBuscaUsuario(java.awt.Frame parent, boolean modal){
+    super(parent, modal);
+    initComponents(); // Inicia os componentes gráficos (gerado pelo NetBeans)
+    
 
+    lstBuscaUsuario.setModel(listaModel);
+    clientes = clienteController.listarTodos();
+    atualizarLista();
+}
+
+    private List<Cliente> clientes = new ArrayList<>();
+    private DefaultListModel<String> listaModel = new DefaultListModel<>();
+
+    private void atualizarLista() {
+    listaModel.clear();
+    for (Cliente cliente : clientes) {
+        listaModel.addElement(cliente.getNome() + " - CPF: " + cliente.getCpf());
+    }
+}
+
+
+    private Cliente buscarClientePorNome(String nome) {
+        return clientes.stream()
+                .filter(c -> c.getNome().equalsIgnoreCase(nome))
+                .findFirst()
+                .orElse(null);
+    }
+    private Cliente buscarClientePorCpf(String cpf) {
+    return clientes.stream()
+            .filter(c -> c.getCpf().equals(cpf))
+            .findFirst()
+            .orElse(null);
+}
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -27,21 +64,190 @@ public class DlgBuscaUsuario extends javax.swing.JDialog {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jLabel1 = new javax.swing.JLabel();
+        lblTitulo = new javax.swing.JLabel();
+        lblNome = new javax.swing.JLabel();
+        jTextField1 = new javax.swing.JTextField();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        lstBuscaUsuario = new javax.swing.JList<>();
+        btnBusca = new javax.swing.JButton();
+        btnReserva = new javax.swing.JButton();
+        btnEditarCliente = new javax.swing.JButton();
+        lblCPF = new javax.swing.JLabel();
+        edtCPF = new javax.swing.JTextField();
+
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+
+        lblTitulo.setFont(new java.awt.Font("Liberation Sans", 1, 36)); // NOI18N
+        lblTitulo.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblTitulo.setText("Buscar Cliente");
+
+        lblNome.setText("Nome:");
+
+        jTextField1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jTextField1ActionPerformed(evt);
+            }
+        });
+
+        lstBuscaUsuario.setModel(new javax.swing.AbstractListModel<String>() {
+            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
+            public int getSize() { return strings.length; }
+            public String getElementAt(int i) { return strings[i]; }
+        });
+        jScrollPane1.setViewportView(lstBuscaUsuario);
+
+        btnBusca.setText("Buscar");
+        btnBusca.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnBuscaActionPerformed(evt);
+            }
+        });
+
+        btnReserva.setText("Reserva");
+        btnReserva.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnReservaActionPerformed(evt);
+            }
+        });
+
+        btnEditarCliente.setText("Editar");
+        btnEditarCliente.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEditarClienteActionPerformed(evt);
+            }
+        });
+
+        lblCPF.setText("CPF:");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
+            .addComponent(lblTitulo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(30, 30, 30)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 564, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(lblNome)
+                            .addComponent(btnBusca))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(40, 40, 40)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel1)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(btnReserva)
+                                        .addGap(40, 40, 40)
+                                        .addComponent(btnEditarCliente))))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(223, 223, 223)
+                                .addComponent(lblCPF))))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(50, 50, 50)
+                        .addComponent(edtCPF, javax.swing.GroupLayout.PREFERRED_SIZE, 251, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(30, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(lblTitulo, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblNome)
+                    .addComponent(lblCPF))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(edtCPF, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(btnReserva)
+                            .addComponent(btnEditarCliente))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel1))
+                    .addComponent(btnBusca))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 20, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 305, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(23, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTextField1ActionPerformed
+
+    private void btnBuscaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscaActionPerformed
+     String nome = jTextField1.getText();
+
+    // Recarrega a lista completa antes de buscar (evita dados desatualizados)
+    clientes = clienteController.listarTodos();
+    atualizarLista();
+
+    Cliente cliente = buscarClientePorNome(nome);
+    if (cliente != null) {
+        listaModel.clear();
+        listaModel.addElement(cliente.getNome());
+    } else {
+        JOptionPane.showMessageDialog(this, "Cliente não encontrado!");
+    }       // TODO add your handling code here:
+    }//GEN-LAST:event_btnBuscaActionPerformed
+
+    private void btnReservaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReservaActionPerformed
+    String nomeSelecionado = lstBuscaUsuario.getSelectedValue();
+        if (nomeSelecionado == null) {
+            JOptionPane.showMessageDialog(this, "Selecione um cliente para criar uma reserva.");
+            return;
+        }
+
+        Cliente cliente = buscarClientePorNome(nomeSelecionado);
+        if (cliente != null) {
+            DlgReservas telaReserva = new DlgReservas(null, true, cliente);
+            telaReserva.setVisible(true);        // TODO add your handling code here:
+        }
+    }//GEN-LAST:event_btnReservaActionPerformed
+
+    private void btnEditarClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditarClienteActionPerformed
+
+    String nomeSelecionado = lstBuscaUsuario.getSelectedValue();
+    if (nomeSelecionado == null) {
+        JOptionPane.showMessageDialog(this, "Selecione um cliente para editar.");
+        return;
+    }
+    // Busca cliente pelo nome (ajustar caso haja duplicidade de nomes)
+    Cliente cliente = clientes.stream()
+            .filter(c -> c.getNome().equals(nomeSelecionado))
+            .findFirst()
+            .orElse(null);
+
+    if (cliente != null) {
+        DlgCadCliente telaCadastro = new DlgCadCliente(null, true, cliente);
+        telaCadastro.setVisible(true);
+
+        // Atualiza lista após edição
+        clientes = clienteController.listarTodos();
+        atualizarLista();
+    } else {
+        JOptionPane.showMessageDialog(this, "Cliente não encontrado.");
+    }
+    }//GEN-LAST:event_btnEditarClienteActionPerformed
+    DefaultListModel<String> listModel = new DefaultListModel<>();
+JList<String> jListBuscaCliente = new JList<>(listModel);
+
+// Método para atualizar a JList
+public void atualizarListaClientes() {
+    listModel.clear();  // Limpa a lista antes de adicionar novos itens
+    for (Cliente cliente : clienteController.listarClientes()) {
+        listModel.addElement(cliente.toString());  // Adiciona cada cliente ao modelo
+    }
+}
 
     /**
      * @param args the command line arguments
@@ -86,5 +292,16 @@ public class DlgBuscaUsuario extends javax.swing.JDialog {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnBusca;
+    private javax.swing.JButton btnEditarCliente;
+    private javax.swing.JButton btnReserva;
+    private javax.swing.JTextField edtCPF;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTextField jTextField1;
+    private javax.swing.JLabel lblCPF;
+    private javax.swing.JLabel lblNome;
+    private javax.swing.JLabel lblTitulo;
+    private javax.swing.JList<String> lstBuscaUsuario;
     // End of variables declaration//GEN-END:variables
 }
