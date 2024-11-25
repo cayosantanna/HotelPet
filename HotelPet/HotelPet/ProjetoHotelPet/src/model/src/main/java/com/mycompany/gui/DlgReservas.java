@@ -192,7 +192,7 @@ public class DlgReservas extends javax.swing.JDialog {
         lblCheckOut.setText("Check-out:");
 
         lblValorTotal.setFont(new java.awt.Font("Liberation Sans", 0, 18)); // NOI18N
-        lblValorTotal.setText("Valor Total:");
+        lblValorTotal.setText("Valor Total a Pagar:");
 
         btnSalvar.setText("Salvar");
         btnSalvar.addActionListener(new java.awt.event.ActionListener() {
