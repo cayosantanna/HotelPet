@@ -39,7 +39,7 @@ public class DlgCadCliente extends javax.swing.JDialog {
         edtNome = new javax.swing.JTextField();
         btnConfirma = new javax.swing.JButton();
         jLabel3 = new javax.swing.JLabel();
-        btnCancela = new javax.swing.JButton();
+        btnCancelar = new javax.swing.JButton();
         edtCPF = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
 
@@ -78,10 +78,10 @@ public class DlgCadCliente extends javax.swing.JDialog {
 
         jLabel3.setText("CPF:");
 
-        btnCancela.setText("Cancela");
-        btnCancela.addActionListener(new java.awt.event.ActionListener() {
+        btnCancelar.setText("Cancelar");
+        btnCancelar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnCancelaActionPerformed(evt);
+                btnCancelarActionPerformed(evt);
             }
         });
 
@@ -111,7 +111,7 @@ public class DlgCadCliente extends javax.swing.JDialog {
                         .addComponent(btnConfirma)))
                 .addGap(50, 50, 50)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(btnCancela)
+                    .addComponent(btnCancelar)
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                         .addComponent(jLabel7)
                         .addComponent(jLabel5)
@@ -152,7 +152,7 @@ public class DlgCadCliente extends javax.swing.JDialog {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 39, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnConfirma)
-                    .addComponent(btnCancela))
+                    .addComponent(btnCancelar))
                 .addGap(37, 37, 37))
         );
 
@@ -171,9 +171,9 @@ public class DlgCadCliente extends javax.swing.JDialog {
         // TODO add your handling code here:
     }//GEN-LAST:event_btnConfirmaActionPerformed
 
-    private void btnCancelaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelaActionPerformed
+    private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_btnCancelaActionPerformed
+    }//GEN-LAST:event_btnCancelarActionPerformed
 
     /**
      * @param args the command line arguments
@@ -219,7 +219,7 @@ public class DlgCadCliente extends javax.swing.JDialog {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnCancela;
+    private javax.swing.JButton btnCancelar;
     private javax.swing.JButton btnConfirma;
     private javax.swing.JTextField edtCEP;
     private javax.swing.JTextField edtCPF;
