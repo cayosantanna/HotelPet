@@ -14,16 +14,6 @@ import java.util.Date;
  */
 public class Reserva {
     private int id;
-    private String nomePet;
-    private Date dataNascimento;
-    private String raca;
-    private String caracteristicasFisicas;
-    private String historicoDoencas;
-    private String medicacoesNecessarias;
-    private String observacoes;
-    private String especie;
-    private String porte;
-    private String sexo;
     private boolean servicoBanho;
     private boolean servicoTosa;
     private boolean servicoPasseio;
@@ -35,16 +25,6 @@ public class Reserva {
     
     public Reserva() throws ParseException {
         super();
-        this.nomePet = "";
-        this.dataNascimento = new SimpleDateFormat("dd/MM/yyyy").parse("01/01/1970");
-        this.raca = "";
-        this.caracteristicasFisicas = "";
-        this.historicoDoencas = "";
-        this.medicacoesNecessarias = "";
-        this.observacoes = "";
-        this.especie = "";
-        this.porte = "";
-        this.sexo = "";
         this.servicoBanho = true;
         this.servicoTosa = true;
         this.servicoPasseio = true;
@@ -55,22 +35,9 @@ public class Reserva {
         this.dataReserva = new SimpleDateFormat("dd/MM/yyyy").parse("01/01/1970");
     }
     
-    public Reserva(String nomePet, Date dataNascimento, String raca,
-                   String caracteristicasFisicas, String historicoDoencas, String medicacoesNecessarias,
-                   String observacoes, String especie, String porte, String sexo,
-                   boolean servicoBanho, boolean servicoTosa, boolean servicoPasseio,
+    public Reserva(boolean servicoBanho, boolean servicoTosa, boolean servicoPasseio,
                    boolean servicoAlimentacaoEspecial, Date checkIn, Date checkOut,
                    double valorTotal, Date dataReserva) {
-        this.nomePet = nomePet;
-        this.dataNascimento = dataNascimento;
-        this.raca = raca;
-        this.caracteristicasFisicas = caracteristicasFisicas;
-        this.historicoDoencas = historicoDoencas;
-        this.medicacoesNecessarias = medicacoesNecessarias;
-        this.observacoes = observacoes;
-        this.especie = especie;
-        this.porte = porte;
-        this.sexo = sexo;
         this.servicoBanho = servicoBanho;
         this.servicoTosa = servicoTosa;
         this.servicoPasseio = servicoPasseio;
@@ -79,86 +46,6 @@ public class Reserva {
         this.checkOut = checkOut;
         this.valorTotal = valorTotal;
         this.dataReserva = dataReserva;
-    }
-    
-    public String getNomePet() {
-        return nomePet;
-    }
-
-    public void setNomePet(String nomePet) {
-        this.nomePet = nomePet;
-    }
-
-    public Date getDataNascimento() {
-        return dataNascimento;
-    }
-
-    public void setDataNascimento(Date dataNascimento) {
-        this.dataNascimento = dataNascimento;
-    }
-
-    public String getRaca() {
-        return raca;
-    }
-
-    public void setRaca(String raca) {
-        this.raca = raca;
-    }
-
-    public String getCaracteristicasFisicas() {
-        return caracteristicasFisicas;
-    }
-
-    public void setCaracteristicasFisicas(String caracteristicasFisicas) {
-        this.caracteristicasFisicas = caracteristicasFisicas;
-    }
-
-    public String getHistoricoDoencas() {
-        return historicoDoencas;
-    }
-
-    public void setHistoricoDoencas(String historicoDoencas) {
-        this.historicoDoencas = historicoDoencas;
-    }
-
-    public String getMedicacoesNecessarias() {
-        return medicacoesNecessarias;
-    }
-
-    public void setMedicacoesNecessarias(String medicacoesNecessarias) {
-        this.medicacoesNecessarias = medicacoesNecessarias;
-    }
-
-    public String getObservacoes() {
-        return observacoes;
-    }
-
-    public void setObservacoes(String observacoes) {
-        this.observacoes = observacoes;
-    }
-
-    public String getEspecie() {
-        return especie;
-    }
-
-    public void setEspecie(String especie) {
-        this.especie = especie;
-    }
-
-    public String getPorte() {
-        return porte;
-    }
-
-    public void setPorte(String porte) {
-        this.porte = porte;
-    }
-
-    public String getSexo() {
-        return sexo;
-    }
-
-    public void setSexo(String sexo) {
-        this.sexo = sexo;
     }
 
     public boolean isServicoBanho() {
@@ -225,4 +112,3 @@ public class Reserva {
         this.dataReserva = dataReserva;
     }
 }
-
