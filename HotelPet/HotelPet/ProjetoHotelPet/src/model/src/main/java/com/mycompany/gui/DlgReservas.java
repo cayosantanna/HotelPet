@@ -34,32 +34,7 @@ public class DlgReservas extends javax.swing.JDialog {
         jTextArea1 = new javax.swing.JTextArea();
         lblTituloRealizarReserva = new javax.swing.JLabel();
         lblCliente = new javax.swing.JLabel();
-        edtCliente = new javax.swing.JTextField();
-        lblTituloInformacoesPet = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
-        edtNomePet = new javax.swing.JTextField();
-        lblEspecie = new javax.swing.JLabel();
-        comboBoxEspecie = new javax.swing.JComboBox<>();
-        lblRaca = new javax.swing.JLabel();
-        edtRaca = new javax.swing.JTextField();
-        lblDataNascimento = new javax.swing.JLabel();
-        edtDataNascimento = new javax.swing.JTextField();
-        jLabel2 = new javax.swing.JLabel();
-        comboBoxSexo = new javax.swing.JComboBox<>();
-        lblPorte = new javax.swing.JLabel();
-        comboBoxPorte = new javax.swing.JComboBox<>();
-        lblCaracteristicasFisicas = new javax.swing.JLabel();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        txtAreaCaracteristicasFisicas = new javax.swing.JTextArea();
-        lblDoencasAlergias = new javax.swing.JLabel();
-        jScrollPane3 = new javax.swing.JScrollPane();
-        txtAreaDoencasAlergias = new javax.swing.JTextArea();
-        lblMedicacoes = new javax.swing.JLabel();
-        jScrollPane4 = new javax.swing.JScrollPane();
-        txtAreaMedicacoes = new javax.swing.JTextArea();
-        lblObservacoes = new javax.swing.JLabel();
-        jScrollPane5 = new javax.swing.JScrollPane();
-        txtAreaObservacoes = new javax.swing.JTextArea();
         lblServicosDisponiveis = new javax.swing.JLabel();
         checkBoxBanho = new javax.swing.JCheckBox();
         checkBoxTosa = new javax.swing.JCheckBox();
@@ -73,8 +48,11 @@ public class DlgReservas extends javax.swing.JDialog {
         edtValorTotal = new javax.swing.JTextField();
         btnSalvar = new javax.swing.JButton();
         btnCancelar = new javax.swing.JButton();
-        lblData = new javax.swing.JLabel();
-        edtData = new javax.swing.JTextField();
+        edtLblNomeCliente = new javax.swing.JLabel();
+        edtLblNomePet = new javax.swing.JLabel();
+        lblDataReserva = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
+        edtDataReserva = new javax.swing.JTextField();
 
         jTextArea1.setColumns(20);
         jTextArea1.setRows(5);
@@ -90,72 +68,8 @@ public class DlgReservas extends javax.swing.JDialog {
         lblCliente.setFont(new java.awt.Font("Liberation Sans", 0, 18)); // NOI18N
         lblCliente.setText("Cliente:");
 
-        edtCliente.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                edtClienteActionPerformed(evt);
-            }
-        });
-
-        lblTituloInformacoesPet.setFont(new java.awt.Font("Liberation Sans", 1, 18)); // NOI18N
-        lblTituloInformacoesPet.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        lblTituloInformacoesPet.setText("Por favor, forneça as informações sobre o pet!");
-
         jLabel1.setFont(new java.awt.Font("Liberation Sans", 0, 18)); // NOI18N
         jLabel1.setText("Nome Pet:");
-
-        lblEspecie.setFont(new java.awt.Font("Liberation Sans", 0, 18)); // NOI18N
-        lblEspecie.setText("Espécie:");
-
-        comboBoxEspecie.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Cachorro", "Gato" }));
-        comboBoxEspecie.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                comboBoxEspecieActionPerformed(evt);
-            }
-        });
-
-        lblRaca.setFont(new java.awt.Font("Liberation Sans", 0, 18)); // NOI18N
-        lblRaca.setText("Raça:");
-
-        lblDataNascimento.setFont(new java.awt.Font("Liberation Sans", 0, 18)); // NOI18N
-        lblDataNascimento.setText("Data de nascimento: ");
-
-        jLabel2.setFont(new java.awt.Font("Liberation Sans", 0, 18)); // NOI18N
-        jLabel2.setText("Sexo:");
-
-        comboBoxSexo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Feminino", "Masculino" }));
-
-        lblPorte.setFont(new java.awt.Font("Liberation Sans", 0, 18)); // NOI18N
-        lblPorte.setText("Porte:");
-
-        comboBoxPorte.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Pequeno", "Médio", "Grande" }));
-
-        lblCaracteristicasFisicas.setFont(new java.awt.Font("Liberation Sans", 0, 18)); // NOI18N
-        lblCaracteristicasFisicas.setText("Caractéristicas Físicas:");
-
-        txtAreaCaracteristicasFisicas.setColumns(20);
-        txtAreaCaracteristicasFisicas.setRows(5);
-        jScrollPane1.setViewportView(txtAreaCaracteristicasFisicas);
-
-        lblDoencasAlergias.setFont(new java.awt.Font("Liberation Sans", 0, 18)); // NOI18N
-        lblDoencasAlergias.setText("Histórico de Doenças ou Alergias:");
-
-        txtAreaDoencasAlergias.setColumns(20);
-        txtAreaDoencasAlergias.setRows(5);
-        jScrollPane3.setViewportView(txtAreaDoencasAlergias);
-
-        lblMedicacoes.setFont(new java.awt.Font("Liberation Sans", 0, 18)); // NOI18N
-        lblMedicacoes.setText("Medicações Necessárias:");
-
-        txtAreaMedicacoes.setColumns(20);
-        txtAreaMedicacoes.setRows(5);
-        jScrollPane4.setViewportView(txtAreaMedicacoes);
-
-        lblObservacoes.setFont(new java.awt.Font("Liberation Sans", 0, 18)); // NOI18N
-        lblObservacoes.setText("Observações:");
-
-        txtAreaObservacoes.setColumns(20);
-        txtAreaObservacoes.setRows(5);
-        jScrollPane5.setViewportView(txtAreaObservacoes);
 
         lblServicosDisponiveis.setFont(new java.awt.Font("Liberation Sans", 0, 18)); // NOI18N
         lblServicosDisponiveis.setText("Serviços Disponíveis:");
@@ -205,95 +119,77 @@ public class DlgReservas extends javax.swing.JDialog {
 
         btnCancelar.setText("Cancelar");
 
-        lblData.setFont(new java.awt.Font("Liberation Sans", 0, 18)); // NOI18N
-        lblData.setText("Data:");
+        edtLblNomeCliente.setText("-");
+
+        edtLblNomePet.setText("-");
+
+        lblDataReserva.setText("Data da Realização da Reserva:");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(lblTituloInformacoesPet, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 533, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(comboBoxEspecie, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(72, 72, 72)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(comboBoxPorte, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(lblPorte))
-                                .addGap(69, 69, 69)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel2)
-                                    .addComponent(comboBoxSexo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                        .addGap(18, 18, 18)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(lblObservacoes)
-                            .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 530, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(lblServicosDisponiveis)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(checkBoxBanho)
-                                .addGap(18, 18, 18)
-                                .addComponent(checkBoxTosa)
-                                .addGap(18, 18, 18)
-                                .addComponent(checkBoxPasseio)
-                                .addGap(18, 18, 18)
-                                .addComponent(checkBoxAlimentacaoEspecial))
-                            .addComponent(lblCheckOut))
-                        .addGap(0, 0, Short.MAX_VALUE)))
-                .addGap(14, 14, 14))
-            .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(lblTituloRealizarReserva, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(lblTituloRealizarReserva, javax.swing.GroupLayout.DEFAULT_SIZE, 494, Short.MAX_VALUE)
                         .addGap(22, 22, 22))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                    .addComponent(jScrollPane1)
-                                    .addGap(18, 18, 18)
-                                    .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 532, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGroup(layout.createSequentialGroup()
-                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(edtNomePet, javax.swing.GroupLayout.PREFERRED_SIZE, 507, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(jLabel1)
-                                        .addComponent(lblCaracteristicasFisicas))
-                                    .addGap(18, 18, 18)
-                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                        .addComponent(lblDoencasAlergias)
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(edtDataNascimento, javax.swing.GroupLayout.PREFERRED_SIZE, 296, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addComponent(lblDataNascimento)))
-                                    .addGap(18, 18, 18)
-                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(edtRaca, javax.swing.GroupLayout.PREFERRED_SIZE, 244, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(lblRaca)))
-                                .addComponent(edtCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 516, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(lblMedicacoes)
-                            .addComponent(lblEspecie)
-                            .addComponent(lblCheckIn)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(edtCheckIn, javax.swing.GroupLayout.PREFERRED_SIZE, 533, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(lblValorTotal)
-                                    .addComponent(edtValorTotal, javax.swing.GroupLayout.PREFERRED_SIZE, 533, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGap(18, 18, 18)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(lblData)
-                                    .addComponent(edtCheckOut, javax.swing.GroupLayout.DEFAULT_SIZE, 530, Short.MAX_VALUE)
-                                    .addComponent(edtData)))
-                            .addComponent(lblCliente))
+                            .addComponent(lblCliente)
+                            .addComponent(jLabel1))
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
             .addGroup(layout.createSequentialGroup()
-                .addGap(400, 400, 400)
-                .addComponent(btnSalvar, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(93, 93, 93)
-                .addComponent(btnCancelar)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(edtLblNomePet, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 516, Short.MAX_VALUE)
+                            .addComponent(edtLblNomeCliente, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(checkBoxBanho)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(checkBoxTosa)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(checkBoxPasseio)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(checkBoxAlimentacaoEspecial))
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(lblServicosDisponiveis))
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(lblCheckIn))
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(edtCheckIn, javax.swing.GroupLayout.PREFERRED_SIZE, 443, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(lblCheckOut))
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(lblValorTotal))
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(edtValorTotal, javax.swing.GroupLayout.PREFERRED_SIZE, 443, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(133, 133, 133)
+                        .addComponent(btnSalvar, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(74, 74, 74)
+                        .addComponent(btnCancelar))
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(lblDataReserva))
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(edtCheckOut, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 443, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(edtDataReserva, javax.swing.GroupLayout.PREFERRED_SIZE, 443, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(0, 0, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -304,87 +200,50 @@ public class DlgReservas extends javax.swing.JDialog {
                 .addGap(26, 26, 26)
                 .addComponent(lblCliente)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(edtCliente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(edtLblNomeCliente)
+                .addGap(24, 24, 24)
+                .addComponent(jLabel1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(edtLblNomePet)
                 .addGap(18, 18, 18)
-                .addComponent(lblTituloInformacoesPet)
-                .addGap(18, 18, 18)
+                .addComponent(lblServicosDisponiveis)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1)
-                    .addComponent(lblDataNascimento)
-                    .addComponent(lblRaca))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(edtNomePet, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(edtDataNascimento, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(edtRaca, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(checkBoxBanho)
+                    .addComponent(checkBoxTosa)
+                    .addComponent(checkBoxPasseio)
+                    .addComponent(checkBoxAlimentacaoEspecial))
                 .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(lblCaracteristicasFisicas)
-                    .addComponent(lblDoencasAlergias))
+                .addComponent(lblCheckIn)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jScrollPane3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(edtCheckIn, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblMedicacoes)
-                    .addComponent(lblObservacoes))
+                .addComponent(lblCheckOut)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(edtCheckOut, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(lblDataReserva)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(edtDataReserva, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel3)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
+                        .addComponent(lblValorTotal)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(edtValorTotal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(27, 125, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(lblEspecie)
-                            .addComponent(lblServicosDisponiveis)
-                            .addComponent(lblPorte)
-                            .addComponent(jLabel2)))
-                    .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(checkBoxBanho)
-                        .addComponent(checkBoxTosa)
-                        .addComponent(checkBoxPasseio)
-                        .addComponent(checkBoxAlimentacaoEspecial))
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(comboBoxEspecie, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(comboBoxPorte, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(comboBoxSexo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblCheckIn)
-                    .addComponent(lblCheckOut))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(edtCheckIn, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(edtCheckOut, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblValorTotal)
-                    .addComponent(lblData))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(edtValorTotal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(edtData, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(58, 58, 58)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnSalvar, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnCancelar, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(53, Short.MAX_VALUE))
+                            .addComponent(btnSalvar, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btnCancelar, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(45, 45, 45))))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
-    private void edtClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_edtClienteActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_edtClienteActionPerformed
-
-    private void comboBoxEspecieActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboBoxEspecieActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_comboBoxEspecieActionPerformed
 
     private void checkBoxBanhoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_checkBoxBanhoActionPerformed
         // TODO add your handling code here:
@@ -452,44 +311,22 @@ public class DlgReservas extends javax.swing.JDialog {
     private javax.swing.JCheckBox checkBoxBanho;
     private javax.swing.JCheckBox checkBoxPasseio;
     private javax.swing.JCheckBox checkBoxTosa;
-    private javax.swing.JComboBox<String> comboBoxEspecie;
-    private javax.swing.JComboBox<String> comboBoxPorte;
-    private javax.swing.JComboBox<String> comboBoxSexo;
     private javax.swing.JTextField edtCheckIn;
     private javax.swing.JTextField edtCheckOut;
-    private javax.swing.JTextField edtCliente;
-    private javax.swing.JTextField edtData;
-    private javax.swing.JTextField edtDataNascimento;
-    private javax.swing.JTextField edtNomePet;
-    private javax.swing.JTextField edtRaca;
+    private javax.swing.JTextField edtDataReserva;
+    private javax.swing.JLabel edtLblNomeCliente;
+    private javax.swing.JLabel edtLblNomePet;
     private javax.swing.JTextField edtValorTotal;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JLabel jLabel3;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JScrollPane jScrollPane3;
-    private javax.swing.JScrollPane jScrollPane4;
-    private javax.swing.JScrollPane jScrollPane5;
     private javax.swing.JTextArea jTextArea1;
-    private javax.swing.JLabel lblCaracteristicasFisicas;
     private javax.swing.JLabel lblCheckIn;
     private javax.swing.JLabel lblCheckOut;
     private javax.swing.JLabel lblCliente;
-    private javax.swing.JLabel lblData;
-    private javax.swing.JLabel lblDataNascimento;
-    private javax.swing.JLabel lblDoencasAlergias;
-    private javax.swing.JLabel lblEspecie;
-    private javax.swing.JLabel lblMedicacoes;
-    private javax.swing.JLabel lblObservacoes;
-    private javax.swing.JLabel lblPorte;
-    private javax.swing.JLabel lblRaca;
+    private javax.swing.JLabel lblDataReserva;
     private javax.swing.JLabel lblServicosDisponiveis;
-    private javax.swing.JLabel lblTituloInformacoesPet;
     private javax.swing.JLabel lblTituloRealizarReserva;
     private javax.swing.JLabel lblValorTotal;
-    private javax.swing.JTextArea txtAreaCaracteristicasFisicas;
-    private javax.swing.JTextArea txtAreaDoencasAlergias;
-    private javax.swing.JTextArea txtAreaMedicacoes;
-    private javax.swing.JTextArea txtAreaObservacoes;
     // End of variables declaration//GEN-END:variables
 }

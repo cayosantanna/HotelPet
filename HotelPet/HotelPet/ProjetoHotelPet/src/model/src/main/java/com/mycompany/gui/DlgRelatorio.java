@@ -33,24 +33,6 @@ public class DlgRelatorio extends javax.swing.JDialog {
         EdtLblNomeCliente = new javax.swing.JLabel();
         lblPet = new javax.swing.JLabel();
         edtLblNomePet = new javax.swing.JLabel();
-        lblDataNascimento = new javax.swing.JLabel();
-        EdtLblDataNascimentoPet = new javax.swing.JLabel();
-        lblRaca = new javax.swing.JLabel();
-        edtLblRaca = new javax.swing.JLabel();
-        lblCaracteristicasFisicas = new javax.swing.JLabel();
-        edtLblCaractéristicasFísicas = new javax.swing.JLabel();
-        lblDoencasAlergias = new javax.swing.JLabel();
-        edtLblDoencasAlergias = new javax.swing.JLabel();
-        lblMedicacoes = new javax.swing.JLabel();
-        edtLblMedifcacoes = new javax.swing.JLabel();
-        lblObservacoes = new javax.swing.JLabel();
-        edtLblObservacoes = new javax.swing.JLabel();
-        lblEspecie = new javax.swing.JLabel();
-        edtLblEspecie = new javax.swing.JLabel();
-        lblPorte = new javax.swing.JLabel();
-        edtLblPorte = new javax.swing.JLabel();
-        lblSexo = new javax.swing.JLabel();
-        edtLblSexo = new javax.swing.JLabel();
         lblServicos = new javax.swing.JLabel();
         edtLblServicos = new javax.swing.JLabel();
         lblCheckIn = new javax.swing.JLabel();
@@ -80,51 +62,6 @@ public class DlgRelatorio extends javax.swing.JDialog {
         lblPet.setText("Nome Pet:");
 
         edtLblNomePet.setText("-");
-
-        lblDataNascimento.setFont(new java.awt.Font("Liberation Sans", 0, 18)); // NOI18N
-        lblDataNascimento.setText("Data de nascimento: ");
-
-        EdtLblDataNascimentoPet.setText("-");
-
-        lblRaca.setFont(new java.awt.Font("Liberation Sans", 0, 18)); // NOI18N
-        lblRaca.setText("Raça:");
-
-        edtLblRaca.setText("-");
-
-        lblCaracteristicasFisicas.setFont(new java.awt.Font("Liberation Sans", 0, 18)); // NOI18N
-        lblCaracteristicasFisicas.setText("Caractéristicas Físicas:");
-
-        edtLblCaractéristicasFísicas.setText("-");
-
-        lblDoencasAlergias.setFont(new java.awt.Font("Liberation Sans", 0, 18)); // NOI18N
-        lblDoencasAlergias.setText("Histórico de Doenças ou Alergias:");
-
-        edtLblDoencasAlergias.setText("-");
-
-        lblMedicacoes.setFont(new java.awt.Font("Liberation Sans", 0, 18)); // NOI18N
-        lblMedicacoes.setText("Medicações Necessárias:");
-
-        edtLblMedifcacoes.setText("-");
-
-        lblObservacoes.setFont(new java.awt.Font("Liberation Sans", 0, 18)); // NOI18N
-        lblObservacoes.setText("Observações");
-
-        edtLblObservacoes.setText("-");
-
-        lblEspecie.setFont(new java.awt.Font("Liberation Sans", 0, 18)); // NOI18N
-        lblEspecie.setText("Espécie:");
-
-        edtLblEspecie.setText("-");
-
-        lblPorte.setFont(new java.awt.Font("Liberation Sans", 0, 18)); // NOI18N
-        lblPorte.setText("Porte:");
-
-        edtLblPorte.setText("-");
-
-        lblSexo.setFont(new java.awt.Font("Liberation Sans", 0, 18)); // NOI18N
-        lblSexo.setText("Sexo:");
-
-        edtLblSexo.setText("-");
 
         lblServicos.setFont(new java.awt.Font("Liberation Sans", 0, 18)); // NOI18N
         lblServicos.setText("Serviços Realizados:");
@@ -162,7 +99,15 @@ public class DlgRelatorio extends javax.swing.JDialog {
             .addGroup(layout.createSequentialGroup()
                 .addGap(26, 26, 26)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(edtLblDoencasAlergias, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jLabel1)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(lblData)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(edtLblData, javax.swing.GroupLayout.PREFERRED_SIZE, 162, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(lblServicos)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(edtLblServicos, javax.swing.GroupLayout.PREFERRED_SIZE, 530, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addGroup(layout.createSequentialGroup()
@@ -173,65 +118,22 @@ public class DlgRelatorio extends javax.swing.JDialog {
                                 .addComponent(lblCliente)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(EdtLblNomeCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 277, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(81, 81, 81)
-                                .addComponent(jLabel3)
-                                .addGap(0, 0, Short.MAX_VALUE))
-                            .addGroup(layout.createSequentialGroup()
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(lblDataNascimento)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(EdtLblDataNascimentoPet, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(lblRaca)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(edtLblRaca, javax.swing.GroupLayout.DEFAULT_SIZE, 196, Short.MAX_VALUE))))
-                    .addComponent(edtLblCaractéristicasFísicas, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(edtLblMedifcacoes, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(edtLblObservacoes, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGap(81, 81, 81)
+                        .addComponent(jLabel3))
+                    .addComponent(jLabel4)
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jLabel4)
-                            .addComponent(jLabel1)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(lblValorPago)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(edtLblValorPago, javax.swing.GroupLayout.PREFERRED_SIZE, 202, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(179, 179, 179)
-                                .addComponent(lblData)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(edtLblData, javax.swing.GroupLayout.PREFERRED_SIZE, 162, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(lblCheckIn)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(edtLblCheckIn, javax.swing.GroupLayout.PREFERRED_SIZE, 168, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(lblCheckOut)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(lblEdtCheckOut, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(lblServicos)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(edtLblServicos, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                            .addComponent(lblObservacoes)
-                            .addComponent(lblMedicacoes)
-                            .addComponent(lblDoencasAlergias)
-                            .addComponent(lblCaracteristicasFisicas)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(lblEspecie)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(edtLblEspecie, javax.swing.GroupLayout.PREFERRED_SIZE, 168, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(lblPorte)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(edtLblPorte, javax.swing.GroupLayout.PREFERRED_SIZE, 169, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(lblSexo)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(edtLblSexo, javax.swing.GroupLayout.PREFERRED_SIZE, 174, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(0, 0, Short.MAX_VALUE)))
-                .addContainerGap())
+                        .addComponent(lblCheckIn)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(edtLblCheckIn, javax.swing.GroupLayout.PREFERRED_SIZE, 168, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(lblCheckOut)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(lblEdtCheckOut, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(lblValorPago)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(edtLblValorPago, javax.swing.GroupLayout.PREFERRED_SIZE, 202, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(18, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -250,56 +152,31 @@ public class DlgRelatorio extends javax.swing.JDialog {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblPet)
-                    .addComponent(edtLblNomePet)
-                    .addComponent(lblDataNascimento)
-                    .addComponent(EdtLblDataNascimentoPet)
-                    .addComponent(lblRaca)
-                    .addComponent(edtLblRaca))
+                    .addComponent(edtLblNomePet))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(lblCaracteristicasFisicas)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(edtLblCaractéristicasFísicas, javax.swing.GroupLayout.PREFERRED_SIZE, 76, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(lblDoencasAlergias)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(edtLblDoencasAlergias, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(lblMedicacoes)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(edtLblMedifcacoes, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(lblObservacoes)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(edtLblObservacoes, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblEspecie)
-                    .addComponent(edtLblEspecie)
-                    .addComponent(lblPorte)
-                    .addComponent(edtLblPorte)
-                    .addComponent(lblSexo)
-                    .addComponent(edtLblSexo))
-                .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblServicos)
                     .addComponent(edtLblServicos))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(lblCheckIn)
-                    .addComponent(edtLblCheckIn)
-                    .addComponent(lblCheckOut)
-                    .addComponent(lblEdtCheckOut))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(edtLblCheckIn)
+                        .addComponent(lblCheckOut)
+                        .addComponent(lblEdtCheckOut)))
+                .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblValorPago)
-                    .addComponent(edtLblValorPago)
                     .addComponent(lblData)
                     .addComponent(edtLblData))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(edtLblValorPago)
+                    .addComponent(lblValorPago))
+                .addGap(18, 18, 18)
                 .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(77, 77, 77)
                 .addComponent(jLabel4)
-                .addContainerGap(56, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
@@ -348,40 +225,22 @@ public class DlgRelatorio extends javax.swing.JDialog {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JLabel EdtLblDataNascimentoPet;
     private javax.swing.JLabel EdtLblNomeCliente;
-    private javax.swing.JLabel edtLblCaractéristicasFísicas;
     private javax.swing.JLabel edtLblCheckIn;
     private javax.swing.JLabel edtLblData;
-    private javax.swing.JLabel edtLblDoencasAlergias;
-    private javax.swing.JLabel edtLblEspecie;
-    private javax.swing.JLabel edtLblMedifcacoes;
     private javax.swing.JLabel edtLblNomePet;
-    private javax.swing.JLabel edtLblObservacoes;
-    private javax.swing.JLabel edtLblPorte;
-    private javax.swing.JLabel edtLblRaca;
     private javax.swing.JLabel edtLblServicos;
-    private javax.swing.JLabel edtLblSexo;
     private javax.swing.JLabel edtLblValorPago;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel lblCaracteristicasFisicas;
     private javax.swing.JLabel lblCheckIn;
     private javax.swing.JLabel lblCheckOut;
     private javax.swing.JLabel lblCliente;
     private javax.swing.JLabel lblData;
-    private javax.swing.JLabel lblDataNascimento;
-    private javax.swing.JLabel lblDoencasAlergias;
     private javax.swing.JLabel lblEdtCheckOut;
-    private javax.swing.JLabel lblEspecie;
-    private javax.swing.JLabel lblMedicacoes;
-    private javax.swing.JLabel lblObservacoes;
     private javax.swing.JLabel lblPet;
-    private javax.swing.JLabel lblPorte;
-    private javax.swing.JLabel lblRaca;
     private javax.swing.JLabel lblServicos;
-    private javax.swing.JLabel lblSexo;
     private javax.swing.JLabel lblTitulo;
     private javax.swing.JLabel lblValorPago;
     // End of variables declaration//GEN-END:variables
