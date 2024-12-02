@@ -35,7 +35,7 @@ public class Reserva {
         this.dataReserva = new SimpleDateFormat("dd/MM/yyyy").parse("01/01/1970");
     }
     
-    public Reserva(boolean servicoBanho, boolean servicoTosa, boolean servicoPasseio,
+    public Reserva(int id, boolean servicoBanho, boolean servicoTosa, boolean servicoPasseio,
                    boolean servicoAlimentacaoEspecial, Date checkIn, Date checkOut,
                    double valorTotal, Date dataReserva) {
         this.servicoBanho = servicoBanho;
@@ -46,6 +46,16 @@ public class Reserva {
         this.checkOut = checkOut;
         this.valorTotal = valorTotal;
         this.dataReserva = dataReserva;
+    }
+
+ 
+    
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public boolean isServicoBanho() {
