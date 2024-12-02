@@ -4,20 +4,32 @@
  */
 package com.mycompany.gui;
 
-/**
- *
- * @author cayo
- */
+import controller.ClienteController;
+import javax.swing.JOptionPane;
+import model.Cliente;
+
 public class DlgCadCliente extends javax.swing.JDialog {
 
-    /**
-     * Creates new form novo
-     */
+    private int id = 0; 
+    private ClienteController clienteController;
+
     public DlgCadCliente(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
+        clienteController = new ClienteController(true); 
         initComponents();
     }
 
+    public void setCliente(Cliente cliente) {
+        this.id = cliente.getId();
+        edtNome.setText(cliente.getNome());
+        edtCPF.setText(cliente.getCpf());
+        edtEmail.setText(cliente.getEmail());
+        edtTelefone.setText(cliente.getTelefone());
+        edtEndereço.setText(cliente.getEndereco());
+        edtCEP.setText(cliente.getCep());
+        jPasswordField2.setText(cliente.getSenha());
+        edtCPF.setEditable(false); 
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -91,7 +103,11 @@ public class DlgCadCliente extends javax.swing.JDialog {
 
         jLabel1.setText("Senha:");
 
-        jPasswordField2.setText("jPasswordField2");
+        jPasswordField2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jPasswordField2ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -184,56 +200,61 @@ public class DlgCadCliente extends javax.swing.JDialog {
     }//GEN-LAST:event_edtEndereçoActionPerformed
 
     private void btnConfirmaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnConfirmaActionPerformed
-        // TODO add your handling code here:
+    try {
+
+        String nome = edtNome.getText();
+        String cpf = edtCPF.getText();
+        String email = edtEmail.getText();
+        String telefone = edtTelefone.getText();
+        String endereco = edtEndereço.getText();
+        String cep = edtCEP.getText();
+        String senha = new String(jPasswordField2.getPassword()); 
+
+
+       if (nome.isEmpty() || cpf.isEmpty() || email.isEmpty() || telefone.isEmpty() ||
+                endereco.isEmpty() || cep.isEmpty() || senha.isEmpty()) {
+                throw new IllegalArgumentException("Todos os campos devem ser preenchidos.");
+            }
+
+            if (cpf.length() != 11 || !cpf.matches("\\d+")) {
+                throw new IllegalArgumentException("CPF inválido. Deve conter exatamente 11 dígitos.");
+            }
+
+            if (!email.contains("@") || !email.contains(".")) {
+                throw new IllegalArgumentException("E-mail inválido.");
+            }
+
+            Cliente cliente = new Cliente(id, nome, cpf, email, telefone, endereco, cep, senha);
+
+            if (id == 0) {
+
+                clienteController.cadastrarCliente(cliente);
+                JOptionPane.showMessageDialog(this, "Cliente cadastrado com sucesso!");
+            } else {
+
+                clienteController.atualizarCliente(cliente);
+                JOptionPane.showMessageDialog(this, "Cliente atualizado com sucesso!");
+            }
+
+            this.dispose();
+
+        } catch (IllegalArgumentException e) {
+            JOptionPane.showMessageDialog(this, e.getMessage(), "Erro de validação", JOptionPane.WARNING_MESSAGE);
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Erro ao salvar cliente: " + e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
+        }
+
+
     }//GEN-LAST:event_btnConfirmaActionPerformed
 
     private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
-        // TODO add your handling code here:
+        this.dispose();
+        this.setVisible(false);   
     }//GEN-LAST:event_btnCancelarActionPerformed
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(DlgCadCliente.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(DlgCadCliente.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(DlgCadCliente.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(DlgCadCliente.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-        //</editor-fold>
-
-        /* Create and display the dialog */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                DlgCadCliente dialog = new DlgCadCliente(new javax.swing.JFrame(), true);
-                dialog.addWindowListener(new java.awt.event.WindowAdapter() {
-                    @Override
-                    public void windowClosing(java.awt.event.WindowEvent e) {
-                        System.exit(0);
-                    }
-                });
-                dialog.setVisible(true);
-            }
-        });
-    }
-
+    private void jPasswordField2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jPasswordField2ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jPasswordField2ActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCancelar;
     private javax.swing.JButton btnConfirma;

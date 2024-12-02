@@ -61,8 +61,6 @@ public class FrTelaInicial extends javax.swing.JFrame {
         jLabel5.setFont(new java.awt.Font("Liberation Serif", 0, 24)); // NOI18N
         jLabel5.setText("Sistema de Funcionários do Hotel Pet");
 
-        jPasswordField2.setText("jPasswordField2");
-
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
