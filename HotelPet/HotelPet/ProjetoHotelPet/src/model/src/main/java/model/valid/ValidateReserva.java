@@ -56,7 +56,7 @@ public class ValidateReserva {
     }
 
     public Reserva validaCamposEntrada(boolean servicoBanho, boolean servicoTosa, boolean servicoPasseio, boolean servicoAlimentacaoEspecial, Date checkIn, Date checkOut, double valorTotal) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        throw new UnsupportedOperationException("Not supported yet."); 
     }
 }
 
