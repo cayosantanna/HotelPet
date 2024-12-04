@@ -154,14 +154,6 @@ public class DlgHistoricoReservas extends javax.swing.JDialog {
         // TODO add your handling code here:
     }//GEN-LAST:event_jTextField1ActionPerformed
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        
-        DlgHistoricoReservas telaHistorico = new DlgHistoricoReservas(new javax.swing.JFrame(), true);
-        telaHistorico.setVisible(true);
-    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;

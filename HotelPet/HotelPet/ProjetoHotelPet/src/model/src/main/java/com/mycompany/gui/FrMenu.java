@@ -140,8 +140,8 @@ public class FrMenu extends javax.swing.JDialog {
     }//GEN-LAST:event_jButton6ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-    FrTelaInicial telaInicial = new FrTelaInicial();
-    telaInicial.setVisible(true);     
+        this.dispose();
+        this.setVisible(false);      
     }//GEN-LAST:event_jButton1ActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

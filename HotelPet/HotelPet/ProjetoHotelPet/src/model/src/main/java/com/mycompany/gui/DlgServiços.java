@@ -234,8 +234,8 @@ public class DlgServiços extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-     FrMenu telaMenu = new FrMenu(new javax.swing.JFrame(), true);
-        telaMenu.setVisible(true);        // TODO add your handling code here:
+        this.dispose();
+        this.setVisible(false);         // TODO add your handling code here:
     }//GEN-LAST:event_jButton1ActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
