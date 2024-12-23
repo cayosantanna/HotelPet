@@ -4,20 +4,53 @@
  */
 package com.mycompany.gui;
 
+import model.HistoricoReserva;
+import controller.ControllerHistoricoReservas;
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author cayo
  */
 public class DlgHistoricoReservas extends javax.swing.JDialog {
-
-    /**
-     * Creates new form DlgHistoricoReservas
-     */
+    
+    ControllerHistoricoReservas histoController;
+    String cpfHisto;
+    
     public DlgHistoricoReservas(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
+        
+        histoController = new ControllerHistoricoReservas();
+        cpfHisto = "-";
+        
+        
         initComponents();
+        
+        this.habilitarCampos(false);
+        this.limparCampos();
+
+        histoController.atualizarTabela(grdHistReser);
     }
 
+    public void habilitarCampos(boolean flag) {
+        
+    }
+
+    public void limparCampos() {
+        edtNomePet.setText("");
+        edtCPF.setText("");
+    }
+  
+
+    public void objetoParaCampos(HistoricoReserva h) {
+        edtNomePet.setText(h.getNomePet());
+        edtCPF.setText(h.getCpf());
+    }
+    
+    
+    
+    
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -30,60 +63,57 @@ public class DlgHistoricoReservas extends javax.swing.JDialog {
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
+        edtNomePet = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
+        jbtnBuscar = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        grdHistReser = new javax.swing.JTable();
         jLabel5 = new javax.swing.JLabel();
-        jTextField3 = new javax.swing.JTextField();
+        edtCPF = new javax.swing.JTextField();
+        jbtnVisualizar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         jLabel1.setFont(new java.awt.Font("SansSerif", 0, 36)); // NOI18N
         jLabel1.setText("Historico de Reservas");
 
-        jLabel2.setFont(new java.awt.Font("SansSerif", 0, 14)); // NOI18N
+        jLabel2.setFont(new java.awt.Font("SansSerif", 0, 18)); // NOI18N
         jLabel2.setText("Buscar Reserva");
 
-        jTextField1.addActionListener(new java.awt.event.ActionListener() {
+        edtNomePet.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField1ActionPerformed(evt);
+                edtNomePetActionPerformed(evt);
             }
         });
 
         jLabel4.setFont(new java.awt.Font("SansSerif", 0, 18)); // NOI18N
         jLabel4.setText("Nome do Pet");
 
-        jButton1.setFont(new java.awt.Font("SansSerif", 0, 18)); // NOI18N
-        jButton1.setText("Buscar");
-
-        jTable1.setFont(new java.awt.Font("SansSerif", 0, 18)); // NOI18N
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
-            },
-            new String [] {
-                "Cliente", "Pet", "Data", "Valor Total"
-            }
-        ) {
-            boolean[] canEdit = new boolean [] {
-                false, false, false, false
-            };
-
-            public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
+        jbtnBuscar.setFont(new java.awt.Font("SansSerif", 0, 18)); // NOI18N
+        jbtnBuscar.setText("Buscar");
+        jbtnBuscar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jbtnBuscarActionPerformed(evt);
             }
         });
-        jScrollPane1.setViewportView(jTable1);
+
+        grdHistReser.setFont(new java.awt.Font("SansSerif", 0, 18)); // NOI18N
+        grdHistReser.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                grdHistReserMouseClicked(evt);
+            }
+        });
+        jScrollPane1.setViewportView(grdHistReser);
 
         jLabel5.setFont(new java.awt.Font("SansSerif", 0, 18)); // NOI18N
         jLabel5.setText("CPF");
 
-        jTextField3.setText("000.000.00-00");
+        jbtnVisualizar.setText("Visualizar detalhes");
+        jbtnVisualizar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jbtnVisualizarActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -100,14 +130,15 @@ public class DlgHistoricoReservas extends javax.swing.JDialog {
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addComponent(jLabel4)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 268, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(edtNomePet, javax.swing.GroupLayout.PREFERRED_SIZE, 268, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(18, 18, 18)
                                 .addComponent(jLabel5)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(jButton1)
+                                .addComponent(edtCPF, javax.swing.GroupLayout.PREFERRED_SIZE, 152, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jbtnBuscar)
+                            .addComponent(jLabel2)
                             .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 680, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel2))))
+                            .addComponent(jbtnVisualizar))))
                 .addContainerGap(96, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
@@ -119,15 +150,17 @@ public class DlgHistoricoReservas extends javax.swing.JDialog {
                 .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 13, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(edtNomePet, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel4)
                     .addComponent(jLabel5)
-                    .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(edtCPF, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
-                .addComponent(jButton1)
-                .addGap(18, 18, 18)
+                .addComponent(jbtnBuscar)
+                .addGap(27, 27, 27)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 203, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(124, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addComponent(jbtnVisualizar)
+                .addContainerGap(53, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -144,27 +177,75 @@ public class DlgHistoricoReservas extends javax.swing.JDialog {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(51, Short.MAX_VALUE))
+                .addContainerGap(31, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
+    private void edtNomePetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_edtNomePetActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField1ActionPerformed
+    }//GEN-LAST:event_edtNomePetActionPerformed
+
+    private void jbtnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbtnBuscarActionPerformed
+        // Recuperar os valores dos campos de texto
+    String nomePet = edtNomePet.getText().trim();
+    String cpf = edtCPF.getText().trim();
+
+    // Buscar os dados no controlador
+    java.util.List<HistoricoReserva> historicos = histoController.buscarReservas(nomePet, cpf);
+
+    // Exibir os dados na tabela
+    if (historicos != null && !historicos.isEmpty()) {
+        atualizarTabela(historicos);
+    } else {
+        JOptionPane.showMessageDialog(this, "Nenhuma reserva encontrada.", "Resultado", JOptionPane.INFORMATION_MESSAGE);
+    }
+
+                                         
+    }//GEN-LAST:event_jbtnBuscarActionPerformed
+
+    private void grdHistReserMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_grdHistReserMouseClicked
+        if (evt.getClickCount() == 2) {
+            jbtnVisualizarActionPerformed(null);
+        }
+    }//GEN-LAST:event_grdHistReserMouseClicked
+
+    private void jbtnVisualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbtnVisualizarActionPerformed
+        HistoricoReserva historicoEditando = (HistoricoReserva) this.getObjectSelectOnGrid();
+        if (historicoEditando != null) {
+            objetoParaCampos(historicoEditando);
+        } else {
+            JOptionPane.showMessageDialog(this, "Nenhum histórico selecionado.", "Atenção", JOptionPane.WARNING_MESSAGE);
+        }
+    }//GEN-LAST:event_jbtnVisualizarActionPerformed
+    
+    private Object getObjectSelectOnGrid() {
+         int rowClicked = grdHistReser.getSelectedRow();
+        if (rowClicked >= 0) {
+            return grdHistReser.getModel().getValueAt(rowClicked, -1);
+        }
+        return null;
+        }
+    
+    
+    /**
+     * @param args the command line arguments
+     */
+    
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
+    private javax.swing.JTextField edtCPF;
+    private javax.swing.JTextField edtNomePet;
+    private javax.swing.JTable grdHistReser;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
-    private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField3;
+    private javax.swing.JButton jbtnBuscar;
+    private javax.swing.JButton jbtnVisualizar;
     // End of variables declaration//GEN-END:variables
 }
