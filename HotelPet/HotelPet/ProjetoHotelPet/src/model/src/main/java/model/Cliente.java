@@ -125,7 +125,14 @@ public class Cliente {
     
     @Override
     public String toString() {
-        return "Cliente{id=" + id + ", nome='" + getNome() + "', cpf='" + getCpf() + "', email='" + getEmail() + "', telefone='" + getTelefone() + "'}";
+        return "Cliente{id=" + getId() + ", nome='" + getNome() + "', cpf='" + getCpf() + "', email='" + getEmail() + "', telefone='" + getTelefone() + "'}";
+    }
+
+    /**
+     * @param id the id to set
+     */
+    public void setId(int id) {
+        this.id = id;
     }
 
 }

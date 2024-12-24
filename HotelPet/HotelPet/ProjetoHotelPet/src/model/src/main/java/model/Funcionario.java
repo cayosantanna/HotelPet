@@ -5,7 +5,6 @@
 package model;
 
 /**
- *
  * @author neidi
  */
 public class Funcionario extends Pessoa {
@@ -16,10 +15,10 @@ public class Funcionario extends Pessoa {
         this.cargo = "";
     }
     
-    public Funcionario(int id, String nome, String cpf, String email, String telefone, String endereco, String cep, String senha) {
-        super(id, nome, cpf, email, telefone, endereco, cep, senha);
-        this.cargo = cargo;
-    }
+  public Funcionario(int id, String nome, String cpf, String email, String telefone, String endereco, String cep, String senha, String cargo) {
+    super(id, nome, cpf, email, telefone, endereco, cep, senha);
+    this.cargo = cargo;
+}
     
     public void copiar(Funcionario outro){
         this.id = outro.getId();

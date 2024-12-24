@@ -8,8 +8,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class Reserva {
 
+public class Reserva {
     private int id;
     private String NomePet;
     private boolean servicoBanho;
@@ -20,30 +20,22 @@ public class Reserva {
     private Date checkOut;
     private double valorTotal;
     private Date dataReserva;
-
+    
     public Reserva() throws ParseException {
         super();
         this.servicoBanho = true;
         this.servicoTosa = true;
         this.servicoPasseio = true;
         this.servicoAlimentacaoEspecial = true;
-        this.checkIn = new SimpleDateFormat("dd/MM/yyyy").parse("01/01/1970");
-        this.checkOut = new SimpleDateFormat("dd/MM/yyyy").parse("01/01/1970");
+        this.checkIn = new SimpleDateFormat("dd/MM/yyyy").parse("01/01/1925");
+        this.checkOut = new SimpleDateFormat("dd/MM/yyyy").parse("01/01/1925");
         this.valorTotal = 0;
-        this.dataReserva = new SimpleDateFormat("dd/MM/yyyy").parse("01/01/1970");
+        this.dataReserva = new SimpleDateFormat("dd/MM/yyyy").parse("01/01/1925");
     }
-
-    public Reserva(
-            int id,
-            boolean servicoBanho,
-            boolean servicoTosa,
-            boolean servicoPasseio,
-            boolean servicoAlimentacaoEspecial,
-            Date checkIn,
-            Date checkOut,
-            double valorTotal,
-            Date dataReserva
-    ) {
+    
+    public Reserva(int id, boolean servicoBanho, boolean servicoTosa, boolean servicoPasseio,
+                   boolean servicoAlimentacaoEspecial, Date checkIn, Date checkOut,
+                   double valorTotal, Date dataReserva) {
         this.servicoBanho = servicoBanho;
         this.servicoTosa = servicoTosa;
         this.servicoPasseio = servicoPasseio;
@@ -54,6 +46,8 @@ public class Reserva {
         this.dataReserva = dataReserva;
     }
 
+ 
+    
     public int getId() {
         return id;
     }

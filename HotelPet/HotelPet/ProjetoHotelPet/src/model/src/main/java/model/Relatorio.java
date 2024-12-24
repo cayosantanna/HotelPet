@@ -3,12 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package model;
-import model.Reserva;
 
-/**
- *
- * @author thais
- */
 public class Relatorio {
     private Reserva reserva;
     
