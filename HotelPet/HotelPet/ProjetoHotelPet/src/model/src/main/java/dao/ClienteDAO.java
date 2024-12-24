@@ -11,17 +11,19 @@ import factory.Persistencia;
 
 public class ClienteDAO implements IDao<Cliente> {
 
+    private final String tabela = "clientes";
+
+    private String sql = "";
+
     @Override
     public List<Cliente> findAll() {
         List<Cliente> clientes = new ArrayList<>();
-        String sql = "SELECT * FROM cliente"; 
-        try (Connection connection = Persistencia.getConnection();
-             PreparedStatement statement = connection.prepareStatement(sql);
-             ResultSet resultSet = statement.executeQuery()) {
-             
+        this.sql = "SELECT * FROM " + this.tabela;
+        try (Connection connection = Persistencia.getConnection(); PreparedStatement statement = connection.prepareStatement(this.sql); ResultSet resultSet = statement.executeQuery()) {
+
             while (resultSet.next()) {
                 Cliente cliente = new Cliente(
-                        resultSet.getInt("id"),  
+                        resultSet.getInt("id"),
                         resultSet.getString("nome"),
                         resultSet.getString("cpf"),
                         resultSet.getString("email"),
@@ -30,23 +32,22 @@ public class ClienteDAO implements IDao<Cliente> {
                         resultSet.getString("cep"),
                         resultSet.getString("senha")
                 );
-                clientes.add(cliente); 
+                clientes.add(cliente);
             }
         } catch (SQLException e) {
-            e.printStackTrace(); 
+            e.printStackTrace();
         }
         return clientes;
     }
 
     @Override
     public Cliente find(Cliente obj) {
-        String sql = "SELECT * FROM cliente WHERE id = ?";
-        try (Connection connection = Persistencia.getConnection();
-             PreparedStatement statement = connection.prepareStatement(sql)) {
-             
+        this.sql = "SELECT * FROM " + this.tabela + " WHERE id = ?";
+        try (Connection connection = Persistencia.getConnection(); PreparedStatement statement = connection.prepareStatement(this.sql)) {
+
             statement.setInt(1, obj.getId());
             ResultSet resultSet = statement.executeQuery();
-            
+
             if (resultSet.next()) {
                 return new Cliente(
                         resultSet.getInt("id"),
@@ -60,54 +61,52 @@ public class ClienteDAO implements IDao<Cliente> {
                 );
             }
         } catch (SQLException e) {
-            e.printStackTrace(); 
+            e.printStackTrace();
         }
-        return null; 
+        return null;
     }
 
     @Override
     public void save(Cliente obj) {
-        String sql = "INSERT INTO cliente (nome, cpf, email, telefone) VALUES (?, ?, ?, ?)";
-        try (Connection connection = Persistencia.getConnection();
-             PreparedStatement statement = connection.prepareStatement(sql)) {
-             
+        this.sql = "INSERT INTO " + this.tabela + " (nome, cpf, email, telefone) VALUES (?, ?, ?, ?)";
+        try (Connection connection = Persistencia.getConnection(); PreparedStatement statement = connection.prepareStatement(this.sql)) {
+
             statement.setString(1, obj.getNome());
             statement.setString(2, obj.getCpf());
             statement.setString(3, obj.getEmail());
             statement.setString(4, obj.getTelefone());
             statement.executeUpdate();
         } catch (SQLException e) {
-            e.printStackTrace(); 
+            e.printStackTrace();
         }
     }
 
     public void update(Cliente obj, Cliente Novo) {
-        String sql = "UPDATE cliente SET nome = ?, cpf = ?, email = ?, telefone = ? WHERE id = ?";
-        try (Connection connection = Persistencia.getConnection();
-             PreparedStatement statement = connection.prepareStatement(sql)) {
-             
+        this.sql = "UPDATE " + this.tabela + " SET nome = ?, cpf = ?, email = ?, telefone = ? WHERE id = ?";
+        try (Connection connection = Persistencia.getConnection(); PreparedStatement statement = connection.prepareStatement(this.sql)) {
+
             statement.setString(1, Novo.getNome());
             statement.setString(2, Novo.getCpf());
             statement.setString(3, Novo.getEmail());
             statement.setString(4, Novo.getTelefone());
-            statement.setInt(5, obj.getId());  
+            statement.setInt(5, obj.getId());
             statement.executeUpdate();
         } catch (SQLException e) {
-            e.printStackTrace(); 
+            e.printStackTrace();
         }
     }
 
     @Override
     public boolean delete(Cliente obj) {
-        String sql = "DELETE FROM cliente WHERE id = ?";
-        try (Connection connection = Persistencia.getConnection();
-             PreparedStatement statement = connection.prepareStatement(sql)) {
-             
+        this.sql = "DELETE FROM " + this.tabela + " WHERE id = ?";
+        try (Connection connection = Persistencia.getConnection(); PreparedStatement statement = connection.prepareStatement(this.sql)) {
+
             statement.setInt(1, obj.getId());
             int rowsAffected = statement.executeUpdate();
             return rowsAffected > 0;
         } catch (SQLException e) {
-            e.printStackTrace();         }
+            e.printStackTrace();
+        }
         return false;
     }
 
@@ -118,11 +117,32 @@ public class ClienteDAO implements IDao<Cliente> {
                 .orElse(null);
     }
 
-    @Override
     public void update(Cliente obj) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
+
+    public Cliente findById(int id) {
+        this.sql = "SELECT * FROM " + this.tabela + " WHERE id = ?";
+        try (Connection connection = Persistencia.getConnection(); PreparedStatement statement = connection.prepareStatement(this.sql)) {
+
+            statement.setInt(1, id);
+            ResultSet resultSet = statement.executeQuery();
+
+            if (resultSet.next()) {
+                return new Cliente(
+                        resultSet.getInt("id"),
+                        resultSet.getString("nome"),
+                        resultSet.getString("cpf"),
+                        resultSet.getString("email"),
+                        resultSet.getString("telefone"),
+                        resultSet.getString("endereco"),
+                        resultSet.getString("cep"),
+                        resultSet.getString("senha")
+                );
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 }
-
-
-

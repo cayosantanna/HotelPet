@@ -98,5 +98,9 @@ public class HistoricoReservaDao extends DAO {
     public HistoricoReserva findByCpf(String cpf) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
+    
+    public List<HistoricoReserva> getByCpfandPetName(String cpf, String petName) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
 }
 

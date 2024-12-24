@@ -80,4 +80,8 @@ public class ClienteController {
             clienteDAO.delete(cliente);   
         }
     }
+    
+    public Cliente findById(int id) {
+        return this.clienteDAO.findById(id);
+    }
 }

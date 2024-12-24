@@ -4,8 +4,11 @@
  */
 package com.mycompany.gui;
 
+import controller.ClienteController;
+import controller.PetController;
 import java.awt.Frame;
-
+import model.Cliente;
+import model.Pet;
 
 /**
  *
@@ -13,11 +16,19 @@ import java.awt.Frame;
  */
 public class DlgReservas extends javax.swing.JDialog {
 
+    private Cliente cliente;
+    private Pet pet;
+    private ClienteController clienteController;
+    private PetController petController;
     /**
      * Creates new form DlgReservas
      */
-    public DlgReservas(Frame parent, boolean modal) {
+    public DlgReservas(Frame parent, boolean modal, int clienteId, int petId) {
         super(parent, modal);
+        this.clienteController = new ClienteController(true);
+        this.petController = new PetController(true);
+        this.cliente = this.clienteController.findById(clienteId);
+        this.pet = this.petController.findById(petId);
         initComponents();
     }
 
@@ -123,6 +134,7 @@ public class DlgReservas extends javax.swing.JDialog {
 
         edtLblNomePet.setText("-");
 
+        lblDataReserva.setFont(new java.awt.Font("Liberation Sans", 0, 18)); // NOI18N
         lblDataReserva.setText("Data da Realização da Reserva:");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -233,7 +245,7 @@ public class DlgReservas extends javax.swing.JDialog {
                         .addComponent(lblValorTotal)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(edtValorTotal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(27, 125, Short.MAX_VALUE))
+                        .addGap(27, 121, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)

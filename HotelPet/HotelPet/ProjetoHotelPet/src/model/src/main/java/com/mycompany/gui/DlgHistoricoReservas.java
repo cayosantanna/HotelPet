@@ -4,52 +4,66 @@
  */
 package com.mycompany.gui;
 
+
 import model.HistoricoReserva;
 import controller.ControllerHistoricoReservas;
 import javax.swing.JOptionPane;
+import java.util.List;
 
 /**
  *
  * @author cayo
  */
 public class DlgHistoricoReservas extends javax.swing.JDialog {
-    
-    ControllerHistoricoReservas histoController;
-    String cpfHisto;
-    
+
+    private final ControllerHistoricoReservas histoController;
+    private String cpfHisto;
+
     public DlgHistoricoReservas(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
-        
-        histoController = new ControllerHistoricoReservas();
-        cpfHisto = "-";
-        
-        
+
+        // Inicialização do controlador e variáveis
+        this.histoController = new ControllerHistoricoReservas();
+        this.cpfHisto = "-";
+
         initComponents();
-        
+
+        // Configurações iniciais
         this.habilitarCampos(false);
         this.limparCampos();
 
+        // Atualiza a tabela com os dados iniciais
         histoController.atualizarTabela(grdHistReser);
     }
 
+    // Método para habilitar ou desabilitar campos
     public void habilitarCampos(boolean flag) {
-        
+        edtNomePet.setEnabled(flag);
+        edtCPF.setEnabled(flag);
     }
 
+    // Método para limpar os campos de entrada
     public void limparCampos() {
         edtNomePet.setText("");
         edtCPF.setText("");
     }
-  
 
-    public void objetoParaCampos(HistoricoReserva h) {
-        edtNomePet.setText(h.getNomePet());
-        edtCPF.setText(h.getCpf());
+    // Preenche os campos com os dados de um objeto HistoricoReserva
+    public void objetoParaCampos(HistoricoReserva historico) {
+        if (historico != null) {
+            edtNomePet.setText(historico.getNomePet());
+            edtCPF.setText(historico.getCpf());
+        }
     }
-    
-    
-    
-    
+
+    // Recupera o objeto selecionado na tabela
+    private HistoricoReserva getObjectSelectOnGrid() {
+        int rowClicked = grdHistReser.getSelectedRow();
+        if (rowClicked >= 0) {
+            return (HistoricoReserva) grdHistReser.getModel().getValueAt(rowClicked, -1); // Certifique-se que o modelo suporta isso
+        }
+        return null;
+    }
     
     /**
      * This method is called from within the constructor to initialize the form.
@@ -188,52 +202,38 @@ public class DlgHistoricoReservas extends javax.swing.JDialog {
     }//GEN-LAST:event_edtNomePetActionPerformed
 
     private void jbtnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbtnBuscarActionPerformed
-        // Recuperar os valores dos campos de texto
-    String nomePet = edtNomePet.getText().trim();
-    String cpf = edtCPF.getText().trim();
+        String nomePet = edtNomePet.getText().trim();
+        String cpf = edtCPF.getText().trim();
 
-    // Buscar os dados no controlador
-    java.util.List<HistoricoReserva> historicos = histoController.buscarReservas(nomePet, cpf);
+        // Validar os campos de entrada
+        if (nomePet.isEmpty() && cpf.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Informe ao menos um campo para busca.", "Atenção", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
 
-    // Exibir os dados na tabela
-    if (historicos != null && !historicos.isEmpty()) {
-        atualizarTabela(historicos);
-    } else {
-        JOptionPane.showMessageDialog(this, "Nenhuma reserva encontrada.", "Resultado", JOptionPane.INFORMATION_MESSAGE);
-    }
-
-                                         
+        // Buscar os dados
+        List<HistoricoReserva> historicos = histoController.buscarHistoricoReservaCpfAndPetName(cpf, nomePet);
+        if (historicos != null && !historicos.isEmpty()) {
+            histoController.atualizarTabela(grdHistReser);
+        } else {
+            JOptionPane.showMessageDialog(this, "Nenhuma reserva encontrada.", "Resultado", JOptionPane.INFORMATION_MESSAGE);
+        }                         
     }//GEN-LAST:event_jbtnBuscarActionPerformed
 
     private void grdHistReserMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_grdHistReserMouseClicked
-        if (evt.getClickCount() == 2) {
+         if (evt.getClickCount() == 2) {
             jbtnVisualizarActionPerformed(null);
         }
     }//GEN-LAST:event_grdHistReserMouseClicked
 
     private void jbtnVisualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbtnVisualizarActionPerformed
-        HistoricoReserva historicoEditando = (HistoricoReserva) this.getObjectSelectOnGrid();
-        if (historicoEditando != null) {
-            objetoParaCampos(historicoEditando);
+        HistoricoReserva historicoSelecionado = getObjectSelectOnGrid();
+        if (historicoSelecionado != null) {
+            objetoParaCampos(historicoSelecionado);
         } else {
             JOptionPane.showMessageDialog(this, "Nenhum histórico selecionado.", "Atenção", JOptionPane.WARNING_MESSAGE);
         }
     }//GEN-LAST:event_jbtnVisualizarActionPerformed
-    
-    private Object getObjectSelectOnGrid() {
-         int rowClicked = grdHistReser.getSelectedRow();
-        if (rowClicked >= 0) {
-            return grdHistReser.getModel().getValueAt(rowClicked, -1);
-        }
-        return null;
-        }
-    
-    
-    /**
-     * @param args the command line arguments
-     */
-    
-
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextField edtCPF;

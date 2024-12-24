@@ -15,16 +15,17 @@ import factory.Persistencia;
 import java.util.stream.Collectors;
 
 public class PetDAO implements IDao<Pet> {
+    private final String tabela = "pets";
+
+    private String sql = "";
 
     @Override
     public List<Pet> findAll() {
         List<Pet> pets = new ArrayList<>();
-        String sql = "SELECT * FROM pet"; 
-        
-        try (Connection connection = Persistencia.getConnection();
-             PreparedStatement statement = connection.prepareStatement(sql);
-             ResultSet resultSet = statement.executeQuery()) {
-             
+        this.sql = "SELECT * FROM" + this.tabela;
+
+        try (Connection connection = Persistencia.getConnection(); PreparedStatement statement = connection.prepareStatement(this.sql); ResultSet resultSet = statement.executeQuery()) {
+
             while (resultSet.next()) {
                 Pet pet = new Pet(
                         resultSet.getInt("id"),
@@ -38,18 +39,16 @@ public class PetDAO implements IDao<Pet> {
                         resultSet.getString("caracteristicasFisicas"),
                         resultSet.getString("historicoDoencas"),
                         resultSet.getString("medicacoes")
-                        
                 );
-                pets.add(pet);  
+                pets.add(pet);
             }
         } catch (SQLException e) {
-            e.printStackTrace(); 
+            e.printStackTrace();
         }
-        
-        return pets;  
+
+        return pets;
     }
 
-  
     public List<Pet> findByResponsavel(String cpfResponsavel) {
         return findAll().stream()
                 .filter(pet -> pet.getCpfResponsavel().equals(cpfResponsavel))
@@ -58,11 +57,10 @@ public class PetDAO implements IDao<Pet> {
 
     @Override
     public void save(Pet pet) {
-        String sql = "INSERT INTO pet (nome, cpfResponsavel, especie, raca, porte) VALUES (?, ?, ?, ?, ?)";
-        
-        try (Connection connection = Persistencia.getConnection();
-             PreparedStatement statement = connection.prepareStatement(sql)) {
-             
+        this.sql = "INSERT INTO " + this.tabela + " (nome, cpfResponsavel, especie, raca, porte) VALUES (?, ?, ?, ?, ?)";
+
+        try (Connection connection = Persistencia.getConnection(); PreparedStatement statement = connection.prepareStatement(this.sql)) {
+
             statement.setString(1, pet.getNome());
             statement.setString(2, pet.getCpfResponsavel());
             statement.setString(3, pet.getEspecie());
@@ -73,20 +71,19 @@ public class PetDAO implements IDao<Pet> {
             statement.setString(8, pet.getCaracteristicasFisicas());
             statement.setString(9, pet.getHistoricoDoencas());
             statement.setString(10, pet.getMedicacoes());
-            
-            statement.executeUpdate();  
+
+            statement.executeUpdate();
         } catch (SQLException e) {
-            e.printStackTrace();  
+            e.printStackTrace();
         }
     }
 
     @Override
     public void update(Pet pet) {
-        String sql = "UPDATE pet SET nome = ?, cpfResponsavel = ?, especie = ?, raca = ?, porte = ? WHERE id = ?";
-        
-        try (Connection connection = Persistencia.getConnection();
-             PreparedStatement statement = connection.prepareStatement(sql)) {
-             
+        this.sql = "UPDATE " + this.tabela + " SET nome = ?, cpfResponsavel = ?, especie = ?, raca = ?, porte = ? WHERE id = ?";
+
+        try (Connection connection = Persistencia.getConnection(); PreparedStatement statement = connection.prepareStatement(this.sql)) {
+
             statement.setString(1, pet.getNome());
             statement.setString(2, pet.getCpfResponsavel());
             statement.setString(3, pet.getEspecie());
@@ -97,39 +94,37 @@ public class PetDAO implements IDao<Pet> {
             statement.setString(8, pet.getCaracteristicasFisicas());
             statement.setString(9, pet.getHistoricoDoencas());
             statement.setString(10, pet.getMedicacoes());
-            
-            statement.executeUpdate(); 
+
+            statement.executeUpdate();
         } catch (SQLException e) {
-            e.printStackTrace();  
+            e.printStackTrace();
         }
     }
 
     @Override
     public boolean delete(Pet pet) {
-        String sql = "DELETE FROM pet WHERE id = ?";
-        
-        try (Connection connection = Persistencia.getConnection();
-             PreparedStatement statement = connection.prepareStatement(sql)) {
-             
+        this.sql = "DELETE FROM " + this.tabela + " WHERE id = ?";
+
+        try (Connection connection = Persistencia.getConnection(); PreparedStatement statement = connection.prepareStatement(this.sql)) {
+
             statement.setInt(1, pet.getId());
-            int rowsAffected = statement.executeUpdate();  
-            return rowsAffected > 0;  
+            int rowsAffected = statement.executeUpdate();
+            return rowsAffected > 0;
         } catch (SQLException e) {
-            e.printStackTrace();  
+            e.printStackTrace();
         }
         return false;
     }
 
     @Override
     public Pet find(Pet pet) {
-        String sql = "SELECT * FROM pet WHERE id = ?";
-        
-        try (Connection connection = Persistencia.getConnection();
-             PreparedStatement statement = connection.prepareStatement(sql)) {
-             
+        this.sql = "SELECT * FROM " + this.tabela + " WHERE id = ?";
+
+        try (Connection connection = Persistencia.getConnection(); PreparedStatement statement = connection.prepareStatement(this.sql)) {
+
             statement.setInt(1, pet.getId());
             ResultSet resultSet = statement.executeQuery();
-            
+
             if (resultSet.next()) {
                 return new Pet(
                         resultSet.getInt("id"),
@@ -145,8 +140,37 @@ public class PetDAO implements IDao<Pet> {
                         resultSet.getString("Medicacoes"));
             }
         } catch (SQLException e) {
-            e.printStackTrace();  
+            e.printStackTrace();
         }
-        return null;  
+        return null;
+    }
+
+    public Pet findById(int id) {
+        this.sql = "SELECT * FROM " + this.tabela + " WHERE id = ?";
+
+        try (Connection connection = Persistencia.getConnection(); PreparedStatement statement = connection.prepareStatement(this.sql)) {
+
+            statement.setInt(1, id);
+            ResultSet resultSet = statement.executeQuery();
+
+            if (resultSet.next()) {
+                return new Pet(
+                        resultSet.getInt("id"),
+                        resultSet.getString("nome"),
+                        resultSet.getString("datanascimento"),
+                        resultSet.getString("cpfResponsavel"),
+                        resultSet.getString("especie"),
+                        resultSet.getString("raca"),
+                        resultSet.getString("porte"),
+                        resultSet.getString("Sexo"),
+                        resultSet.getString("CaracteristicasFisicas"),
+                        resultSet.getString("HistoricoDoencas"),
+                        resultSet.getString("Medicacoes")
+                );
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }

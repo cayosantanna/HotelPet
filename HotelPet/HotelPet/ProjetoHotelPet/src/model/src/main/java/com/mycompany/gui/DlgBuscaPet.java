@@ -27,7 +27,7 @@ public class DlgBuscaPet extends javax.swing.JDialog {
         super(parent, modal);
         initComponents();
         petController = new PetController(true); 
-        clienteController = new ClienteController(true); 
+        clienteController = new ClienteController(false); 
         listModelPets = new DefaultListModel<>();
         lstBuscaPet.setModel(listModelPets);
     }
@@ -181,7 +181,9 @@ public class DlgBuscaPet extends javax.swing.JDialog {
     }//GEN-LAST:event_edtNomePetActionPerformed
 
     private void btnReservaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReservaActionPerformed
-        DlgReservas telaReservas = new DlgReservas(new javax.swing.JFrame(), true);
+        int clienteId = 1;
+        int petId = 1;
+        DlgReservas telaReservas = new DlgReservas(new javax.swing.JFrame(), true, clienteId, petId);
         telaReservas.setVisible(true);      
     }//GEN-LAST:event_btnReservaActionPerformed
 

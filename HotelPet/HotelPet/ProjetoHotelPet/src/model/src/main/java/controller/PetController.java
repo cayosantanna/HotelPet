@@ -7,6 +7,7 @@ package controller;
 import dao.PetDAO;
 import dao.PetDAOSimulado;
 import java.util.List;
+import model.Cliente;
 import model.Pet;
 import model.exceptions.ReservaException;
 import model.valid.ValidatePet;
@@ -53,6 +54,10 @@ public class PetController {
         } else {
             petDAO.delete(pet);
         }
+    }
+    
+     public Pet findById(int id) {
+        return this.petDAO.findById(id);
     }
 }
 
