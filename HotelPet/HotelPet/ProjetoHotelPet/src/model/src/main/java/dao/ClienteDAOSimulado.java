@@ -8,6 +8,7 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import model.Cliente;
+import model.Pet;
 
 public class ClienteDAOSimulado implements IDao<Cliente> {
     private static final String FILE_PATH = "clientes.txt";
@@ -90,7 +91,6 @@ public class ClienteDAOSimulado implements IDao<Cliente> {
         return removed;
     }
 
-    @Override
     public void update(Cliente obj) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
@@ -100,5 +100,10 @@ public class ClienteDAOSimulado implements IDao<Cliente> {
                 .filter(cliente -> cliente.getCpf().equals(cpf))
                 .findFirst()
                 .orElse(null);
+    }
+
+    @Override
+    public void update(Cliente obj, Pet novo) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 }

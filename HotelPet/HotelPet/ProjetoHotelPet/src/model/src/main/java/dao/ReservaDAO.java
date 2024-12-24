@@ -6,9 +6,10 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
-import model.Cliente;
+import model.Pet;
 import model.Reserva;
 
 public class ReservaDAO implements IDao<Reserva> {
@@ -157,4 +158,53 @@ public class ReservaDAO implements IDao<Reserva> {
                 .orElse(null);
     }
 
+    @Override
+    public void update(Reserva obj, Pet novo) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    public List<Reserva> buscarPorNomeOuCpf(String nomePet, String cpfResponsavel) throws ParseException {
+    List<Reserva> reservas = new ArrayList<>();
+    StringBuilder sql = new StringBuilder("SELECT * FROM reservas r ");
+    sql.append("JOIN pets p ON r.id_pet = p.id_pet ");
+    sql.append("JOIN responsaveis resp ON r.id_responsavel = resp.id_responsavel ");
+    sql.append("WHERE 1=1 ");
+    
+    // Adicionar condições baseadas nos parâmetros fornecidos
+    if (nomePet != null && !nomePet.isEmpty()) {
+        sql.append("AND p.nome LIKE ? ");
+    }
+    if (cpfResponsavel != null && !cpfResponsavel.isEmpty()) {
+        sql.append("AND resp.cpf = ? ");
+    }
+
+    try (PreparedStatement stmt = connection.prepareStatement(sql.toString())) {
+        int index = 1;
+        
+        // Preencher os parâmetros da consulta
+        if (nomePet != null && !nomePet.isEmpty()) {
+            stmt.setString(index++, "%" + nomePet + "%");
+        }
+        if (cpfResponsavel != null && !cpfResponsavel.isEmpty()) {
+            stmt.setString(index++, cpfResponsavel);
+        }
+        
+        ResultSet rs = stmt.executeQuery();
+        while (rs.next()) {
+            Reserva reserva = new Reserva();
+            reserva.setId(rs.getInt("id_reserva"));
+            Pet pet = new Pet();
+            pet.setNome(rs.getString("nome_pet"));
+            reserva.setPet(pet);
+            // Preencher os outros campos de Reserva conforme necessário
+            reservas.add(reserva);
+        }
+    } catch (SQLException e) {
+    }
+    
+    return reservas;
 }
+
+    
+}
+

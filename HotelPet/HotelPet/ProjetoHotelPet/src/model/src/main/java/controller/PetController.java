@@ -7,7 +7,6 @@ package controller;
 import dao.PetDAO;
 import dao.PetDAOSimulado;
 import java.util.List;
-import model.Cliente;
 import model.Pet;
 import model.exceptions.ReservaException;
 import model.valid.ValidatePet;
@@ -37,14 +36,19 @@ public class PetController {
     }
 
     public List<Pet> listarTodosPets() {
-        return usarSimulador ? petDAOSimulado.findAll() : petDAO.findAll();
+        if (usarSimulador) {
+            return petDAOSimulado.findAll();
+        } else {
+            return petDAO.findAll(); 
+        }
     }
+    
 
     public void atualizarPet(Pet pet, Pet novo) throws ReservaException {
         if (usarSimulador) {
             petDAOSimulado.update(pet, novo);
         } else {
-            petDAO.update(novo);
+            petDAO.update(novo, novo);
         }
     }
 

@@ -4,72 +4,55 @@
  */
 package dao;
 import model.HistoricoReserva;
-import java.io.BufferedReader;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 /**
  *
  * @author neidi
  */
 public class HistoricoReservaDao extends DAO {
-
+    
+    private List<HistoricoReserva> lst;
 
     public HistoricoReservaDao() {
         super("historico_reserva.csv");
+        this.lst = new ArrayList<>();
     }
+    
 
     public HistoricoReservaDao(String pathArquivo) {
         super(pathArquivo);
     }
 
-    @Override
-    public boolean delete(Object obj) {
-        if (obj instanceof HistoricoReserva) {
-            HistoricoReserva reserva = (HistoricoReserva) obj;
-            List<HistoricoReserva> reservas = findAll();
-
-            boolean removido = reservas.removeIf(r -> r.getCpf().equals(reserva.getCpf()) 
-                                                   && r.getNomePet().equals(reserva.getNomePet()));
-            if (removido) {
-                saveAll(reservas);
-                return true;
-            }
-        }
-        return false;
-    }
+    
+    
+    
 
     @Override
     public HistoricoReserva find(Object obj) {
-        if (obj instanceof HistoricoReserva) {
-            HistoricoReserva reserva = (HistoricoReserva) obj;
-            List<HistoricoReserva> reservas = findAll();
-
-            for (HistoricoReserva r : reservas) {
-                if (r.getCpf().equals(reserva.getCpf()) && r.getNomePet().equals(reserva.getNomePet())) {
-                    return r;
-                }
-            }
+       HistoricoReserva historico = (HistoricoReserva) obj;
+                
+        for(HistoricoReserva h: this.lst){
+            if(h.equals(historico))
+                return h;
         }
+        
         return null;
     }
 
 
     public List<HistoricoReserva> findAll() {
-        List<HistoricoReserva> reservas = new ArrayList<>();
-        try (BufferedReader br = new BufferedReader(new FileReader(this.pathArquivo))) {
-            String linha;
-            while ((linha = br.readLine()) != null) {
-                HistoricoReserva reserva = fromCSV(linha);
-                reservas.add(reserva);
-            }
-        } catch (IOException e) {
-            System.out.println("Erro ao carregar os dados: " + e.getMessage());
-        }
-        return reservas;
+        this.lst = loadArquivo();
+        
+        if(this.lst == null)
+            return new ArrayList<>();
+        else
+            return this.lst; 
     }
 
     // Converte uma linha de texto (CSV) para um objeto HistoricoReserva
@@ -95,11 +78,49 @@ public class HistoricoReservaDao extends DAO {
         save(sb.toString());
     }
 
-    public HistoricoReserva findByCpf(String cpf) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
     
-    public List<HistoricoReserva> getByCpfandPetName(String cpf, String petName) {
+   
+    
+
+     
+    /**
+     * Este metodo é um bom exemplo para usar heranca e metodos abstratos
+     * Dá para subir com este metodo para SUPER.
+     * O metodo é igual para ALUNO e PROFESSOR e tem a mesma chamada de CSVToAtributo. Logo este pode
+     * subir e temos que garantir que ALUNO e PROFESSOR implementem CSVToAtributo
+     * @return 
+     */
+    private List<HistoricoReserva> loadArquivo() {
+        FileReader f = null;
+        try {
+            f = new FileReader(this.pathArquivo);//"ListagemProfessores.csv");
+            Scanner arquivoLido = new Scanner(f);
+            arquivoLido.useDelimiter("\n");
+            
+            List<HistoricoReserva> lista = new ArrayList<>();
+            String linhaLida = arquivoLido.next();
+            while (arquivoLido.hasNext()) {
+                linhaLida = arquivoLido.next();
+
+                HistoricoReserva aluno = new HistoricoReserva();
+                aluno.CSVToAtributo(linhaLida);
+                lista.add(aluno);
+            }
+            return lista;
+        } catch (FileNotFoundException ex) {
+            
+        } finally {
+            try {
+                f.close();
+            } catch (IOException ex) {
+                
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public boolean delete(Object obj) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 }

@@ -20,6 +20,7 @@ public class Reserva {
     private Date checkOut;
     private double valorTotal;
     private Date dataReserva;
+    private Pet pet; // Cada reserva tem um pet associado
 
     public Reserva() throws ParseException {
         super();
@@ -31,6 +32,7 @@ public class Reserva {
         this.checkOut = new SimpleDateFormat("dd/MM/yyyy").parse("01/01/1970");
         this.valorTotal = 0;
         this.dataReserva = new SimpleDateFormat("dd/MM/yyyy").parse("01/01/1970");
+        this.pet = pet;
     }
 
     public Reserva(
@@ -52,6 +54,7 @@ public class Reserva {
         this.checkOut = checkOut;
         this.valorTotal = valorTotal;
         this.dataReserva = dataReserva;
+        this.pet = pet;
     }
 
     public int getId() {
@@ -130,13 +133,22 @@ public class Reserva {
      * @return the NomePet
      */
     public String getNomePet() {
-        return NomePet;
+         return NomePet;
     }
-
+    
     /**
      * @param NomePet the NomePet to set
      */
     public void setNomePet(String NomePet) {
         this.NomePet = NomePet;
     }
+    
+     public Pet getPet() {
+        return pet;
+    }
+    public void setPet(Pet pet){
+        this.pet = pet;
+    }
+
+   
 }

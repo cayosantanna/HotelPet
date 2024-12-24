@@ -17,7 +17,7 @@ import javax.swing.JList;
  */
 import controller.ClienteController;
 import model.Cliente;
-import javax.swing.DefaultListModel;
+
 
 public class DlgBuscaUsuario extends javax.swing.JDialog {
 
@@ -171,7 +171,7 @@ public class DlgBuscaUsuario extends javax.swing.JDialog {
     }//GEN-LAST:event_edtNomeActionPerformed
 
     private void btnBuscaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscaActionPerformed
- 
+        
     String nomeBusca = edtNome.getText().trim();
     String cpfBusca = edtCPF.getText().trim();
 

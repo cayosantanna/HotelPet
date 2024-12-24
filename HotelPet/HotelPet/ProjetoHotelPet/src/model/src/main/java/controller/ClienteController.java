@@ -84,4 +84,14 @@ public class ClienteController {
     public Cliente findById(int id) {
         return this.clienteDAO.findById(id);
     }
+    
+     public boolean isCpfDuplicado(String cpf, int idCliente) {
+        for (Cliente cliente : listarTodosClientes()) {
+            // Verifica se o CPF é igual e se o ID é diferente (para permitir edição do próprio cliente)
+            if (cliente.getCpf().equals(cpf) && cliente.getId() != idCliente) {
+                return true; // CPF duplicado encontrado
+            }
+        }
+        return false; // Não encontrou CPF duplicado
+    }
 }

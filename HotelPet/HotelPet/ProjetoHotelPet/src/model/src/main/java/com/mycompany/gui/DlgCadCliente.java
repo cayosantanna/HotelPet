@@ -223,6 +223,10 @@ public class DlgCadCliente extends javax.swing.JDialog {
             if (!email.contains("@") || !email.contains(".")) {
                 throw new IllegalArgumentException("E-mail inválido.");
             }
+             // Verificação de CPF duplicado antes de salvar ou atualizar
+            if (clienteController.isCpfDuplicado(cpf, id)) {
+                throw new IllegalArgumentException("CPF já cadastrado.");
+        }
 
             Cliente cliente = new Cliente(id, nome, cpf, email, telefone, endereco, cep, senha);
 

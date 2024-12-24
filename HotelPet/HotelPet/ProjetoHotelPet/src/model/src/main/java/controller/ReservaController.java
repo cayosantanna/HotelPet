@@ -11,6 +11,7 @@ import java.util.Date;
 import java.util.List;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
+import model.Pet;
 import model.Reserva;
 import model.exceptions.ReservaException;
 import model.valid.ValidateReserva;
@@ -18,6 +19,8 @@ import model.valid.ValidateReserva;
 public class ReservaController {
 
     private ReservaDAO repositorio;
+    private List<Reserva> listaDeReservas;
+    ReservaDAO reservaDAO = new ReservaDAO();
 
     public ReservaController() {
         this.repositorio = new ReservaDAO();
@@ -91,4 +94,12 @@ public class ReservaController {
 
         return reserva;
     }
-}
+    
+    public List<Reserva> buscarReservasPorNomeOuCpf(String nomePet, String cpfResponsavel) throws ParseException {
+        // Aqui você chama o DAO ou repositório para buscar as reservas
+        return reservaDAO.buscarPorNomeOuCpf(nomePet, cpfResponsavel);
+    }
+    
+    
+    
+    }

@@ -33,6 +33,10 @@ public class Pet {
         this.cpfResponsavel = cpfResponsavel;
     }
 
+    public Pet() {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
     /**
      * @return the nome
      */
@@ -186,6 +190,7 @@ public class Pet {
     public void setDatanascimento(String datanascimento) {
         this.datanascimento = datanascimento;
     }
+
 
 }
 

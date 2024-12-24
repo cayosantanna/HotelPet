@@ -1,43 +1,23 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package dao;
 
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import model.Pet;
+import com.google.gson.*;
 
 public class PetDAOSimulado implements IDao<Pet> {
-    private static final String FILE_PATH = "pets.txt";
+    private static final String FILE_PATH = "pets.json";
+    private final Gson gson = new Gson();
 
     @Override
     public List<Pet> findAll() {
-        List<Pet> pets = new ArrayList<>();
-        try (BufferedReader reader = new BufferedReader(new FileReader(FILE_PATH))) {
-            String line;
-            while ((line = reader.readLine()) != null) {
-                String[] data = line.split(";");
-                Pet pet = new Pet(
-                        Integer.parseInt(data[0]), 
-                        data[1], 
-                        data[2], 
-                        data[3],
-                        data[4], 
-                        data[5], 
-                        data[6],
-                        data[7], 
-                        data[8], 
-                        data[9],  
-                        data[10]
-                );
-                pets.add(pet);
-            }
+        try (Reader reader = new FileReader(FILE_PATH)) {
+            Pet[] pets = gson.fromJson(reader, Pet[].class);
+            return pets != null ? List.of(pets) : new ArrayList<>();
         } catch (IOException e) {
-            e.printStackTrace();
+            return new ArrayList<>();
         }
-        return pets;
     }
 
     @Override
@@ -50,55 +30,35 @@ public class PetDAOSimulado implements IDao<Pet> {
 
     @Override
     public void save(Pet obj) {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_PATH, true))) {
-            writer.write(obj.getId() + ";" + obj.getCpfResponsavel() + ";" + obj.getDatanascimento() + ";" + obj.getNome() + ";" + 
-                         obj.getEspecie() + ";" + obj.getRaca() + ";" + obj.getPorte() + ";" + 
-                         obj.getSexo() + ";" + obj.getCaracteristicasFisicas() + ";" + 
-                         obj.getHistoricoDoencas() + ";" + obj.getMedicacoes());
-            writer.newLine();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        List<Pet> pets = findAll();
+        pets.add(obj);
+        writeToFile(pets);
     }
 
+    @Override
     public void update(Pet obj, Pet novo) {
         List<Pet> pets = findAll();
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_PATH))) {
-            for (Pet pet : pets) {
-                if (pet.getId() == obj.getId()) {
-                    pet = novo; 
-                }
-                writer.write(pet.getId() + ";" + pet.getCpfResponsavel() + ";" + pet.getNome() + ";" +
-                             pet.getEspecie() + ";" + pet.getRaca() + ";" + pet.getPorte() + ";" + 
-                             pet.getSexo() + ";" + pet.getCaracteristicasFisicas() + ";" +
-                             pet.getHistoricoDoencas() + ";" + pet.getMedicacoes());
-                writer.newLine();
+        for (int i = 0; i < pets.size(); i++) {
+            if (pets.get(i).getId() == obj.getId()) {
+                pets.set(i, obj);
+                break;
             }
-        } catch (IOException e) {
-            e.printStackTrace();
         }
+        writeToFile(pets);
     }
 
     @Override
     public boolean delete(Pet obj) {
         List<Pet> pets = findAll();
         boolean removed = pets.removeIf(pet -> pet.getId() == obj.getId());
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_PATH))) {
-            for (Pet pet : pets) {
-                writer.write(pet.getId() + ";" + pet.getCpfResponsavel() + ";" + pet.getNome() + ";" +
-                             pet.getEspecie() + ";" + pet.getRaca() + ";" + pet.getPorte() + ";" + 
-                             pet.getSexo() + ";" + pet.getCaracteristicasFisicas() + ";" +
-                             pet.getHistoricoDoencas() + ";" + pet.getMedicacoes());
-                writer.newLine();
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        writeToFile(pets);
         return removed;
     }
 
-    @Override
-    public void update(Pet obj) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    private void writeToFile(List<Pet> pets) {
+        try (Writer writer = new FileWriter(FILE_PATH)) {
+            gson.toJson(pets, writer);
+        } catch (IOException e) {
+        }
     }
 }

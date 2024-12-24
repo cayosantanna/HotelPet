@@ -79,7 +79,7 @@ public class PetDAO implements IDao<Pet> {
     }
 
     @Override
-    public void update(Pet pet) {
+    public void update(Pet pet, Pet novo1) {
         this.sql = "UPDATE " + this.tabela + " SET nome = ?, cpfResponsavel = ?, especie = ?, raca = ?, porte = ? WHERE id = ?";
 
         try (Connection connection = Persistencia.getConnection(); PreparedStatement statement = connection.prepareStatement(this.sql)) {

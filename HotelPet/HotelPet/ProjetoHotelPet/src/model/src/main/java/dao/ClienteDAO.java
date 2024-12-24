@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import model.Cliente;
 import factory.Persistencia;
+import model.Pet;
 
 public class ClienteDAO implements IDao<Cliente> {
 
@@ -144,5 +145,10 @@ public class ClienteDAO implements IDao<Cliente> {
             e.printStackTrace();
         }
         return null;
+    }
+
+    @Override
+    public void update(Cliente obj, Pet novo) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 }

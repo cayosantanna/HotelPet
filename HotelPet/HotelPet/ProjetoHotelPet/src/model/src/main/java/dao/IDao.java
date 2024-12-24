@@ -5,6 +5,7 @@
 package dao;
 
 import java.util.List;
+import model.Pet;
 
 /**
  *
@@ -13,7 +14,7 @@ import java.util.List;
 public interface IDao<T> {
     public void save(T obj);
     
-    public void update(T obj);
+    public void update(T obj, Pet novo);
     
     public boolean delete(T obj);
             
