@@ -28,6 +28,7 @@
 /home/thais/HotelPet/HotelPet/HotelPet/ProjetoHotelPet/src/model/src/main/java/dao/PetDAOSimulado.java
 /home/thais/HotelPet/HotelPet/HotelPet/ProjetoHotelPet/src/model/src/main/java/dao/RelatorioDAO.java
 /home/thais/HotelPet/HotelPet/HotelPet/ProjetoHotelPet/src/model/src/main/java/dao/ReservaDAO.java
+/home/thais/HotelPet/HotelPet/HotelPet/ProjetoHotelPet/src/model/src/main/java/factory/Database.java
 /home/thais/HotelPet/HotelPet/HotelPet/ProjetoHotelPet/src/model/src/main/java/factory/Persistencia.java
 /home/thais/HotelPet/HotelPet/HotelPet/ProjetoHotelPet/src/model/src/main/java/model/Cliente.java
 /home/thais/HotelPet/HotelPet/HotelPet/ProjetoHotelPet/src/model/src/main/java/model/Funcionario.java

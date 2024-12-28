@@ -9,6 +9,7 @@ import model.Reserva;
  *
  * @author thais
  */
+
 public class Relatorio {
     private Reserva reserva;
     

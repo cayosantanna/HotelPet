@@ -1,3 +1,4 @@
+factory/Database.class
 dao/DAO.class
 model/Pagamento.class
 controller/RelatorioController.class
