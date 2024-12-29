@@ -135,7 +135,7 @@ public class FrMenu extends javax.swing.JDialog {
     }//GEN-LAST:event_jButton7ActionPerformed
 
     private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
-         DlgServiços telaServiços = new DlgServiços(new javax.swing.JFrame(), true);
+         DlgServicos telaServiços = new DlgServicos(new javax.swing.JFrame(), true);
         telaServiços.setVisible(true);         // TODO add your handling code here:
     }//GEN-LAST:event_jButton6ActionPerformed
 

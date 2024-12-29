@@ -4,18 +4,32 @@
  */
 package com.mycompany.gui;
 
-/**
- *
- * @author thais
- */
-public class DlgRelatorio extends javax.swing.JDialog {
+import controller.RelatorioController;
 
-    /**
-     * Creates new form DlgRelatorio
-     */
+public class DlgRelatorio extends javax.swing.JDialog {
+    private String cpfResponsavel;
+    private RelatorioController relatorioController;
+
     public DlgRelatorio(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
+        this.cpfResponsavel = cpfResponsavel;
+        relatorioController = new RelatorioController(true); 
         initComponents();
+        
+        edtCliente.setText(cpfResponsavel);
+        
+        // Desativando todos os campos
+        edtCliente.setEditable(false); // CPF do responsável não pode ser editado
+        edtPet.setEditable(false); // Pet
+        edtDataCheckIn.setEditable(false); // Data de check-in
+        edtDataCheckOut.setEditable(false); // Data de check-out
+        edtDataRealizaçãoReserva.setEditable(false); // Data de realização da reserva
+        edtValorPago.setEditable(false); // Valor pago
+        
+        checkBoxBanho.setEnabled(false); // Serviço de banho
+        checkBoxPasseio.setEnabled(false); // Serviço de passeio
+        checkBoxAlimentacaoEspecial.setEnabled(false); // Serviço de alimentação especial
+     
     }
 
     /**
@@ -30,110 +44,150 @@ public class DlgRelatorio extends javax.swing.JDialog {
         lblTitulo = new javax.swing.JLabel();
         lblCliente = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
-        EdtLblNomeCliente = new javax.swing.JLabel();
         lblPet = new javax.swing.JLabel();
-        edtLblNomePet = new javax.swing.JLabel();
         lblServicos = new javax.swing.JLabel();
-        edtLblServicos = new javax.swing.JLabel();
         lblCheckIn = new javax.swing.JLabel();
-        edtLblCheckIn = new javax.swing.JLabel();
         lblCheckOut = new javax.swing.JLabel();
-        lblEdtCheckOut = new javax.swing.JLabel();
         lblValorPago = new javax.swing.JLabel();
-        edtLblValorPago = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         lblData = new javax.swing.JLabel();
-        edtLblData = new javax.swing.JLabel();
+        edtCliente = new javax.swing.JTextField();
+        edtPet = new javax.swing.JTextField();
+        edtDataCheckIn = new javax.swing.JTextField();
+        checkBoxTosa = new javax.swing.JCheckBox();
+        checkBoxPasseio = new javax.swing.JCheckBox();
+        checkBoxAlimentacaoEspecial = new javax.swing.JCheckBox();
+        checkBoxBanho = new javax.swing.JCheckBox();
+        edtDataRealizaçãoReserva = new javax.swing.JTextField();
+        edtDataCheckOut = new javax.swing.JTextField();
+        edtValorPago = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         lblTitulo.setFont(new java.awt.Font("Liberation Sans", 1, 36)); // NOI18N
         lblTitulo.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        lblTitulo.setText("Relatório de Reservas e Serviços");
+        lblTitulo.setText("Confirmação de Reservas e Serviços");
 
         lblCliente.setFont(new java.awt.Font("Liberation Sans", 0, 18)); // NOI18N
         lblCliente.setText("Cliente:");
 
-        EdtLblNomeCliente.setFont(new java.awt.Font("Liberation Sans", 0, 18)); // NOI18N
-        EdtLblNomeCliente.setText("-");
-
         lblPet.setFont(new java.awt.Font("Liberation Sans", 0, 18)); // NOI18N
         lblPet.setText("Nome Pet:");
-
-        edtLblNomePet.setText("-");
 
         lblServicos.setFont(new java.awt.Font("Liberation Sans", 0, 18)); // NOI18N
         lblServicos.setText("Serviços Realizados:");
 
-        edtLblServicos.setText("-");
-
         lblCheckIn.setFont(new java.awt.Font("Liberation Sans", 0, 18)); // NOI18N
         lblCheckIn.setText("Check-in:");
-
-        edtLblCheckIn.setText("-");
 
         lblCheckOut.setFont(new java.awt.Font("Liberation Sans", 0, 18)); // NOI18N
         lblCheckOut.setText("Check-out:");
 
-        lblEdtCheckOut.setText("-");
-
         lblValorPago.setFont(new java.awt.Font("Liberation Sans", 0, 18)); // NOI18N
         lblValorPago.setText("Valor Pago:");
-
-        edtLblValorPago.setText("-");
 
         jLabel1.setFont(new java.awt.Font("Liberation Sans", 0, 18)); // NOI18N
         jLabel1.setText("Realizar FeedBack:");
 
         lblData.setFont(new java.awt.Font("Liberation Sans", 0, 18)); // NOI18N
-        lblData.setText("Data:");
+        lblData.setText("Data Realização Reserva:");
 
-        edtLblData.setText("-");
+        edtCliente.setFont(new java.awt.Font("Liberation Sans", 0, 18)); // NOI18N
+        edtCliente.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                edtClienteActionPerformed(evt);
+            }
+        });
+
+        edtPet.setFont(new java.awt.Font("Liberation Sans", 0, 18)); // NOI18N
+
+        edtDataCheckIn.setFont(new java.awt.Font("Liberation Sans", 0, 18)); // NOI18N
+
+        checkBoxTosa.setFont(new java.awt.Font("Liberation Sans", 0, 18)); // NOI18N
+        checkBoxTosa.setText("Tosa");
+        checkBoxTosa.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                checkBoxTosaActionPerformed(evt);
+            }
+        });
+
+        checkBoxPasseio.setFont(new java.awt.Font("Liberation Sans", 0, 18)); // NOI18N
+        checkBoxPasseio.setText("Passeio");
+
+        checkBoxAlimentacaoEspecial.setFont(new java.awt.Font("Liberation Sans", 0, 18)); // NOI18N
+        checkBoxAlimentacaoEspecial.setText("Alimentação Especial");
+        checkBoxAlimentacaoEspecial.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                checkBoxAlimentacaoEspecialActionPerformed(evt);
+            }
+        });
+
+        checkBoxBanho.setFont(new java.awt.Font("Liberation Sans", 0, 18)); // NOI18N
+        checkBoxBanho.setText("Banho");
+        checkBoxBanho.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                checkBoxBanhoActionPerformed(evt);
+            }
+        });
+
+        edtDataRealizaçãoReserva.setFont(new java.awt.Font("Liberation Sans", 0, 18)); // NOI18N
+
+        edtDataCheckOut.setFont(new java.awt.Font("Liberation Sans", 0, 18)); // NOI18N
+
+        edtValorPago.setFont(new java.awt.Font("Liberation Sans", 0, 18)); // NOI18N
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(lblTitulo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(lblTitulo, javax.swing.GroupLayout.DEFAULT_SIZE, 751, Short.MAX_VALUE)
             .addGroup(layout.createSequentialGroup()
                 .addGap(26, 26, 26)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel1)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(lblData)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(edtLblData, javax.swing.GroupLayout.PREFERRED_SIZE, 162, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(lblServicos)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(edtLblServicos, javax.swing.GroupLayout.PREFERRED_SIZE, 530, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(lblPet)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(edtLblNomePet, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addComponent(edtPet))
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(lblCliente)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(EdtLblNomeCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 277, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(81, 81, 81)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(edtCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 279, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(73, 73, 73)
                         .addComponent(jLabel3))
-                    .addComponent(jLabel4)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(lblCheckIn)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(edtLblCheckIn, javax.swing.GroupLayout.PREFERRED_SIZE, 168, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(lblCheckOut)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(lblEdtCheckOut, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(lblValorPago)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(edtLblValorPago, javax.swing.GroupLayout.PREFERRED_SIZE, 202, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(18, Short.MAX_VALUE))
+                        .addComponent(edtValorPago, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(lblData)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(edtDataRealizaçãoReserva, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jLabel4)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                                .addComponent(lblCheckIn)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(edtDataCheckIn, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(25, 25, 25)
+                                .addComponent(lblCheckOut)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(edtDataCheckOut, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                                .addComponent(lblServicos)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(checkBoxBanho)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(checkBoxTosa)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(checkBoxPasseio)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(checkBoxAlimentacaoEspecial)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -145,50 +199,73 @@ public class DlgRelatorio extends javax.swing.JDialog {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(lblCliente)
-                            .addComponent(EdtLblNomeCliente)))
+                            .addComponent(edtCliente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(25, 25, 25)
                         .addComponent(jLabel3)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblPet)
-                    .addComponent(edtLblNomePet))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                    .addComponent(edtPet, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblServicos)
-                    .addComponent(edtLblServicos))
+                    .addComponent(checkBoxBanho)
+                    .addComponent(checkBoxTosa)
+                    .addComponent(checkBoxPasseio)
+                    .addComponent(checkBoxAlimentacaoEspecial))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(lblCheckIn)
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(edtLblCheckIn)
                         .addComponent(lblCheckOut)
-                        .addComponent(lblEdtCheckOut)))
+                        .addComponent(edtDataCheckIn, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(edtDataCheckOut, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblData)
-                    .addComponent(edtLblData))
+                    .addComponent(edtDataRealizaçãoReserva, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(edtLblValorPago)
-                    .addComponent(lblValorPago))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblValorPago)
+                    .addComponent(edtValorPago, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addComponent(jLabel1)
                 .addGap(77, 77, 77)
                 .addComponent(jLabel4)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(127, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void edtClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_edtClienteActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_edtClienteActionPerformed
+
+    private void checkBoxTosaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_checkBoxTosaActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_checkBoxTosaActionPerformed
+
+    private void checkBoxAlimentacaoEspecialActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_checkBoxAlimentacaoEspecialActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_checkBoxAlimentacaoEspecialActionPerformed
+
+    private void checkBoxBanhoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_checkBoxBanhoActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_checkBoxBanhoActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JLabel EdtLblNomeCliente;
-    private javax.swing.JLabel edtLblCheckIn;
-    private javax.swing.JLabel edtLblData;
-    private javax.swing.JLabel edtLblNomePet;
-    private javax.swing.JLabel edtLblServicos;
-    private javax.swing.JLabel edtLblValorPago;
+    private javax.swing.JCheckBox checkBoxAlimentacaoEspecial;
+    private javax.swing.JCheckBox checkBoxBanho;
+    private javax.swing.JCheckBox checkBoxPasseio;
+    private javax.swing.JCheckBox checkBoxTosa;
+    private javax.swing.JTextField edtCliente;
+    private javax.swing.JTextField edtDataCheckIn;
+    private javax.swing.JTextField edtDataCheckOut;
+    private javax.swing.JTextField edtDataRealizaçãoReserva;
+    private javax.swing.JTextField edtPet;
+    private javax.swing.JTextField edtValorPago;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -196,7 +273,6 @@ public class DlgRelatorio extends javax.swing.JDialog {
     private javax.swing.JLabel lblCheckOut;
     private javax.swing.JLabel lblCliente;
     private javax.swing.JLabel lblData;
-    private javax.swing.JLabel lblEdtCheckOut;
     private javax.swing.JLabel lblPet;
     private javax.swing.JLabel lblServicos;
     private javax.swing.JLabel lblTitulo;

@@ -11,13 +11,9 @@ import java.util.List;
  * @author thais
  */
 public interface IDao<T> {
-    public void save(T obj);
-    
-    public void update(T obj);
-    
-    public boolean delete(T obj);
-            
-    public T find(T obj);
-        
-    public List<T> findAll();
+    void save(T obj);
+    void update(T obj, T novo);  // Modificar para aceitar dois parâmetros
+    boolean delete(T obj);
+    T find(T obj);
+    List<T> findAll();
 }

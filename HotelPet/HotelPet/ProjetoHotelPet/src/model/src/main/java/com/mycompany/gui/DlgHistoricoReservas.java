@@ -9,6 +9,8 @@ import model.HistoricoReserva;
 import controller.ControllerHistoricoReservas;
 import javax.swing.JOptionPane;
 import java.util.List;
+import model.RelatorioFuncionario;
+import model.Reserva;
 
 /**
  *
@@ -17,6 +19,7 @@ import java.util.List;
 public class DlgHistoricoReservas extends javax.swing.JDialog {
 
     private final ControllerHistoricoReservas histoController;
+
     private String cpfHisto;
 
     public DlgHistoricoReservas(java.awt.Frame parent, boolean modal) {
@@ -85,6 +88,7 @@ public class DlgHistoricoReservas extends javax.swing.JDialog {
         jLabel5 = new javax.swing.JLabel();
         edtCPF = new javax.swing.JTextField();
         jbtnVisualizar = new javax.swing.JButton();
+        btnRelatorioEstadiaPet = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -129,6 +133,13 @@ public class DlgHistoricoReservas extends javax.swing.JDialog {
             }
         });
 
+        btnRelatorioEstadiaPet.setText("Gerar Relatorio da Estadia");
+        btnRelatorioEstadiaPet.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnRelatorioEstadiaPetActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -152,7 +163,10 @@ public class DlgHistoricoReservas extends javax.swing.JDialog {
                             .addComponent(jbtnBuscar)
                             .addComponent(jLabel2)
                             .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 680, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jbtnVisualizar))))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(jbtnVisualizar)
+                                .addGap(18, 18, 18)
+                                .addComponent(btnRelatorioEstadiaPet)))))
                 .addContainerGap(96, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
@@ -173,7 +187,9 @@ public class DlgHistoricoReservas extends javax.swing.JDialog {
                 .addGap(27, 27, 27)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 203, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(jbtnVisualizar)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jbtnVisualizar)
+                    .addComponent(btnRelatorioEstadiaPet))
                 .addContainerGap(53, Short.MAX_VALUE))
         );
 
@@ -221,9 +237,15 @@ public class DlgHistoricoReservas extends javax.swing.JDialog {
     }//GEN-LAST:event_jbtnBuscarActionPerformed
 
     private void grdHistReserMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_grdHistReserMouseClicked
-         if (evt.getClickCount() == 2) {
+         if (evt.getClickCount() == 1) {
             jbtnVisualizarActionPerformed(null);
-        }
+        }else{
+        // Detecta clique na tabela e habilita ações para a linha selecionada
+        if (grdHistReser.getSelectedRow() != 1 && grdHistReser.getSelectedRow()!= -1 ) {
+        btnRelatorioEstadiaPet.setEnabled(true);
+    }
+
+}
     }//GEN-LAST:event_grdHistReserMouseClicked
 
     private void jbtnVisualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbtnVisualizarActionPerformed
@@ -235,7 +257,35 @@ public class DlgHistoricoReservas extends javax.swing.JDialog {
         }
     }//GEN-LAST:event_jbtnVisualizarActionPerformed
 
+    private void btnRelatorioEstadiaPetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRelatorioEstadiaPetActionPerformed
+                                                     
+       HistoricoReserva historicoSelecionado = getObjectSelectOnGrid();
+    if (historicoSelecionado != null) {
+        RelatorioFuncionario relatorioFuncionario = new RelatorioFuncionario();
+
+        relatorioFuncionario.setCpfResponsavel(historicoSelecionado.getCpf());
+        relatorioFuncionario.setNomePet(historicoSelecionado.getNomePet());
+
+        DlgRelatorioFuncionario dlgRelatorioFuncionario = new DlgRelatorioFuncionario(new javax.swing.JFrame(), true);
+        dlgRelatorioFuncionario.setRelatorioFuncionario(relatorioFuncionario);
+        dlgRelatorioFuncionario.carregarRelatorioExistente(relatorioFuncionario);
+        dlgRelatorioFuncionario.setVisible(true);
+    } else {
+        JOptionPane.showMessageDialog(this, "Nenhum histórico selecionado.", "Atenção", JOptionPane.WARNING_MESSAGE);
+    }
+
+    }//GEN-LAST:event_btnRelatorioEstadiaPetActionPerformed
+                                       
+
+private Reserva getReservaSelecionada() {
+    // Retorna a reserva selecionada na tabela
+    int linhaSelecionada = grdHistReser.getSelectedRow();
+    return null;
+}
+
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnRelatorioEstadiaPet;
     private javax.swing.JTextField edtCPF;
     private javax.swing.JTextField edtNomePet;
     private javax.swing.JTable grdHistReser;
