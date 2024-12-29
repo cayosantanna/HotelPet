@@ -15,11 +15,8 @@ import javax.persistence.Persistence;
 public class ProjetoHotelPet {
 
     public static void main(String[] args) {
-        EntityManagerFactory factory = Persistence.createEntityManagerFactory("exemplo-jpa");
-        
+
         FrTelaInicial telaInicial = new FrTelaInicial();
         telaInicial.setVisible(true);
-        
-        factory.close();
     }
 }

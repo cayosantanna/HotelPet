@@ -29,8 +29,8 @@ public class DlgBuscaPet extends javax.swing.JDialog {
     public DlgBuscaPet(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
-        petController = new PetController(true); 
-        clienteController = new ClienteController(false); 
+        petController = new PetController(); 
+        clienteController = new ClienteController(); 
         listModelPets = new DefaultListModel<>();
         lstBuscaPet.setModel(listModelPets);
     }
@@ -165,7 +165,7 @@ public class DlgBuscaPet extends javax.swing.JDialog {
                     .filter(pet -> pet.getId() == petId).findFirst().orElse(null);
 
             if (petSelecionado != null) {
-                Cliente clienteResponsavel = clienteController.buscarClientePorCPF(petSelecionado.getCpfResponsavel());
+                Cliente clienteResponsavel = clienteController.buscarClientePorId(petSelecionado.getCliente().getId());
 
                 if (clienteResponsavel != null) {
                     JOptionPane.showMessageDialog(this,

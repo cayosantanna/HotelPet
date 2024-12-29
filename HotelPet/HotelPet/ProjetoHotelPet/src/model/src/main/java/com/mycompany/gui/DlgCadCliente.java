@@ -15,7 +15,7 @@ public class DlgCadCliente extends javax.swing.JDialog {
 
     public DlgCadCliente(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
-        clienteController = new ClienteController(true); 
+        clienteController = new ClienteController(); 
         initComponents();
     }
 
@@ -28,7 +28,6 @@ public class DlgCadCliente extends javax.swing.JDialog {
         edtEndereço.setText(cliente.getEndereco());
         edtCEP.setText(cliente.getCep());
         jPasswordField2.setText(cliente.getSenha());
-        edtCPF.setEditable(false); 
     }
     /**
      * This method is called from within the constructor to initialize the form.
@@ -227,7 +226,6 @@ public class DlgCadCliente extends javax.swing.JDialog {
             Cliente cliente = new Cliente(id, nome, cpf, email, telefone, endereco, cep, senha);
 
             if (id == 0) {
-
                 clienteController.cadastrarCliente(cliente);
                 JOptionPane.showMessageDialog(this, "Cliente cadastrado com sucesso!");
             } else {
@@ -255,6 +253,7 @@ public class DlgCadCliente extends javax.swing.JDialog {
     private void jPasswordField2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jPasswordField2ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jPasswordField2ActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCancelar;
     private javax.swing.JButton btnConfirma;

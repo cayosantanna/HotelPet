@@ -12,39 +12,42 @@ import model.valid.ValidateCliente;
 
 public class ClienteController {
     private ClienteDAO clienteDAO;
-    public ClienteController(boolean par) {
-
-            this.clienteDAO = new ClienteDAO();
+    
+    public ClienteController() {
+        this.clienteDAO = new ClienteDAO();
     }
 
     public void cadastrarCliente(Cliente cliente) throws ReservaException {
         ValidateCliente.validateCPF(cliente.getCpf());
         ValidateCliente.validateEmail(cliente.getEmail());
 
-            clienteDAO.save(cliente);
+        clienteDAO.save(cliente);
     }
 
     public Cliente buscarClientePorCPF(String cpf) throws ReservaException {
         ValidateCliente.validateCPF(cpf);
 
-            return clienteDAO.findByCPF(cpf);
+        return clienteDAO.findByCPF(cpf);
+    }
+    
+    public Cliente buscarClientePorId(Integer id) throws ReservaException {
+        return clienteDAO.findById(id);
     }
 
     public List<Cliente> listarTodosClientes() {
-            return clienteDAO.findAll(); 
-        
+        return clienteDAO.findAll();
+    }
+    
+    public List<Cliente> listarTodosClientes(String nome, String cpf) {
+        return clienteDAO.findAll(nome, cpf);
     }
 
     public void atualizarCliente(Cliente cliente) throws ReservaException {
         
         ValidateCliente.validateCPF(cliente.getCpf());
         ValidateCliente.validateEmail(cliente.getEmail());
-        
-            Cliente clienteExistente = clienteDAO.findByCPF(cliente.getCpf());
-        if (clienteExistente == null) {
-            throw new ReservaException("Cliente não encontrado para atualização.");
-        }
-        clienteDAO.update(clienteExistente, cliente);  
+     
+        clienteDAO.update(cliente);  
         
     }
 

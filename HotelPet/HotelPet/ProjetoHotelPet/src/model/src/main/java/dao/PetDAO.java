@@ -13,8 +13,11 @@ import java.util.List;
 import model.Pet;
 import factory.Persistencia;
 import java.util.stream.Collectors;
+import javax.persistence.EntityManager;
+import utils.EntityManagerUtil;
 
 public class PetDAO implements IDao<Pet> {
+
     private final String tabela = "pets";
 
     private String sql = "";
@@ -29,7 +32,6 @@ public class PetDAO implements IDao<Pet> {
             while (resultSet.next()) {
                 Pet pet = new Pet(
                         resultSet.getInt("id"),
-                        resultSet.getString("cpfResponsavel"),
                         resultSet.getString("datanascimento"),
                         resultSet.getString("nome"),
                         resultSet.getString("especie"),
@@ -51,42 +53,35 @@ public class PetDAO implements IDao<Pet> {
 
     public List<Pet> findByResponsavel(String cpfResponsavel) {
         return findAll().stream()
-                .filter(pet -> pet.getCpfResponsavel().equals(cpfResponsavel))
+                .filter(pet -> pet.getNome().equals(cpfResponsavel))
                 .collect(Collectors.toList());
     }
 
     @Override
     public void save(Pet pet) {
-        this.sql = "INSERT INTO " + this.tabela + " (nome, cpfResponsavel, especie, raca, porte, sexo, caracteristicasFisicas, historicoDoencas, medicacoes) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        EntityManager entityManager = EntityManagerUtil.getEntityManager();
 
+        try {
+            entityManager.getTransaction().begin();
+            entityManager.persist(pet);
+            entityManager.getTransaction().commit();
 
-        try (Connection connection = Persistencia.getConnection(); PreparedStatement statement = connection.prepareStatement(this.sql)) {
-
-            statement.setString(1, pet.getNome());
-            statement.setString(2, pet.getCpfResponsavel());
-            statement.setString(3, pet.getEspecie());
-            statement.setString(4, pet.getRaca());
-            statement.setString(5, pet.getPorte());
-            statement.setInt(6, pet.getId());
-            statement.setString(7, pet.getSexo());
-            statement.setString(8, pet.getCaracteristicasFisicas());
-            statement.setString(9, pet.getHistoricoDoencas());
-            statement.setString(10, pet.getMedicacoes());
-
-            statement.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+            entityManager.getTransaction().rollback();
+            System.out.println("Erro: " + e.getMessage());
+        } finally {
+            if (entityManager != null) {
+                entityManager.close();
+            }
         }
     }
 
-    @Override
     public void update(Pet pet, Pet novo) {
         this.sql = "UPDATE " + this.tabela + " SET nome = ?, cpfResponsavel = ?, especie = ?, raca = ?, porte = ? WHERE id = ?";
 
         try (Connection connection = Persistencia.getConnection(); PreparedStatement statement = connection.prepareStatement(this.sql)) {
 
             statement.setString(1, pet.getNome());
-            statement.setString(2, pet.getCpfResponsavel());
             statement.setString(3, pet.getEspecie());
             statement.setString(4, pet.getRaca());
             statement.setString(5, pet.getPorte());
@@ -131,7 +126,6 @@ public class PetDAO implements IDao<Pet> {
                         resultSet.getInt("id"),
                         resultSet.getString("nome"),
                         resultSet.getString("datanascimento"),
-                        resultSet.getString("cpfResponsavel"),
                         resultSet.getString("especie"),
                         resultSet.getString("raca"),
                         resultSet.getString("porte"),
@@ -159,7 +153,6 @@ public class PetDAO implements IDao<Pet> {
                         resultSet.getInt("id"),
                         resultSet.getString("nome"),
                         resultSet.getString("datanascimento"),
-                        resultSet.getString("cpfResponsavel"),
                         resultSet.getString("especie"),
                         resultSet.getString("raca"),
                         resultSet.getString("porte"),
@@ -173,5 +166,10 @@ public class PetDAO implements IDao<Pet> {
             e.printStackTrace();
         }
         return null;
+    }
+
+    @Override
+    public void update(Pet obj) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 }

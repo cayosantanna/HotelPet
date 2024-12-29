@@ -187,4 +187,9 @@ public class ReservaDAO implements IDao<Reserva> {
     }
 }
 
+    @Override
+    public void update(Reserva obj) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
 }

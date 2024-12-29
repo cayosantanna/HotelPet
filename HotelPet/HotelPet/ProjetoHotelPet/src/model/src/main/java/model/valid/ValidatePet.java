@@ -13,12 +13,5 @@ public class ValidatePet {
             throw new ReservaException("Nome do pet não pode ser vazio.");
         }
     }
-
-    public static void validateCpfResponsavel(String cpfResponsavel) throws ReservaException {
-        if (cpfResponsavel == null || cpfResponsavel.trim().isEmpty()) {
-            throw new ReservaException("CPF do responsável não pode ser vazio.");
-        }
-        // Aqui você pode adicionar mais validações de CPF, se necessário
-    }
 }
 

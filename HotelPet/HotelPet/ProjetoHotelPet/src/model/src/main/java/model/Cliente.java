@@ -4,7 +4,27 @@
  */
 package model;
 
+import java.util.List;
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
+import lombok.Data;
+
+@Data
+@Entity
+@NamedQuery(name = "Cliente.findAll", query = "SELECT c FROM Cliente c")
+@NamedQuery(name = "Cliente.findAllByNameCpf", query = "SELECT c FROM Cliente c WHERE (:nome IS NULL OR c.nome LIKE :nome) AND (:cpf IS NULL OR c.cpf LIKE :cpf)")
+@NamedQuery(name = "Cliente.findById", query = "SELECT c FROM Cliente c WHERE c.id = :id")
 public class Cliente {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private String nome;
     private String cpf;
@@ -13,8 +33,14 @@ public class Cliente {
     private String endereco;
     private String cep;
     private String senha;
+    
+    @OneToMany(mappedBy = "cliente", cascade=CascadeType.ALL)
+    private List<Pet> pet;
 
-    public Cliente(int id,String nome, String cpf, String email, String telefone, String endereco, String cep, String senha) {
+    public Cliente() {
+    }
+
+    public Cliente(int id, String nome, String cpf, String email, String telefone, String endereco, String cep, String senha) {
         this.id = id;
         this.nome = nome;
         this.cpf = cpf;
@@ -24,10 +50,11 @@ public class Cliente {
         this.cep = cep;
         this.senha = senha;
     }
-    
+
     public int getId() {
         return id;
     }
+
     public String getNome() {
         return nome;
     }
@@ -122,7 +149,7 @@ public class Cliente {
     public void setSenha(String senha) {
         this.senha = senha;
     }
-    
+
     @Override
     public String toString() {
         return "Cliente{id=" + getId() + ", nome='" + getNome() + "', cpf='" + getCpf() + "', email='" + getEmail() + "', telefone='" + getTelefone() + "'}";

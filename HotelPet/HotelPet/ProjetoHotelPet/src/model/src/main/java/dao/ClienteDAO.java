@@ -4,40 +4,66 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 import model.Cliente;
 import factory.Persistencia;
+import javax.persistence.EntityManager;
+import javax.persistence.TypedQuery;
+import utils.EntityManagerUtil;
 
 public class ClienteDAO implements IDao<Cliente> {
 
-    private final String tabela = "clientes";
+    private final String tabela = "Cliente";
 
     private String sql = "";
 
     @Override
     public List<Cliente> findAll() {
-        List<Cliente> clientes = new ArrayList<>();
-        this.sql = "SELECT * FROM " + this.tabela;
-        try (Connection connection = Persistencia.getConnection(); PreparedStatement statement = connection.prepareStatement(this.sql); ResultSet resultSet = statement.executeQuery()) {
+        EntityManager entityManager = EntityManagerUtil.getEntityManager();
 
-            while (resultSet.next()) {
-                Cliente cliente = new Cliente(
-                        resultSet.getInt("id"),
-                        resultSet.getString("nome"),
-                        resultSet.getString("cpf"),
-                        resultSet.getString("email"),
-                        resultSet.getString("telefone"),
-                        resultSet.getString("endereco"),
-                        resultSet.getString("cep"),
-                        resultSet.getString("senha")
-                );
-                clientes.add(cliente);
+        try {
+            TypedQuery<Cliente> query = entityManager.createNamedQuery("Cliente.findAll", Cliente.class);
+            return query.getResultList();
+        } catch (Exception e) {
+            entityManager.getTransaction().rollback();
+            System.out.println("Erro: " + e.getMessage());
+            return null;
+        } finally {
+            if (entityManager != null) {
+                entityManager.close();
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
         }
-        return clientes;
+    }
+
+    public List<Cliente> findAll(String nome, String cpf) {
+        EntityManager entityManager = EntityManagerUtil.getEntityManager();
+
+        try {
+            TypedQuery<Cliente> query = entityManager.createNamedQuery("Cliente.findAllByNameCpf", Cliente.class);
+            if (nome != null && !nome.trim().isEmpty()) {
+                query.setParameter("nome", "%" + nome + "%");
+            } else {
+                query.setParameter("nome", null);
+
+            }
+
+            if (cpf != null && !cpf.trim().isEmpty()) {
+                query.setParameter("cpf", "%" + cpf + "%");
+            } else {
+                query.setParameter("cpf", null);
+
+            }
+
+            return query.getResultList();
+        } catch (Exception e) {
+            entityManager.getTransaction().rollback();
+            System.out.println("Erro: " + e.getMessage());
+            return null;
+        } finally {
+            if (entityManager != null) {
+                entityManager.close();
+            }
+        }
     }
 
     @Override
@@ -67,32 +93,39 @@ public class ClienteDAO implements IDao<Cliente> {
     }
 
     @Override
-    public void save(Cliente obj) {
-        this.sql = "INSERT INTO " + this.tabela + " (nome, cpf, email, telefone) VALUES (?, ?, ?, ?)";
-        try (Connection connection = Persistencia.getConnection(); PreparedStatement statement = connection.prepareStatement(this.sql)) {
+    public void save(Cliente cliente) {
+        EntityManager entityManager = EntityManagerUtil.getEntityManager();
 
-            statement.setString(1, obj.getNome());
-            statement.setString(2, obj.getCpf());
-            statement.setString(3, obj.getEmail());
-            statement.setString(4, obj.getTelefone());
-            statement.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
+        try {
+            entityManager.getTransaction().begin();
+            entityManager.persist(cliente);
+            entityManager.getTransaction().commit();
+
+        } catch (Exception e) {
+            entityManager.getTransaction().rollback();
+            System.out.println("Erro: " + e.getMessage());
+        } finally {
+            if (entityManager != null) {
+                entityManager.close();
+            }
         }
+
     }
 
-    public void update(Cliente obj, Cliente Novo) {
-        this.sql = "UPDATE " + this.tabela + " SET nome = ?, cpf = ?, email = ?, telefone = ? WHERE id = ?";
-        try (Connection connection = Persistencia.getConnection(); PreparedStatement statement = connection.prepareStatement(this.sql)) {
-
-            statement.setString(1, Novo.getNome());
-            statement.setString(2, Novo.getCpf());
-            statement.setString(3, Novo.getEmail());
-            statement.setString(4, Novo.getTelefone());
-            statement.setInt(5, obj.getId());
-            statement.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
+    @Override
+    public void update(Cliente cliente) {
+        EntityManager entityManager = EntityManagerUtil.getEntityManager();
+        try {
+            entityManager.getTransaction().begin();
+            entityManager.merge(cliente);
+            entityManager.getTransaction().commit();
+        } catch (Exception e) {
+            entityManager.getTransaction().rollback();
+            System.out.println("Erro: " + e.getMessage());
+        } finally {
+            if (entityManager != null) {
+                entityManager.close();
+            }
         }
     }
 
@@ -117,32 +150,21 @@ public class ClienteDAO implements IDao<Cliente> {
                 .orElse(null);
     }
 
-    public void update(Cliente obj) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
+    public Cliente findById(Integer id) {
+         EntityManager entityManager = EntityManagerUtil.getEntityManager();
 
-    public Cliente findById(int id) {
-        this.sql = "SELECT * FROM " + this.tabela + " WHERE id = ?";
-        try (Connection connection = Persistencia.getConnection(); PreparedStatement statement = connection.prepareStatement(this.sql)) {
-
-            statement.setInt(1, id);
-            ResultSet resultSet = statement.executeQuery();
-
-            if (resultSet.next()) {
-                return new Cliente(
-                        resultSet.getInt("id"),
-                        resultSet.getString("nome"),
-                        resultSet.getString("cpf"),
-                        resultSet.getString("email"),
-                        resultSet.getString("telefone"),
-                        resultSet.getString("endereco"),
-                        resultSet.getString("cep"),
-                        resultSet.getString("senha")
-                );
+        try {
+            TypedQuery<Cliente> query = entityManager.createNamedQuery("Cliente.findById", Cliente.class);
+            query.setParameter("id", id);
+            return query.getSingleResult();
+        } catch (Exception e) {
+            entityManager.getTransaction().rollback();
+            System.out.println("Erro: " + e.getMessage());
+            return null;
+        } finally {
+            if (entityManager != null) {
+                entityManager.close();
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
         }
-        return null;
     }
 }

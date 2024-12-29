@@ -4,12 +4,8 @@
  */
 package com.mycompany.gui;
 
-import java.util.ArrayList;
 import java.util.List;
-import javax.swing.DefaultListModel;
 import javax.swing.JOptionPane;
-import java.awt.Frame;
-import javax.swing.JList;
 
 /**
  *
@@ -26,8 +22,10 @@ public class DlgBuscaUsuario extends javax.swing.JDialog {
     public DlgBuscaUsuario(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
-        clienteController = new ClienteController(true); 
+        this.clienteController = new ClienteController();
+        this.buscaClientes();
     }
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -35,14 +33,14 @@ public class DlgBuscaUsuario extends javax.swing.JDialog {
         jLabel1 = new javax.swing.JLabel();
         lblTitulo = new javax.swing.JLabel();
         lblNome = new javax.swing.JLabel();
-        edtNome = new javax.swing.JTextField();
+        buscaNome = new javax.swing.JTextField();
         jScrollPane1 = new javax.swing.JScrollPane();
         lstBuscaUsuario = new javax.swing.JList<>();
         btnBusca = new javax.swing.JButton();
         btnReserva = new javax.swing.JButton();
         btnEditarCliente = new javax.swing.JButton();
         lblCPF = new javax.swing.JLabel();
-        edtCPF = new javax.swing.JTextField();
+        buscaCPF = new javax.swing.JTextField();
         btnNovoPet = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
@@ -53,9 +51,9 @@ public class DlgBuscaUsuario extends javax.swing.JDialog {
 
         lblNome.setText("Nome:");
 
-        edtNome.addActionListener(new java.awt.event.ActionListener() {
+        buscaNome.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                edtNomeActionPerformed(evt);
+                buscaNomeActionPerformed(evt);
             }
         });
 
@@ -130,9 +128,9 @@ public class DlgBuscaUsuario extends javax.swing.JDialog {
                                 .addGap(18, 18, 18)
                                 .addComponent(btnNovoPet))))
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(edtNome, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(buscaNome, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(50, 50, 50)
-                        .addComponent(edtCPF, javax.swing.GroupLayout.PREFERRED_SIZE, 251, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(buscaCPF, javax.swing.GroupLayout.PREFERRED_SIZE, 251, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(30, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -145,8 +143,8 @@ public class DlgBuscaUsuario extends javax.swing.JDialog {
                     .addComponent(lblCPF))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(edtNome, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(edtCPF, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(buscaNome, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(buscaCPF, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addGap(30, 30, 30)
@@ -166,94 +164,111 @@ public class DlgBuscaUsuario extends javax.swing.JDialog {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void edtNomeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_edtNomeActionPerformed
+    private void buscaClientes() {
+        List<Cliente> clientes = clienteController.listarTodosClientes();
+        DefaultListModel<String> listModel = new DefaultListModel<String>();
+
+        for (Cliente cliente : clientes) {
+            listModel.addElement("ID: " + cliente.getId() + " - Nome: " + cliente.getNome() + " - CPF: " + cliente.getCpf());
+        }
+
+        lstBuscaUsuario.setModel(listModel);
+    }
+
+    private void buscaClientes(String nome, String cpf) {
+        List<Cliente> clientes = clienteController.listarTodosClientes(nome, cpf);
+        DefaultListModel<String> listModel = new DefaultListModel<String>();
+
+        if (clientes == null || clientes.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Nenhum cliente encontrado.", "Busca", JOptionPane.INFORMATION_MESSAGE);
+        }
+
+        for (Cliente cliente : clientes) {
+            listModel.addElement("ID: " + cliente.getId() + " - Nome: " + cliente.getNome() + " - CPF: " + cliente.getCpf());
+        }
+
+        lstBuscaUsuario.setModel(listModel);
+    }
+
+    private void buscaNomeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buscaNomeActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_edtNomeActionPerformed
+    }//GEN-LAST:event_buscaNomeActionPerformed
 
     private void btnBuscaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscaActionPerformed
- 
-    String nomeBusca = edtNome.getText().trim();
-    String cpfBusca = edtCPF.getText().trim();
+        String nome = buscaNome.getText().trim();
+        String cpf = buscaCPF.getText().trim();
 
-    List<Cliente> clientes = clienteController.listarTodosClientes();
-    DefaultListModel<String> listModel = new DefaultListModel<>();
-
-    for (Cliente cliente : clientes) {
-        if (!nomeBusca.isEmpty() && cliente.getNome().toLowerCase().contains(nomeBusca.toLowerCase()) ||
-            !cpfBusca.isEmpty() && cliente.getCpf().equals(cpfBusca)) {
-            listModel.addElement(cliente.getNome() + " - CPF: " + cliente.getCpf());
-        }
-    }
-
-    if (listModel.isEmpty()) {
-        JOptionPane.showMessageDialog(this, "Nenhum cliente encontrado.", "Busca", JOptionPane.INFORMATION_MESSAGE);
-    }
-
-    lstBuscaUsuario.setModel(listModel);
-
+        this.buscaClientes(nome, cpf);
     }//GEN-LAST:event_btnBuscaActionPerformed
 
     private void btnReservaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReservaActionPerformed
-    DlgBuscaPet telabuscapet = new DlgBuscaPet(new javax.swing.JFrame(), true);
-    telabuscapet.setVisible(true);       
+        DlgBuscaPet telabuscapet = new DlgBuscaPet(new javax.swing.JFrame(), true);
+        telabuscapet.setVisible(true);
     }//GEN-LAST:event_btnReservaActionPerformed
 
     private void btnEditarClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditarClienteActionPerformed
-       
-    String selecionado = lstBuscaUsuario.getSelectedValue();
 
-    if (selecionado != null) {
-        if (!selecionado.contains(" - CPF: ")) {
+        String clienteSelecionado = lstBuscaUsuario.getSelectedValue();
+
+        if (clienteSelecionado == null) {
+            JOptionPane.showMessageDialog(this, "Por favor, selecione um cliente.", "Aviso", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        if (!clienteSelecionado.contains("ID: ")) {
             JOptionPane.showMessageDialog(this, "Formato inválido da entrada selecionada.", "Erro", JOptionPane.ERROR_MESSAGE);
             return;
         }
 
-        String cpf = selecionado.split(" - CPF: ")[1];
-        Cliente cliente = clienteController.buscarClientePorCPF(cpf);
+        String id = clienteSelecionado.split("ID: ")[1].toString().split(" - Nome: ")[0];
+        Cliente cliente = clienteController.buscarClientePorId(Integer.parseInt(id));
 
-        if (cliente != null) {
-            DlgCadCliente dlgCadCliente = new DlgCadCliente(new javax.swing.JFrame(), true);
-            dlgCadCliente.setCliente(cliente);
-            dlgCadCliente.setVisible(true);
-        } else {
+        if (cliente == null) {
             JOptionPane.showMessageDialog(this, "Cliente não encontrado.", "Erro", JOptionPane.ERROR_MESSAGE);
+            return;
         }
-    } else {
-        JOptionPane.showMessageDialog(this, "Por favor, selecione um cliente.", "Aviso", JOptionPane.WARNING_MESSAGE);
-    }
+
+        DlgCadCliente dlgCadCliente = new DlgCadCliente(new javax.swing.JFrame(), true);
+        dlgCadCliente.setCliente(cliente);
+        dlgCadCliente.setVisible(true);
+
+        this.buscaClientes();
+
     }//GEN-LAST:event_btnEditarClienteActionPerformed
 
     private void lstBuscaUsuarioMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lstBuscaUsuarioMouseClicked
-   String nomeSelecionado = lstBuscaUsuario.getSelectedValue();
-    if (nomeSelecionado != null) {
-        Cliente cliente = clienteController.listarTodosClientes().stream()
-            .filter(c -> c.getNome().equals(nomeSelecionado))
-            .findFirst()
-            .orElse(null);
+        String nomeSelecionado = lstBuscaUsuario.getSelectedValue();
+        if (nomeSelecionado != null) {
+            Cliente cliente = clienteController.listarTodosClientes().stream()
+                    .filter(c -> c.getNome().equals(nomeSelecionado))
+                    .findFirst()
+                    .orElse(null);
 
-        if (cliente != null) {
-           
-            JOptionPane.showMessageDialog(this, "Cliente selecionado:\nNome: " + cliente.getNome() +
-                                              "\nCPF: " + cliente.getCpf() + 
-                                              "\nEmail: " + cliente.getEmail() +
-                                              "\nTelefone: " + cliente.getTelefone(), 
-                                          "Detalhes do Cliente", JOptionPane.INFORMATION_MESSAGE);
+            if (cliente != null) {
+
+                JOptionPane.showMessageDialog(this, "Cliente selecionado:\nNome: " + cliente.getNome()
+                        + "\nCPF: " + cliente.getCpf()
+                        + "\nEmail: " + cliente.getEmail()
+                        + "\nTelefone: " + cliente.getTelefone(),
+                        "Detalhes do Cliente", JOptionPane.INFORMATION_MESSAGE);
+            }
         }
-    }
     }//GEN-LAST:event_lstBuscaUsuarioMouseClicked
 
     private void btnNovoPetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNovoPetActionPerformed
-    String selecionado = lstBuscaUsuario.getSelectedValue();
+        String clienteSelecionado = lstBuscaUsuario.getSelectedValue();
+        String id = clienteSelecionado.split("ID: ")[1].toString().split(" - Nome: ")[0];
+        String cpf = clienteSelecionado.split(" - CPF: ")[1];
 
-        if (selecionado != null) {
-            String cpf = selecionado.split(" - CPF: ")[1];
-            DlgCadPet dlgCadPet = new DlgCadPet(new javax.swing.JFrame(), true, cpf);
+        if (clienteSelecionado != null) {
+            DlgCadPet dlgCadPet = new DlgCadPet(new javax.swing.JFrame(), true, cpf, Integer.parseInt(id));
             dlgCadPet.setVisible(true);
-        } else {
-            JOptionPane.showMessageDialog(this, "Por favor, selecione um cliente para cadastrar um pet.", "Aviso", JOptionPane.WARNING_MESSAGE);
+            return;
         }
+
+        JOptionPane.showMessageDialog(this, "Por favor, selecione um cliente para cadastrar um pet.", "Aviso", JOptionPane.WARNING_MESSAGE);
     }//GEN-LAST:event_btnNovoPetActionPerformed
-    
+
     /**
      * @param args the command line arguments
      */
@@ -263,8 +278,8 @@ public class DlgBuscaUsuario extends javax.swing.JDialog {
     private javax.swing.JButton btnEditarCliente;
     private javax.swing.JButton btnNovoPet;
     private javax.swing.JButton btnReserva;
-    private javax.swing.JTextField edtCPF;
-    private javax.swing.JTextField edtNome;
+    private javax.swing.JTextField buscaCPF;
+    private javax.swing.JTextField buscaNome;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel lblCPF;

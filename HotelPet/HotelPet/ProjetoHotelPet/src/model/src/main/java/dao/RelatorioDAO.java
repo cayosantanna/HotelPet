@@ -71,7 +71,6 @@ public class RelatorioDAO implements IDao<Relatorio> {
         }
     }
     
-    @Override
     public void update(Relatorio relatorio, Relatorio novo) {
         this.sql = "UPDATE " + this.tabela + " SET cpfUsuario = ?, dataCheckIn = ?, dataCheckOut = ?, dataRealizacaoReserva = ?, pet = ?, valorPago = ?, checkBoxAlimentacaoEspecial = ?, "
                 + "checkBoxBanho = ?, checkBoxPasseio = ?, checkBoxTosa = ? WHERE id = ?";
@@ -167,5 +166,10 @@ public class RelatorioDAO implements IDao<Relatorio> {
             e.printStackTrace();
         }
         return null;
+    }
+
+    @Override
+    public void update(Relatorio obj) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 }

@@ -1,6 +1,23 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
 package model;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import lombok.Data;
+
+@Data
+@Entity
 public class Pet {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private String nome;
     private String datanascimento;
@@ -11,12 +28,27 @@ public class Pet {
     private String caracteristicasFisicas;
     private String historicoDoencas;
     private String medicacoes;
-    private String cpfResponsavel;
 
-    // Construtor com parâmetros
-    public Pet(int id, String nome, String datanascimento, String especie, String raca, String porte, 
-               String sexo, String caracteristicasFisicas, String historicoDoencas, 
-               String medicacoes, String cpfResponsavel) {
+    @ManyToOne
+    @JoinColumn(name = "cliente_id")
+    private Cliente cliente;
+
+    public Pet() {
+
+    }
+
+    public Pet(
+            int id,
+            String nome,
+            String datanascimento,
+            String especie,
+            String raca,
+            String porte,
+            String sexo,
+            String caracteristicasFisicas,
+            String historicoDoencas,
+            String medicacoes
+    ) {
         this.id = id;
         this.nome = nome;
         this.datanascimento = datanascimento;
@@ -27,26 +59,9 @@ public class Pet {
         this.caracteristicasFisicas = caracteristicasFisicas;
         this.historicoDoencas = historicoDoencas;
         this.medicacoes = medicacoes;
-        this.cpfResponsavel = cpfResponsavel;
-    }
-
-    // Construtor padrão (sem parâmetros) com valores padrão
-    public Pet() {
-        this.id = 0;
-        this.nome = "";
-        this.datanascimento = "";
-        this.especie = "";
-        this.raca = "";
-        this.porte = "";
-        this.sexo = "";
-        this.caracteristicasFisicas = "";
-        this.historicoDoencas = "";
-        this.medicacoes = "";
-        this.cpfResponsavel = "";
     }
 
     // Métodos getter e setter para acessar e modificar os atributos
-
     public int getId() {
         return id;
     }
@@ -126,13 +141,12 @@ public class Pet {
     public void setMedicacoes(String medicacoes) {
         this.medicacoes = medicacoes;
     }
-
-    public String getCpfResponsavel() {
-        return cpfResponsavel;
+    
+    public Cliente getCliente(){
+        return this.cliente;
     }
-
-    public void setCpfResponsavel(String cpfResponsavel) {
-        this.cpfResponsavel = cpfResponsavel;
+    
+    public void setCliente(Cliente cliente){
+        this.cliente = cliente;
     }
-
 }

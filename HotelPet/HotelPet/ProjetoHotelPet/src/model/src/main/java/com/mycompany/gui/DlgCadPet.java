@@ -1,6 +1,8 @@
 package com.mycompany.gui;
+
 import controller.PetController;
 import java.awt.Frame;
+import java.text.DateFormat;
 import javax.swing.JOptionPane;
 import model.Pet;
 
@@ -11,38 +13,31 @@ import model.Pet;
 public class DlgCadPet extends javax.swing.JDialog {
 
     private PetController petController;
-    private String cpfResponsavel; // CPF do cliente responsável pelo pet
+    private String cpfResponsavel;
+    private Integer responsavelId;
 
-    /**
-     * Construtor que recebe o CPF do responsável
-     *
-     * @param parent
-     * @param modal
-     * @param cpfResponsavel CPF do responsável pelo pet
-     */
-    public DlgCadPet(Frame parent, boolean modal, String cpfResponsavel) {
+    public DlgCadPet(Frame parent, boolean modal, String cpfResponsavel, Integer responsavelId) {
         super(parent, modal);
         this.cpfResponsavel = cpfResponsavel;
-        petController = new PetController(true); // Inicializa com DAO simulado
+        this.responsavelId = responsavelId;
+        petController = new PetController();
         initComponents();
         limparCampos();
         edtCPFUsuario.setText(cpfResponsavel);
-        edtCPFUsuario.setEditable(false); // CPF do responsável não pode ser editado
+        edtCPFUsuario.setEnabled(false);
     }
-
 
     public void limparCampos() {
         edtNome.setText("");
         edtDataNascimento.setText("");
         edtRaca.setText("");
         txtAreaCaracteristicasFisicas.setText("");
-        txtHistoricoDoenças.setText("");
+        txtHistoricoDoencas.setText("");
         txtAreaMedicacoes.setText("");
         comboBoxEspecie.setSelectedIndex(0);
         comboBoxPorte.setSelectedIndex(0);
         comboBoxSexo.setSelectedIndex(0);
     }
-
 
     private void validarCampos() throws IllegalArgumentException {
         if (edtNome.getText().trim().isEmpty()) {
@@ -55,7 +50,6 @@ public class DlgCadPet extends javax.swing.JDialog {
             throw new IllegalArgumentException("O campo Raça é obrigatório.");
         }
     }
-
 
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -75,7 +69,7 @@ public class DlgCadPet extends javax.swing.JDialog {
         jScrollPane3 = new javax.swing.JScrollPane();
         txtAreaCaracteristicasFisicas = new javax.swing.JTextArea();
         jScrollPane2 = new javax.swing.JScrollPane();
-        txtHistoricoDoenças = new javax.swing.JTextArea();
+        txtHistoricoDoencas = new javax.swing.JTextArea();
         lblMedicacoes = new javax.swing.JLabel();
         jScrollPane4 = new javax.swing.JScrollPane();
         txtAreaMedicacoes = new javax.swing.JTextArea();
@@ -90,6 +84,13 @@ public class DlgCadPet extends javax.swing.JDialog {
         edtCPFUsuario = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        addInputMethodListener(new java.awt.event.InputMethodListener() {
+            public void caretPositionChanged(java.awt.event.InputMethodEvent evt) {
+            }
+            public void inputMethodTextChanged(java.awt.event.InputMethodEvent evt) {
+                formInputMethodTextChanged(evt);
+            }
+        });
 
         btnConfirma.setText("Confirma");
         btnConfirma.addActionListener(new java.awt.event.ActionListener() {
@@ -138,9 +139,9 @@ public class DlgCadPet extends javax.swing.JDialog {
         txtAreaCaracteristicasFisicas.setRows(5);
         jScrollPane3.setViewportView(txtAreaCaracteristicasFisicas);
 
-        txtHistoricoDoenças.setColumns(20);
-        txtHistoricoDoenças.setRows(5);
-        jScrollPane2.setViewportView(txtHistoricoDoenças);
+        txtHistoricoDoencas.setColumns(20);
+        txtHistoricoDoencas.setRows(5);
+        jScrollPane2.setViewportView(txtHistoricoDoencas);
 
         lblMedicacoes.setFont(new java.awt.Font("Liberation Sans", 0, 18)); // NOI18N
         lblMedicacoes.setText("Medicações Necesárias:");
@@ -296,8 +297,8 @@ public class DlgCadPet extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnConfirmaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnConfirmaActionPerformed
-     try {
-            validarCampos(); 
+        try {
+            validarCampos();
 
             String nome = edtNome.getText().trim();
             String dataNascimento = edtDataNascimento.getText().trim();
@@ -306,22 +307,25 @@ public class DlgCadPet extends javax.swing.JDialog {
             String porte = comboBoxPorte.getSelectedItem().toString();
             String sexo = comboBoxSexo.getSelectedItem().toString();
             String caracteristicasFisicas = txtAreaCaracteristicasFisicas.getText().trim();
-            String historicoDoenças = txtHistoricoDoenças.getText().trim();
+            String historicoDoencas = txtHistoricoDoencas.getText().trim();
             String medicacoes = txtAreaMedicacoes.getText().trim();
 
-            
-            Pet pet = new Pet(0, nome, dataNascimento, especie, raca, porte, sexo, caracteristicasFisicas,
-                    historicoDoenças, medicacoes, cpfResponsavel);
+            Pet pet = new Pet(0, nome, dataNascimento, especie, raca, porte, sexo, caracteristicasFisicas, historicoDoencas, medicacoes);
 
-           
-            petController.cadastrarPet(pet);
+            petController.cadastrarPet(pet, this.responsavelId);
 
-            
-            JOptionPane.showMessageDialog(this, "Pet cadastrado com sucesso!\n\n" +
-                    "Nome: " + nome + "\nEspécie: " + especie + "\nRaça: " + raca + "\nResponsável (CPF): " + cpfResponsavel,
-                    "Cadastro de Pet", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Pet cadastrado com sucesso!\n\n"
+                    + "Nome: " + nome
+                    + "\nEspécie: " + especie
+                    + "\nRaça: " + raca
+                    + "\nResponsável (CPF): " + cpfResponsavel,
+                    "Cadastro de Pet",
+                    JOptionPane.INFORMATION_MESSAGE
+            );
 
-            this.dispose(); 
+            this.dispose();
         } catch (IllegalArgumentException e) {
             JOptionPane.showMessageDialog(this, e.getMessage(), "Erro de Validação", JOptionPane.WARNING_MESSAGE);
         } catch (Exception e) {
@@ -331,7 +335,7 @@ public class DlgCadPet extends javax.swing.JDialog {
     }//GEN-LAST:event_btnConfirmaActionPerformed
 
     private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
-            this.dispose();
+        this.dispose();
     }//GEN-LAST:event_btnCancelarActionPerformed
 
     private void comboBoxEspecieActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboBoxEspecieActionPerformed
@@ -345,6 +349,10 @@ public class DlgCadPet extends javax.swing.JDialog {
     private void edtCPFUsuarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_edtCPFUsuarioActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_edtCPFUsuarioActionPerformed
+
+    private void formInputMethodTextChanged(java.awt.event.InputMethodEvent evt) {//GEN-FIRST:event_formInputMethodTextChanged
+        edtDataNascimento.setText(edtDataNascimento.getText().replaceAll("(\\d{2})(\\d{2})(\\d{4})", "$1/$2/$3"));
+    }//GEN-LAST:event_formInputMethodTextChanged
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCancelar;
@@ -374,6 +382,6 @@ public class DlgCadPet extends javax.swing.JDialog {
     private javax.swing.JTextArea txtAreaCaracteristicasFisicas;
     private javax.swing.JTextArea txtAreaMedicacoes;
     private javax.swing.JTextArea txtAreaResponsaveis;
-    private javax.swing.JTextArea txtHistoricoDoenças;
+    private javax.swing.JTextArea txtHistoricoDoencas;
     // End of variables declaration//GEN-END:variables
 }

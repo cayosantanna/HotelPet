@@ -59,7 +59,6 @@ public class RelatorioFuncionarioDAO implements IDao<RelatorioFuncionario> {
         }
     }
 
-    @Override
     public void update(RelatorioFuncionario obj, RelatorioFuncionario novo) {
         String sql = "UPDATE relatorio_funcionario SET cpf_responsavel = ?, nome_pet = ?, observacoes = ?, servico_banho = ?, servico_tosa = ?, " +
                      "servico_passeio = ?, servico_alimentacao_especial = ?, rotina_especial = ?, servicos_extras = ?, data_entrada = ?, " +
@@ -167,5 +166,10 @@ public class RelatorioFuncionarioDAO implements IDao<RelatorioFuncionario> {
             e.printStackTrace();
         }
         return funcionarios;
+    }
+
+    @Override
+    public void update(RelatorioFuncionario obj) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 }
