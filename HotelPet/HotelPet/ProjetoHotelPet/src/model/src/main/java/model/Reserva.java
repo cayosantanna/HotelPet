@@ -1,3 +1,4 @@
+
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
@@ -7,10 +8,20 @@ package model;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import lombok.Data;
 
-
+@Data
+@Entity
 public class Reserva {
-    private int id;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
+    
     private String NomePet;
     private boolean servicoBanho;
     private boolean servicoTosa;
@@ -20,22 +31,30 @@ public class Reserva {
     private Date checkOut;
     private double valorTotal;
     private Date dataReserva;
-    
-    public Reserva() throws ParseException {
-        super();
-        this.servicoBanho = true;
-        this.servicoTosa = true;
-        this.servicoPasseio = true;
-        this.servicoAlimentacaoEspecial = true;
-        this.checkIn = new SimpleDateFormat("dd/MM/yyyy").parse("01/01/1925");
-        this.checkOut = new SimpleDateFormat("dd/MM/yyyy").parse("01/01/1925");
-        this.valorTotal = 0;
-        this.dataReserva = new SimpleDateFormat("dd/MM/yyyy").parse("01/01/1925");
-    }
-    
-    public Reserva(int id, boolean servicoBanho, boolean servicoTosa, boolean servicoPasseio,
-                   boolean servicoAlimentacaoEspecial, Date checkIn, Date checkOut,
-                   double valorTotal, Date dataReserva) {
+
+    public Reserva(Pet pet) throws ParseException {
+    this.NomePet = pet.getNome(); // Supondo que Pet tenha um método getNome()
+    this.servicoBanho = true; // Defina valores padrão ou conforme necessário
+    this.servicoTosa = true;
+    this.servicoPasseio = true;
+    this.servicoAlimentacaoEspecial = true;
+    this.checkIn = new Date(); // Defina conforme necessário
+    this.checkOut = new Date(); // Defina conforme necessário
+    this.valorTotal = 0.0; // Defina conforme necessário
+    this.dataReserva = new Date(); // Defina conforme necessário
+}
+
+    public Reserva(
+            int id,
+            boolean servicoBanho,
+            boolean servicoTosa,
+            boolean servicoPasseio,
+            boolean servicoAlimentacaoEspecial,
+            Date checkIn,
+            Date checkOut,
+            double valorTotal,
+            Date dataReserva
+    ) {
         this.servicoBanho = servicoBanho;
         this.servicoTosa = servicoTosa;
         this.servicoPasseio = servicoPasseio;
@@ -46,11 +65,9 @@ public class Reserva {
         this.dataReserva = dataReserva;
     }
 
- 
-    
     public int getId() {
         return id;
-    }
+}
 
     public void setId(int id) {
         this.id = id;

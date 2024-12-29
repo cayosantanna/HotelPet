@@ -6,15 +6,18 @@ package com.mycompany.gui;
 
 import controller.PetController;
 import controller.ClienteController;
+import java.text.ParseException;
 import model.Cliente;
 import model.Pet;
-
 import javax.swing.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import model.Reserva;
 
 public class DlgBuscaPet extends javax.swing.JDialog {
+    private List<Reserva> listaReservas = new ArrayList<>();
 
     private PetController petController;
     private ClienteController clienteController;
@@ -88,6 +91,11 @@ public class DlgBuscaPet extends javax.swing.JDialog {
         jScrollPane1.setViewportView(lstBuscaPet);
 
         jButton1.setText("Selecionar");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -137,14 +145,15 @@ public class DlgBuscaPet extends javax.swing.JDialog {
 
     private void btnBuscaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscaActionPerformed
         String nomeBusca = edtNomePet.getText().trim().toLowerCase();
-        List<Pet> pets = petController.listarTodosPets();
-        listModelPets.clear();
+    List<Pet> pets = petController.listarTodosPets();  // Carregar todos os pets
+    listModelPets.clear();  // Limpar a lista antes de adicionar novos itens
 
-        for (Pet pet : pets) {
-            if (pet.getNome().toLowerCase().contains(nomeBusca)) {
-                listModelPets.addElement("ID: " + pet.getId() + " - Nome: " + pet.getNome());
-            }
+    // Buscar pets que contenham o nome informado
+    for (Pet pet : pets) {
+        if (pet.getNome().toLowerCase().contains(nomeBusca)) {
+            listModelPets.addElement("ID: " + pet.getId() + " - Nome: " + pet.getNome());
         }
+    }
     }//GEN-LAST:event_btnBuscaActionPerformed
 
     private void btnEditarClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditarClienteActionPerformed
@@ -181,11 +190,47 @@ public class DlgBuscaPet extends javax.swing.JDialog {
     }//GEN-LAST:event_edtNomePetActionPerformed
 
     private void btnReservaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReservaActionPerformed
-        int clienteId = 1;
-        int petId = 1;
-        DlgReservas telaReservas = new DlgReservas(new javax.swing.JFrame(), true, clienteId, petId);
-        telaReservas.setVisible(true);      
+                                         
+    String petSelecionado = lstBuscaPet.getSelectedValue(); 
+    
+    if (petSelecionado != null) {  
+        
+        Pet pet = encontrarPetPorNome(petSelecionado);  
+        if (pet != null) {
+    Reserva novaReserva = null;
+            try {
+                novaReserva = new Reserva(pet); // Criação de uma nova reserva com o pet
+            } catch (ParseException ex) {
+                Logger.getLogger(DlgBuscaPet.class.getName()).log(Level.SEVERE, null, ex);
+            }
+    listaReservas.add(novaReserva);  
+    JOptionPane.showMessageDialog(this, "Pet reservado com sucesso!", "Reserva", JOptionPane.INFORMATION_MESSAGE);
+}
+
+    } else {
+        JOptionPane.showMessageDialog(this, "Por favor, selecione um pet.", "Aviso", JOptionPane.WARNING_MESSAGE);
+    }
     }//GEN-LAST:event_btnReservaActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+     String petSelecionado = lstBuscaPet.getSelectedValue();
+        if (petSelecionado != null) {
+            JOptionPane.showMessageDialog(this, "Pet selecionado: " + petSelecionado, "Detalhes do Pet", JOptionPane.INFORMATION_MESSAGE);
+        } else {
+            JOptionPane.showMessageDialog(this, "Por favor, selecione um pet.", "Aviso", JOptionPane.WARNING_MESSAGE);
+        }
+    }//GEN-LAST:event_jButton1ActionPerformed
+    
+    private Pet encontrarPetPorNome(String nomePet) {
+    List<Pet> pets = petController.listarTodosPets();  // Carregar todos os pets
+
+    for (Pet p : pets) {
+        if (p.getNome().equalsIgnoreCase(nomePet)) {
+            return p;  
+        }
+    }
+    return null;
+}
 
     /**
      * @param args the command line arguments

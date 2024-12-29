@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence xmlns="http://xmlns.jcp.org/xml/ns/persistence"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence
+                                 http://xmlns.jcp.org/xml/ns/persistence/persistence_2_2.xsd"
+             version="2.2">
+    <persistence-unit name="exemplo-jpa" transaction-type="RESOURCE_LOCAL">
+        <!-- Optional: List entity classes here if not using annotations -->
+        <!-- Example: -->
+        <!-- 
+        <class>com.mycompany.entity.MyEntityClass</class> 
+        -->
+
+        <properties>
+            <!-- Database connection properties -->
+            <property name="javax.persistence.jdbc.url"
+                      value="jdbc:mysql://localhost/hotel_pet_db?useSSL=false&amp;serverTimezone=UTC&amp;allowPublicKeyRetrieval=true"/>
+            <property name="javax.persistence.jdbc.driver"
+                      value="com.mysql.cj.jdbc.Driver"/>
+            <property name="javax.persistence.jdbc.user"
+                      value="Cayo"/>
+            <property name="javax.persistence.jdbc.password"
+                      value="123456789"/>
+
+            <!-- Hibernate properties -->
+            <property name="hibernate.hbm2ddl.auto" value="update"/>
+            <property name="hibernate.dialect" value="org.hibernate.dialect.MySQL8Dialect"/>
+            <property name="hibernate.format_sql" value="true"/>
+            <property name="hibernate.show_sql" value="true"/>
+            <property name="hibernate.connection.pool_size" value="5"/>
+            
+            <!-- Caching properties -->
+            <property name="hibernate.cache.use_second_level_cache" value="false"/>
+            <property name="hibernate.cache.use_query_cache" value="false"/>
+        </properties>
+    </persistence-unit>
+</persistence>
