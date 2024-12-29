@@ -16,6 +16,7 @@ public class ClienteController {
 
     public ClienteController(boolean usarSimulador) {
         this.usarSimulador = usarSimulador;
+        
         if (usarSimulador) {
             this.clienteDAOSimulado = new ClienteDAOSimulado();
         } else {
