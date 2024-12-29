@@ -44,7 +44,7 @@ public class ReservaDAO implements IDao<Reserva> {
         }
     }
 
-    public void update(Reserva reserva) {
+    public void update(Reserva reserva, Reserva nova) {
         this.sql = "UPDATE " + this.tabela + " SET servicoBanho=?, servicoTosa=?, servicoPasseio=?, servicoAlimentacaoEspecial=?, checkIn=?, checkOut=?, valorTotal=?, dataReserva=? WHERE id = ?";
         try {
             connection = Persistencia.getConnection();
@@ -156,5 +156,35 @@ public class ReservaDAO implements IDao<Reserva> {
                 .findFirst()
                 .orElse(null);
     }
+    
+    public Reserva findById(int idReserva) {
+    this.sql = "SELECT * FROM " + this.tabela + " WHERE id = ?";
+    try {
+        statement = Persistencia.getConnection().prepareStatement(sql);
+        statement.setInt(1, idReserva);
+
+        ResultSet resultSet = statement.executeQuery();
+        Reserva reserva = null;
+        if (resultSet.next()) {
+            reserva = new Reserva(
+                    resultSet.getInt("id"),
+                    resultSet.getBoolean("servicoBanho"),
+                    resultSet.getBoolean("servicoTosa"),
+                    resultSet.getBoolean("servicoPasseio"),
+                    resultSet.getBoolean("servicoAlimentacaoEspecial"),
+                    resultSet.getDate("checkIn"),
+                    resultSet.getDate("checkOut"),
+                    resultSet.getDouble("valorTotal"),
+                    resultSet.getDate("dataReserva")
+            );
+        }
+        statement.close();
+        return reserva;
+    } catch (SQLException u) {
+        throw new RuntimeException(u);
+    } finally {
+        Persistencia.closeConnection();
+    }
+}
 
 }

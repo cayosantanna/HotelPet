@@ -22,7 +22,7 @@ public class PetDAO implements IDao<Pet> {
     @Override
     public List<Pet> findAll() {
         List<Pet> pets = new ArrayList<>();
-        this.sql = "SELECT * FROM" + this.tabela;
+        this.sql = "SELECT * FROM " + this.tabela;
 
         try (Connection connection = Persistencia.getConnection(); PreparedStatement statement = connection.prepareStatement(this.sql); ResultSet resultSet = statement.executeQuery()) {
 
@@ -57,7 +57,8 @@ public class PetDAO implements IDao<Pet> {
 
     @Override
     public void save(Pet pet) {
-        this.sql = "INSERT INTO " + this.tabela + " (nome, cpfResponsavel, especie, raca, porte) VALUES (?, ?, ?, ?, ?)";
+        this.sql = "INSERT INTO " + this.tabela + " (nome, cpfResponsavel, especie, raca, porte, sexo, caracteristicasFisicas, historicoDoencas, medicacoes) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
 
         try (Connection connection = Persistencia.getConnection(); PreparedStatement statement = connection.prepareStatement(this.sql)) {
 
@@ -79,7 +80,7 @@ public class PetDAO implements IDao<Pet> {
     }
 
     @Override
-    public void update(Pet pet) {
+    public void update(Pet pet, Pet novo) {
         this.sql = "UPDATE " + this.tabela + " SET nome = ?, cpfResponsavel = ?, especie = ?, raca = ?, porte = ? WHERE id = ?";
 
         try (Connection connection = Persistencia.getConnection(); PreparedStatement statement = connection.prepareStatement(this.sql)) {

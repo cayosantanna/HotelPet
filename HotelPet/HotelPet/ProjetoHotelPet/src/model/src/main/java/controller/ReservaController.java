@@ -33,14 +33,26 @@ public class ReservaController {
     }
 
   
-    public void atualizarReserva(int idReserva, boolean servicoBanho, boolean servicoTosa, boolean servicoPasseio,
-                                 boolean servicoAlimentacaoEspecial, Date checkIn, Date checkOut,
-                                 double valorTotal, Date dataReserva) throws ParseException {
-        ValidateReserva valid = new ValidateReserva();
-        Reserva novaReserva = valid.validaCamposEntrada(servicoBanho, servicoTosa, servicoPasseio, servicoAlimentacaoEspecial, checkIn, checkOut, valorTotal, dataReserva);
-        novaReserva.setId(idReserva);
-        repositorio.update(novaReserva); 
+public void atualizarReserva(int idReserva, boolean servicoBanho, boolean servicoTosa, boolean servicoPasseio,
+                             boolean servicoAlimentacaoEspecial, Date checkIn, Date checkOut,
+                             double valorTotal, Date dataReserva) throws ParseException {
+    ValidateReserva valid = new ValidateReserva();
+    Reserva novaReserva = valid.validaCamposEntrada(servicoBanho, servicoTosa, servicoPasseio, servicoAlimentacaoEspecial, checkIn, checkOut, valorTotal, dataReserva);
+    novaReserva.setId(idReserva);
+
+    // Aqui, você precisará ter o objeto original da reserva para passar junto com a nova reserva.
+    // Supondo que você tenha esse objeto original, o código seria algo assim:
+    Reserva reservaOriginal = repositorio.findById(idReserva);  // Obtendo o objeto original da reserva
+
+    if (reservaOriginal != null) {
+        // Agora, passamos tanto a reserva original quanto a nova reserva para o método update
+        repositorio.update(reservaOriginal, novaReserva);
+    } else {
+        // Tratar caso em que a reserva original não foi encontrada
+        throw new ReservaException("Reserva não encontrada.");
     }
+}
+
 
     /**
      * Atualiza a tabela de reservas

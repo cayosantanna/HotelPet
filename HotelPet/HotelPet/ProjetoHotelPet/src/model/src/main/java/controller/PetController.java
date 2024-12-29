@@ -5,55 +5,38 @@
 package controller;
 
 import dao.PetDAO;
-import dao.PetDAOSimulado;
 import java.util.List;
-import model.Cliente;
 import model.Pet;
 import model.exceptions.ReservaException;
 import model.valid.ValidatePet;
 
 public class PetController {
     private PetDAO petDAO;
-    private PetDAOSimulado petDAOSimulado;
-    private boolean usarSimulador;
 
     public PetController(boolean usarSimulador) {
-        this.usarSimulador = usarSimulador;
-        if (usarSimulador) {
-            this.petDAOSimulado = new PetDAOSimulado();
-        } else {
+        
             this.petDAO = new PetDAO();
-        }
     }
 
     public void cadastrarPet(Pet pet) throws ReservaException {
         ValidatePet.validateNome(pet.getNome());
         ValidatePet.validateCpfResponsavel(pet.getCpfResponsavel());
-        if (usarSimulador) {
-            petDAOSimulado.save(pet);
-        } else {
+
             petDAO.save(pet);
-        }
     }
 
     public List<Pet> listarTodosPets() {
-        return usarSimulador ? petDAOSimulado.findAll() : petDAO.findAll();
+        return petDAO.findAll();
     }
-
+    
     public void atualizarPet(Pet pet, Pet novo) throws ReservaException {
-        if (usarSimulador) {
-            petDAOSimulado.update(pet, novo);
-        } else {
-            petDAO.update(novo);
-        }
-    }
+        petDAO.update(pet, novo);  // Alterar para usar dois parâmetros também
+}
+
+
 
     public void excluirPet(Pet pet) {
-        if (usarSimulador) {
-            petDAOSimulado.delete(pet);
-        } else {
             petDAO.delete(pet);
-        }
     }
     
      public Pet findById(int id) {

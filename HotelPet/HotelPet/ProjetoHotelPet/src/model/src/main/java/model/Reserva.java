@@ -1,3 +1,4 @@
+
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
@@ -31,18 +32,17 @@ public class Reserva {
     private double valorTotal;
     private Date dataReserva;
 
-    public Reserva() throws ParseException {
-        super();
-        this.id = -1;
-        this.servicoBanho = true;
-        this.servicoTosa = true;
-        this.servicoPasseio = true;
-        this.servicoAlimentacaoEspecial = true;
-        this.checkIn = new SimpleDateFormat("dd/MM/yyyy").parse("01/01/1970");
-        this.checkOut = new SimpleDateFormat("dd/MM/yyyy").parse("01/01/1970");
-        this.valorTotal = 0;
-        this.dataReserva = new SimpleDateFormat("dd/MM/yyyy").parse("01/01/1970");
-    }
+    public Reserva(Pet pet) throws ParseException {
+    this.NomePet = pet.getNome(); // Supondo que Pet tenha um método getNome()
+    this.servicoBanho = true; // Defina valores padrão ou conforme necessário
+    this.servicoTosa = true;
+    this.servicoPasseio = true;
+    this.servicoAlimentacaoEspecial = true;
+    this.checkIn = new Date(); // Defina conforme necessário
+    this.checkOut = new Date(); // Defina conforme necessário
+    this.valorTotal = 0.0; // Defina conforme necessário
+    this.dataReserva = new Date(); // Defina conforme necessário
+}
 
     public Reserva(
             int id,
