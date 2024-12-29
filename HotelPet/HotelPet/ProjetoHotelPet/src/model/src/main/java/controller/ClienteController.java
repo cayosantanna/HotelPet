@@ -12,9 +12,8 @@ import model.valid.ValidateCliente;
 
 public class ClienteController {
     private ClienteDAO clienteDAO;
-
-
     public ClienteController(boolean par) {
+
             this.clienteDAO = new ClienteDAO();
     }
 
