@@ -1,5 +1,11 @@
 
 package model;
+import model.Reserva;
+
+/**
+ *
+ * @author thais
+ */
 
 public class Relatorio {
     private int id;

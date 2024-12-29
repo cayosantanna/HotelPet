@@ -25,7 +25,7 @@ public class DlgReservas extends javax.swing.JDialog {
      */
     public DlgReservas(Frame parent, boolean modal, int clienteId, int petId) {
         super(parent, modal);
-        this.clienteController = new ClienteController(true);
+        this.clienteController = new ClienteController(false);
         this.petController = new PetController(true);
         this.cliente = this.clienteController.findById(clienteId);
         this.pet = this.petController.findById(petId);

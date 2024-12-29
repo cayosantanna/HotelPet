@@ -34,7 +34,7 @@ public class Persistencia {
         }
         return instance.connection;
     }
-
+        
     // Método para fechar a conexão (se necessário)
     public static void closeConnection() {
         if (instance != null && instance.connection != null) {
