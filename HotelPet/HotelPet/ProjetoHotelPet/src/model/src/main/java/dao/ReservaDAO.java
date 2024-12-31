@@ -1,195 +1,144 @@
 package dao;
 
-import factory.Persistencia;
-import java.sql.Connection;
-import java.sql.Date;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
-import model.Cliente;
+import javax.persistence.EntityManager;
+import javax.persistence.TypedQuery;
 import model.Reserva;
+import utils.EntityManagerUtil;
+import java.util.List;
+import javax.persistence.EntityTransaction;
+import utils.JPAUtil;
 
 public class ReservaDAO implements IDao<Reserva> {
-
-    protected Connection connection;
-    private PreparedStatement statement;
-    private String sql = "";
-
-    private final String tabela = "pets";
-
-    @Override
-    public void save(Reserva reserva) {
-        this.sql = "INSERT INTO " + this.tabela + " (servicoBanho, servicoTosa, servicoPasseio, servicoAlimentacaoEspecial, checkIn, checkOut, valorTotal, dataReserva) VALUES(?,?,?,?,?,?,?,?)";
-        try {
-            connection = Persistencia.getConnection();
-            statement = connection.prepareStatement(this.sql);
-
-            statement.setBoolean(1, reserva.isServicoBanho());
-            statement.setBoolean(2, reserva.isServicoTosa());
-            statement.setBoolean(3, reserva.isServicoPasseio());
-            statement.setBoolean(4, reserva.isServicoAlimentacaoEspecial());
-            statement.setDate(5, new Date(reserva.getCheckIn().getTime()));
-            statement.setDate(6, new Date(reserva.getCheckOut().getTime()));
-            statement.setDouble(7, reserva.getValorTotal());
-            statement.setDate(8, new Date(reserva.getDataReserva().getTime()));
-
-            statement.execute();
-            statement.close();
-        } catch (SQLException u) {
-            throw new RuntimeException(u);
-        } finally {
-            Persistencia.closeConnection();
-        }
-    }
-
-    public void update(Reserva reserva, Reserva nova) {
-        this.sql = "UPDATE " + this.tabela + " SET servicoBanho=?, servicoTosa=?, servicoPasseio=?, servicoAlimentacaoEspecial=?, checkIn=?, checkOut=?, valorTotal=?, dataReserva=? WHERE id = ?";
-        try {
-            connection = Persistencia.getConnection();
-            statement = connection.prepareStatement(this.sql);
-
-            statement.setBoolean(1, reserva.isServicoBanho());
-            statement.setBoolean(2, reserva.isServicoTosa());
-            statement.setBoolean(3, reserva.isServicoPasseio());
-            statement.setBoolean(4, reserva.isServicoAlimentacaoEspecial());
-            statement.setDate(5, new Date(reserva.getCheckIn().getTime()));
-            statement.setDate(6, new Date(reserva.getCheckOut().getTime()));
-            statement.setDouble(7, reserva.getValorTotal());
-            statement.setDate(8, new Date(reserva.getDataReserva().getTime()));
-            statement.setInt(9, reserva.getId());
-
-            statement.execute();
-            statement.close();
-        } catch (SQLException u) {
-            throw new RuntimeException(u);
-        } finally {
-            Persistencia.closeConnection();
-        }
-    }
-
-    @Override
-    public boolean delete(Reserva reserva) {
-        this.sql = "DELETE FROM " + this.tabela + " WHERE id = ?";
-        try {
-            connection = Persistencia.getConnection();
-            statement = connection.prepareStatement(this.sql);
-            statement.setLong(1, reserva.getId());
-
-            statement.execute();
-            statement.close();
-            return true;
-        } catch (SQLException ex) {
-            throw new RuntimeException(ex);
-        } finally {
-            Persistencia.closeConnection();
-        }
-    }
-
-    @Override
-    public Reserva find(Reserva reserva) {
-        this.sql = "SELECT * FROM " + this.tabela + " WHERE id = ?";
-        try {
-            statement = Persistencia.getConnection().prepareStatement(sql);
-            statement.setInt(1, reserva.getId());
-
-            ResultSet resultset = statement.executeQuery();
-
-            Reserva r = null;
-            while (resultset.next()) {
-                r = new Reserva(
-                        resultset.getInt("id"),
-                        resultset.getBoolean("servicoBanho"),
-                        resultset.getBoolean("servicoTosa"),
-                        resultset.getBoolean("servicoPasseio"),
-                        resultset.getBoolean("servicoAlimentacaoEspecial"),
-                        resultset.getDate("checkIn"),
-                        resultset.getDate("checkOut"),
-                        resultset.getDouble("valorTotal"),
-                        resultset.getDate("dataReserva")
-                );
-            }
-            statement.close();
-            return r;
-        } catch (SQLException u) {
-            throw new RuntimeException(u);
-        } finally {
-            Persistencia.closeConnection();
-        }
-    }
-
     @Override
     public List<Reserva> findAll() {
-        List<Reserva> list = new ArrayList<>();
-        this.sql = "SELECT * FROM " + this.tabela;
+        EntityManager entityManager = EntityManagerUtil.getEntityManager();
         try {
-            connection = Persistencia.getConnection();
-            statement = connection.prepareStatement(this.sql);
-            ResultSet resultSet = statement.executeQuery();
-            while (resultSet.next()) {
-                Reserva reserva = new Reserva(
-                        resultSet.getInt("id"),
-                        resultSet.getBoolean("servicoBanho"),
-                        resultSet.getBoolean("servicoTosa"),
-                        resultSet.getBoolean("servicoPasseio"),
-                        resultSet.getBoolean("servicoAlimentacaoEspecial"),
-                        resultSet.getDate("checkIn"),
-                        resultSet.getDate("checkOut"),
-                        resultSet.getDouble("valorTotal"),
-                        resultSet.getDate("dataReserva")
-                );
-                list.add(reserva);
-            }
-            statement.close();
-        } catch (SQLException ex) {
-            throw new RuntimeException("Erro ao buscar todas as reservas: ", ex);
+            TypedQuery<Reserva> query = entityManager.createNamedQuery("Reserva.findAll", Reserva.class);
+            return query.getResultList();
+        } catch (Exception e) {
+            System.out.println("Erro ao buscar todas as reservas: " + e.getMessage());
+            return null;
         } finally {
-            Persistencia.closeConnection();
+            if (entityManager != null) {
+                entityManager.close();
+            }
         }
-        return list;
+    }
+        public List<Reserva> findReservasSemCheckout() {
+        EntityManager entityManager = EntityManagerUtil.getEntityManager();
+        try {
+            TypedQuery<Reserva> query = entityManager.createQuery(
+                "SELECT r FROM Reserva r WHERE r.checkOut IS NULL", Reserva.class
+            );
+            return query.getResultList();
+        } finally {
+            entityManager.close();
+        }
     }
 
-    public Reserva findByNomePet(String nomePet) {
-        return findAll().stream()
-                .filter(reserva -> reserva.getNomePet().equalsIgnoreCase(nomePet))
-                .findFirst()
-                .orElse(null);
+    public void save(Reserva reserva) {
+        EntityManager entityManager = EntityManagerUtil.getEntityManager();
+        try {
+            entityManager.getTransaction().begin();
+            entityManager.persist(reserva);
+            entityManager.getTransaction().commit();
+        } catch (Exception e) {
+            if (entityManager.getTransaction().isActive()) {
+                entityManager.getTransaction().rollback();
+            }
+            throw e;
+        } finally {
+            entityManager.close();
+        }
+    }
+
+    // Método para buscar uma reserva por ID
+    @Override
+    public Reserva find(Reserva reserva) {
+        EntityManager entityManager = EntityManagerUtil.getEntityManager();
+        try {
+            return entityManager.find(Reserva.class, reserva.getId());
+        } catch (Exception e) {
+            System.out.println("Erro ao buscar a reserva: " + e.getMessage());
+            return null;
+        } finally {
+            if (entityManager != null) {
+                entityManager.close();
+            }
+        }
+    }
+
+    // Método para buscar uma reserva pelo nome do pet
+    public List<Reserva> findByNomePet(String nomePet) {
+        EntityManager entityManager = EntityManagerUtil.getEntityManager();
+        try {
+            TypedQuery<Reserva> query = entityManager.createNamedQuery("Reserva.findByNomePet", Reserva.class);
+            query.setParameter("nomePet", "%" + nomePet + "%");
+            return query.getResultList();
+        } catch (Exception e) {
+            System.out.println("Erro ao buscar reserva por nome do pet: " + e.getMessage());
+            return null;
+        } finally {
+            if (entityManager != null) {
+                entityManager.close();
+            }
+        }
+    }
+
+    // Método para buscar uma reserva pelo ID
+    public Reserva findById(int id) {
+        EntityManager entityManager = EntityManagerUtil.getEntityManager();
+        try {
+            return entityManager.find(Reserva.class, id);
+        } catch (Exception e) {
+            System.out.println("Erro ao buscar reserva por ID: " + e.getMessage());
+            return null;
+        } finally {
+            if (entityManager != null) {
+                entityManager.close();
+            }
+        }
     }
     
-    public Reserva findById(int idReserva) {
-    this.sql = "SELECT * FROM " + this.tabela + " WHERE id = ?";
-    try {
-        statement = Persistencia.getConnection().prepareStatement(sql);
-        statement.setInt(1, idReserva);
-
-        ResultSet resultSet = statement.executeQuery();
-        Reserva reserva = null;
-        if (resultSet.next()) {
-            reserva = new Reserva(
-                    resultSet.getInt("id"),
-                    resultSet.getBoolean("servicoBanho"),
-                    resultSet.getBoolean("servicoTosa"),
-                    resultSet.getBoolean("servicoPasseio"),
-                    resultSet.getBoolean("servicoAlimentacaoEspecial"),
-                    resultSet.getDate("checkIn"),
-                    resultSet.getDate("checkOut"),
-                    resultSet.getDouble("valorTotal"),
-                    resultSet.getDate("dataReserva")
-            );
-        }
-        statement.close();
-        return reserva;
-    } catch (SQLException u) {
-        throw new RuntimeException(u);
-    } finally {
-        Persistencia.closeConnection();
-    }
-}
-
+    // Método para atualizar uma reserva existente
     @Override
-    public void update(Reserva obj) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    public void update(Reserva reserva, Reserva nova) {
+        EntityManager entityManager = EntityManagerUtil.getEntityManager();
+        try {
+            entityManager.getTransaction().begin();
+            reserva = entityManager.merge(reserva); // Mescla a reserva atualizada
+            entityManager.getTransaction().commit();
+        } catch (Exception e) {
+            entityManager.getTransaction().rollback();
+            System.out.println("Erro ao atualizar reserva: " + e.getMessage());
+        } finally {
+            if (entityManager != null) {
+                entityManager.close();
+            }
+        }
+    }
+
+    // Método para excluir uma reserva
+    @Override
+    public boolean delete(Reserva reserva) {
+        EntityManager entityManager = EntityManagerUtil.getEntityManager();
+        try {
+            Reserva r = entityManager.find(Reserva.class, reserva.getId());
+            if (r != null) {
+                entityManager.getTransaction().begin();
+                entityManager.remove(r); // Remove a reserva do banco de dados
+                entityManager.getTransaction().commit();
+                return true;
+            }
+        } catch (Exception e) {
+            entityManager.getTransaction().rollback();
+            System.out.println("Erro ao excluir reserva: " + e.getMessage());
+        } finally {
+            if (entityManager != null) {
+                entityManager.close();
+            }
+        }
+        return false;
     }
 
 }

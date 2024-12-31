@@ -28,6 +28,7 @@ public class Pet {
     private String caracteristicasFisicas;
     private String historicoDoencas;
     private String medicacoes;
+    private Boolean Status;
 
     @ManyToOne
     @JoinColumn(name = "cliente_id")
@@ -47,7 +48,8 @@ public class Pet {
             String sexo,
             String caracteristicasFisicas,
             String historicoDoencas,
-            String medicacoes
+            String medicacoes,
+            Boolean Status
     ) {
         this.id = id;
         this.nome = nome;
@@ -59,6 +61,7 @@ public class Pet {
         this.caracteristicasFisicas = caracteristicasFisicas;
         this.historicoDoencas = historicoDoencas;
         this.medicacoes = medicacoes;
+        this.Status = true;
     }
 
     // Métodos getter e setter para acessar e modificar os atributos
@@ -148,5 +151,19 @@ public class Pet {
     
     public void setCliente(Cliente cliente){
         this.cliente = cliente;
+    }
+
+    /**
+     * @return the Status
+     */
+    public Boolean getStatus() {
+        return Status;
+    }
+
+    /**
+     * @param Status the Status to set
+     */
+    public void setStatus(Boolean Status) {
+        this.Status = Status;
     }
 }

@@ -199,8 +199,7 @@ public class DlgCadCliente extends javax.swing.JDialog {
     }//GEN-LAST:event_edtEndereçoActionPerformed
 
     private void btnConfirmaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnConfirmaActionPerformed
-    try {
-
+        try {
         String nome = edtNome.getText();
         String cpf = edtCPF.getText();
         String email = edtEmail.getText();
@@ -209,40 +208,42 @@ public class DlgCadCliente extends javax.swing.JDialog {
         String cep = edtCEP.getText();
         String senha = new String(jPasswordField2.getPassword()); 
 
-
-       if (nome.isEmpty() || cpf.isEmpty() || email.isEmpty() || telefone.isEmpty() ||
+        // Validação dos campos
+        if (nome.isEmpty() || cpf.isEmpty() || email.isEmpty() || telefone.isEmpty() ||
                 endereco.isEmpty() || cep.isEmpty() || senha.isEmpty()) {
-                throw new IllegalArgumentException("Todos os campos devem ser preenchidos.");
-            }
-
-            if (cpf.length() != 11 || !cpf.matches("\\d+")) {
-                throw new IllegalArgumentException("CPF inválido. Deve conter exatamente 11 dígitos.");
-            }
-
-            if (!email.contains("@") || !email.contains(".")) {
-                throw new IllegalArgumentException("E-mail inválido.");
-            }
-
-            Cliente cliente = new Cliente(id, nome, cpf, email, telefone, endereco, cep, senha);
-
-            if (id == 0) {
-                clienteController.cadastrarCliente(cliente);
-                JOptionPane.showMessageDialog(this, "Cliente cadastrado com sucesso!");
-            } else {
-
-                clienteController.atualizarCliente(cliente);
-                JOptionPane.showMessageDialog(this, "Cliente atualizado com sucesso!");
-            }
-
-            this.dispose();
-
-        } catch (IllegalArgumentException e) {
-            JOptionPane.showMessageDialog(this, e.getMessage(), "Erro de validação", JOptionPane.WARNING_MESSAGE);
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(this, "Erro ao salvar cliente: " + e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
+            throw new IllegalArgumentException("Todos os campos devem ser preenchidos.");
         }
 
+        if (cpf.length() != 11 || !cpf.matches("\\d+")) {
+            throw new IllegalArgumentException("CPF inválido. Deve conter exatamente 11 dígitos.");
+        }
 
+        if (!email.contains("@") || !email.contains(".")) {
+            throw new IllegalArgumentException("E-mail inválido.");
+        }
+
+        // Suponho que 'id' já esteja definido em algum lugar. Se for 0, significa cadastro.
+        Cliente cliente = new Cliente(id, nome, cpf, email, telefone, endereco, cep, senha);
+        
+        if (id == 0) {
+            // Cadastro do cliente
+            clienteController.cadastrarCliente(cliente);
+            JOptionPane.showMessageDialog(this, "Cliente cadastrado com sucesso!");
+        } else {
+            // Atualização do cliente
+            // Aqui é necessário obter os dados atualizados de algum lugar (ex: formulário com os novos dados)
+            Cliente clienteNovo = new Cliente(id, nome, cpf, email, telefone, endereco, cep, senha);
+            clienteController.atualizarCliente(cliente, clienteNovo);
+            JOptionPane.showMessageDialog(this, "Cliente atualizado com sucesso!");
+        }
+
+        this.dispose();
+
+    } catch (IllegalArgumentException e) {
+        JOptionPane.showMessageDialog(this, e.getMessage(), "Erro de validação", JOptionPane.WARNING_MESSAGE);
+    } catch (Exception e) {
+        JOptionPane.showMessageDialog(this, "Erro ao salvar cliente: " + e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
+    }
     }//GEN-LAST:event_btnConfirmaActionPerformed
 
     private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed

@@ -1,71 +1,103 @@
-
 package model;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import java.io.Serializable;
 import java.util.Date;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-
+import javax.persistence.ManyToOne;
+import javax.persistence.Temporal;
 
 @Entity
-public class Reserva {
+public class Reserva implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    
-    private String NomePet;
+
+    @ManyToOne
+    private Cliente cliente; // Cliente associado à reserva
+
+    @ManyToOne
+    private Pet pet; // Pet associado à reserva
+
     private boolean servicoBanho;
     private boolean servicoTosa;
     private boolean servicoPasseio;
     private boolean servicoAlimentacaoEspecial;
+    
+    @Temporal(javax.persistence.TemporalType.DATE)
     private Date checkIn;
+    
+    @Temporal(javax.persistence.TemporalType.DATE)
     private Date checkOut;
+  
     private double valorTotal;
+    
+    @Temporal(javax.persistence.TemporalType.DATE)
     private Date dataReserva;
 
-    public Reserva(Pet pet) throws ParseException {
-    this.NomePet = pet.getNome(); // Supondo que Pet tenha um método getNome()
-    this.servicoBanho = true; // Defina valores padrão ou conforme necessário
-    this.servicoTosa = true;
-    this.servicoPasseio = true;
-    this.servicoAlimentacaoEspecial = true;
-    this.checkIn = new Date(); // Defina conforme necessário
-    this.checkOut = new Date(); // Defina conforme necessário
-    this.valorTotal = 0.0; // Defina conforme necessário
-    this.dataReserva = new Date(); // Defina conforme necessário
-}
+    private String descricaoServicosExtras;
 
-    public Reserva(
-            int id,
-            boolean servicoBanho,
-            boolean servicoTosa,
-            boolean servicoPasseio,
-            boolean servicoAlimentacaoEspecial,
-            Date checkIn,
-            Date checkOut,
-            double valorTotal,
-            Date dataReserva
-    ) {
+    public Reserva() {
+        // Construtor padrão
+    }
+
+    public Reserva(Cliente cliente, Pet pet, boolean servicoBanho, boolean servicoTosa, boolean servicoPasseio,
+                   boolean servicoAlimentacaoEspecial, Date checkIn, Date checkOut, Date dataReserva) {
+        this.cliente = cliente;
+        this.pet = pet;
         this.servicoBanho = servicoBanho;
         this.servicoTosa = servicoTosa;
         this.servicoPasseio = servicoPasseio;
         this.servicoAlimentacaoEspecial = servicoAlimentacaoEspecial;
         this.checkIn = checkIn;
         this.checkOut = checkOut;
-        this.valorTotal = valorTotal;
         this.dataReserva = dataReserva;
+        calcularValorTotal();
     }
 
-    public int getId() {
-        return id;
-}
+    private void calcularValorTotal() {
+        double valorServicos = 0.0;
 
-    public void setId(int id) {
+        if (servicoBanho) valorServicos += 90.0; // Exemplo de valor para banho
+        if (servicoTosa) valorServicos += 70.0; // Exemplo de valor para tosa
+        if (servicoPasseio) valorServicos += 60.0; // Exemplo de valor para passeio
+        if (servicoAlimentacaoEspecial) valorServicos += 100.0; // Exemplo de valor para alimentação especial
+
+        // Calcular o valor total baseado na duração da reserva
+        long diff = checkOut.getTime() - checkIn.getTime();
+        long dias = diff / (1000 * 60 * 60 * 24); // Diferença em dias
+
+        this.valorTotal = dias * 75.0 + valorServicos; // Exemplo de valor fixo por dia
+    }
+
+    // Getters e Setters
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
         this.id = id;
+    }
+
+    public Cliente getCliente() {
+        return cliente;
+    }
+
+    public void setCliente(Cliente cliente) {
+        this.cliente = cliente;
+    }
+
+    public Pet getPet() {
+        return pet;
+    }
+
+    public void setPet(Pet pet) {
+        this.pet = pet;
     }
 
     public boolean isServicoBanho() {
@@ -132,18 +164,11 @@ public class Reserva {
         this.dataReserva = dataReserva;
     }
 
-    /**
-     * @return the NomePet
-     */
-    public String getNomePet() {
-        return NomePet;
+    public String getDescricaoServicosExtras() {
+        return descricaoServicosExtras;
     }
 
-    /**
-     * @param NomePet the NomePet to set
-     */
-    public void setNomePet(String NomePet) {
-        this.NomePet = NomePet;
+    public void setDescricaoServicosExtras(String descricaoServicosExtras) {
+        this.descricaoServicosExtras = descricaoServicosExtras;
     }
 }
-

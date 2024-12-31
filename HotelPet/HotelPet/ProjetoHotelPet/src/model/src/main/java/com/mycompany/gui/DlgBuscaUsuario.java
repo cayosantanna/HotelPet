@@ -14,6 +14,7 @@ import javax.swing.JOptionPane;
 import controller.ClienteController;
 import model.Cliente;
 import javax.swing.DefaultListModel;
+import model.Pet;
 
 public class DlgBuscaUsuario extends javax.swing.JDialog {
 
@@ -202,8 +203,28 @@ public class DlgBuscaUsuario extends javax.swing.JDialog {
     }//GEN-LAST:event_btnBuscaActionPerformed
 
     private void btnReservaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReservaActionPerformed
-        DlgBuscaPet telabuscapet = new DlgBuscaPet(new javax.swing.JFrame(), true);
-        telabuscapet.setVisible(true);
+                                        
+    String clienteSelecionado = lstBuscaUsuario.getSelectedValue();
+    if (clienteSelecionado != null && clienteSelecionado.contains("ID: ")) {
+        try {
+            // Extrai o ID do cliente
+            String id = clienteSelecionado.split("ID: ")[1].split(" - Nome: ")[0].trim();
+            Cliente cliente = clienteController.findById(Integer.parseInt(id));
+
+            if (cliente != null) {
+                // Passa o cliente para a DlgBuscaPet
+                DlgBuscaPet telabuscapet = new DlgBuscaPet(new javax.swing.JFrame(), true);
+                telabuscapet.setClienteAtual(cliente); // Passa o cliente selecionado
+                telabuscapet.setVisible(true);
+            } else {
+                JOptionPane.showMessageDialog(this, "Cliente não encontrado.", "Erro", JOptionPane.ERROR_MESSAGE);
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Erro ao selecionar o cliente.", "Erro", JOptionPane.ERROR_MESSAGE);
+        }
+    } else {
+        JOptionPane.showMessageDialog(this, "Por favor, selecione um cliente para realizar a reserva.", "Aviso", JOptionPane.WARNING_MESSAGE);
+    }
     }//GEN-LAST:event_btnReservaActionPerformed
 
     private void btnEditarClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditarClienteActionPerformed
@@ -221,7 +242,7 @@ public class DlgBuscaUsuario extends javax.swing.JDialog {
         }
 
         String id = clienteSelecionado.split("ID: ")[1].toString().split(" - Nome: ")[0];
-        Cliente cliente = clienteController.buscarClientePorId(Integer.parseInt(id));
+        Cliente cliente = clienteController.findById(Integer.parseInt(id));
 
         if (cliente == null) {
             JOptionPane.showMessageDialog(this, "Cliente não encontrado.", "Erro", JOptionPane.ERROR_MESSAGE);
@@ -256,17 +277,32 @@ public class DlgBuscaUsuario extends javax.swing.JDialog {
     }//GEN-LAST:event_lstBuscaUsuarioMouseClicked
 
     private void btnNovoPetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNovoPetActionPerformed
-        String clienteSelecionado = lstBuscaUsuario.getSelectedValue();
-        String id = clienteSelecionado.split("ID: ")[1].toString().split(" - Nome: ")[0];
-        String cpf = clienteSelecionado.split(" - CPF: ")[1];
-
-        if (clienteSelecionado != null) {
-            DlgCadPet dlgCadPet = new DlgCadPet(new javax.swing.JFrame(), true, cpf, Integer.parseInt(id));
-            dlgCadPet.setVisible(true);
-            return;
+                                        
+    String clienteSelecionado = lstBuscaUsuario.getSelectedValue();
+    
+    if (clienteSelecionado != null && clienteSelecionado.contains("ID: ")) {
+        try {
+            // Extrai o ID e CPF do cliente selecionado
+            String id = clienteSelecionado.split("ID: ")[1].split(" - Nome: ")[0].trim(); // ID extraído corretamente
+            String cpf = clienteSelecionado.split(" - CPF: ")[1].trim(); // CPF extraído corretamente
+            
+            // Verifica se os dados foram extraídos corretamente antes de continuar
+            if (!id.isEmpty() && !cpf.isEmpty()) {
+                // Cria o objeto Pet vazio para um novo cadastro
+                Pet pet = new Pet(0, "", "", "", "", "", "", "", "", "", false);
+                // Passa o cpf, id e o pet (vazio ou existente)
+                DlgCadPet dlgCadPet = new DlgCadPet(new javax.swing.JFrame(), true, cpf, Integer.parseInt(id), pet);
+                dlgCadPet.setVisible(true);
+            } else {
+                JOptionPane.showMessageDialog(this, "Dados do cliente inválidos.", "Erro", JOptionPane.ERROR_MESSAGE);
+            }
+        } catch (ArrayIndexOutOfBoundsException e) {
+            JOptionPane.showMessageDialog(this, "Formato inválido da entrada selecionada.", "Erro", JOptionPane.ERROR_MESSAGE);
         }
-
+    } else {
         JOptionPane.showMessageDialog(this, "Por favor, selecione um cliente para cadastrar um pet.", "Aviso", JOptionPane.WARNING_MESSAGE);
+    }  
+
     }//GEN-LAST:event_btnNovoPetActionPerformed
 
     /**

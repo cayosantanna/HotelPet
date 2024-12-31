@@ -119,7 +119,7 @@ public class DlgServicos extends javax.swing.JDialog {
         jLabel5.setText("R$   90,00");
 
         jLabel7.setFont(new java.awt.Font("SansSerif", 0, 14)); // NOI18N
-        jLabel7.setText("R$   90,00");
+        jLabel7.setText("R$   50,00");
 
         jLabel9.setFont(new java.awt.Font("SansSerif", 0, 14)); // NOI18N
         jLabel9.setText("R$  70,00");

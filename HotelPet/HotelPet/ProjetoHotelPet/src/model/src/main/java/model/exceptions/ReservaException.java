@@ -1,15 +1,22 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package model.exceptions;
 
 /**
- *
- * @author thais
+ * Exceção personalizada para erros relacionados às reservas.
  */
 public class ReservaException extends RuntimeException {
+
+    // Construtor com uma mensagem de erro
     public ReservaException(String msg) {
         super(msg);
+    }
+
+    // Construtor com uma mensagem de erro e a causa (outra exceção)
+    public ReservaException(String msg, Throwable cause) {
+        super(msg, cause);
+    }
+
+    // Construtor com apenas a causa (útil para encadear exceções)
+    public ReservaException(Throwable cause) {
+        super(cause);
     }
 }

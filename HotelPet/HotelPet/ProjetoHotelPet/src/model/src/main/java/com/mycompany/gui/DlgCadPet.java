@@ -3,6 +3,7 @@ package com.mycompany.gui;
 import controller.PetController;
 import java.awt.Frame;
 import java.text.DateFormat;
+import java.util.List;
 import javax.swing.JOptionPane;
 import model.Pet;
 
@@ -16,15 +17,31 @@ public class DlgCadPet extends javax.swing.JDialog {
     private String cpfResponsavel;
     private Integer responsavelId;
 
-    public DlgCadPet(Frame parent, boolean modal, String cpfResponsavel, Integer responsavelId) {
-        super(parent, modal);
-        this.cpfResponsavel = cpfResponsavel;
-        this.responsavelId = responsavelId;
-        petController = new PetController();
-        initComponents();
-        limparCampos();
-        edtCPFUsuario.setText(cpfResponsavel);
-        edtCPFUsuario.setEnabled(false);
+    public DlgCadPet(Frame parent, boolean modal, String cpfResponsavel, Integer responsavelId, Pet pet) {
+    super(parent, modal);
+    this.cpfResponsavel = cpfResponsavel;
+    this.responsavelId = responsavelId;
+    petController = new PetController();
+    initComponents();
+    limparCampos();
+    edtCPFUsuario.setText(cpfResponsavel);
+    edtCPFUsuario.setEnabled(false);
+
+    // Preencher os campos com os dados do pet
+    edtNome.setText(pet.getNome());
+    edtDataNascimento.setText(pet.getDatanascimento());
+    edtRaca.setText(pet.getRaca());
+    txtAreaCaracteristicasFisicas.setText(pet.getCaracteristicasFisicas());
+    txtHistoricoDoencas.setText(pet.getHistoricoDoencas());
+    txtAreaMedicacoes.setText(pet.getMedicacoes());
+    comboBoxEspecie.setSelectedItem(pet.getEspecie());
+    comboBoxPorte.setSelectedItem(pet.getPorte());
+    comboBoxSexo.setSelectedItem(pet.getSexo());
+}
+    private DlgBuscaPet dlgBuscaPet;
+
+    public void setDlgBuscaPet(DlgBuscaPet dlgBuscaPet) {
+    this.dlgBuscaPet = dlgBuscaPet;
     }
 
     public void limparCampos() {
@@ -297,40 +314,53 @@ public class DlgCadPet extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnConfirmaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnConfirmaActionPerformed
-        try {
-            validarCampos();
+                                           
+    try {
+        validarCampos();
 
-            String nome = edtNome.getText().trim();
-            String dataNascimento = edtDataNascimento.getText().trim();
-            String especie = comboBoxEspecie.getSelectedItem().toString();
-            String raca = edtRaca.getText().trim();
-            String porte = comboBoxPorte.getSelectedItem().toString();
-            String sexo = comboBoxSexo.getSelectedItem().toString();
-            String caracteristicasFisicas = txtAreaCaracteristicasFisicas.getText().trim();
-            String historicoDoencas = txtHistoricoDoencas.getText().trim();
-            String medicacoes = txtAreaMedicacoes.getText().trim();
+        // Coleta os dados preenchidos no formulário
+        String nome = edtNome.getText().trim();
+        String dataNascimento = edtDataNascimento.getText().trim();
+        String especie = comboBoxEspecie.getSelectedItem().toString();
+        String raca = edtRaca.getText().trim();
+        String porte = comboBoxPorte.getSelectedItem().toString();
+        String sexo = comboBoxSexo.getSelectedItem().toString();
+        String caracteristicasFisicas = txtAreaCaracteristicasFisicas.getText().trim();
+        String historicoDoencas = txtHistoricoDoencas.getText().trim();
+        String medicacoes = txtAreaMedicacoes.getText().trim();
+        boolean ativo = true;  // Pet está ativo
 
-            Pet pet = new Pet(0, nome, dataNascimento, especie, raca, porte, sexo, caracteristicasFisicas, historicoDoencas, medicacoes);
+        // Criação do objeto Pet com os dados fornecidos
+        Pet pet = new Pet(0, nome, dataNascimento, especie, raca, porte, sexo, caracteristicasFisicas, historicoDoencas, medicacoes, ativo);
 
-            petController.cadastrarPet(pet, this.responsavelId);
+        // Cadastrar o pet usando o petController
+        petController.cadastrarPet(pet, this.responsavelId);
 
-            JOptionPane.showMessageDialog(
-                    this,
-                    "Pet cadastrado com sucesso!\n\n"
-                    + "Nome: " + nome
-                    + "\nEspécie: " + especie
-                    + "\nRaça: " + raca
-                    + "\nResponsável (CPF): " + cpfResponsavel,
-                    "Cadastro de Pet",
-                    JOptionPane.INFORMATION_MESSAGE
-            );
+        // Exibe a mensagem de sucesso
+        JOptionPane.showMessageDialog(
+                this,
+                "Pet cadastrado com sucesso!\n\n"
+                + "Nome: " + nome
+                + "\nEspécie: " + especie
+                + "\nRaça: " + raca
+                + "\nResponsável (CPF): " + cpfResponsavel,
+                "Cadastro de Pet",
+                JOptionPane.INFORMATION_MESSAGE
+        );
 
-            this.dispose();
-        } catch (IllegalArgumentException e) {
-            JOptionPane.showMessageDialog(this, e.getMessage(), "Erro de Validação", JOptionPane.WARNING_MESSAGE);
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(this, "Erro ao cadastrar pet: " + e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
+        // Fecha a janela de cadastro
+        this.dispose();
+
+        // Atualiza a lista de pets na janela de busca, se ela estiver aberta
+        if (dlgBuscaPet != null) {
+            dlgBuscaPet.atualizarListaDePets();  // Atualiza a lista de pets na tela de busca
         }
+
+    } catch (IllegalArgumentException e) {
+        JOptionPane.showMessageDialog(this, e.getMessage(), "Erro de Validação", JOptionPane.WARNING_MESSAGE);
+    } catch (Exception e) {
+        JOptionPane.showMessageDialog(this, "Erro ao cadastrar pet: " + e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
+    }
 
     }//GEN-LAST:event_btnConfirmaActionPerformed
 
@@ -353,6 +383,7 @@ public class DlgCadPet extends javax.swing.JDialog {
     private void formInputMethodTextChanged(java.awt.event.InputMethodEvent evt) {//GEN-FIRST:event_formInputMethodTextChanged
         edtDataNascimento.setText(edtDataNascimento.getText().replaceAll("(\\d{2})(\\d{2})(\\d{4})", "$1/$2/$3"));
     }//GEN-LAST:event_formInputMethodTextChanged
+    
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCancelar;
@@ -384,4 +415,8 @@ public class DlgCadPet extends javax.swing.JDialog {
     private javax.swing.JTextArea txtAreaResponsaveis;
     private javax.swing.JTextArea txtHistoricoDoencas;
     // End of variables declaration//GEN-END:variables
+
+    private void setStatus(boolean b) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
 }

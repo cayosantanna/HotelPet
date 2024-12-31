@@ -5,12 +5,10 @@
                                  http://xmlns.jcp.org/xml/ns/persistence/persistence_2_2.xsd"
              version="2.2">
     <persistence-unit name="exemplo-jpa" transaction-type="RESOURCE_LOCAL">
-        <!-- Optional: List entity classes here if not using annotations -->
-        <!-- Example: -->
-        <!-- 
-        <class>com.mycompany.entity.MyEntityClass</class> 
+        <!-- Adicione as classes de entidade aqui -->
+        <!-- Exemplo:
+        <class>com.mycompany.entity.MyEntityClass</class>
         -->
-
         <properties>
             <!-- Database connection properties -->
             <property name="javax.persistence.jdbc.url"
@@ -18,12 +16,12 @@
             <property name="javax.persistence.jdbc.driver"
                       value="com.mysql.cj.jdbc.Driver"/>
             <property name="javax.persistence.jdbc.user"
-                      value="root"/>
+                      value="HotelPet"/>
             <property name="javax.persistence.jdbc.password"
-                      value="password"/>
+                      value="123456789"/>
 
             <!-- Hibernate properties -->
-            <property name="hibernate.hbm2ddl.auto" value="update"/>
+            <property name="hibernate.hbm2ddl.auto" value="update"/> <!-- Atualiza o esquema automaticamente -->
             <property name="hibernate.dialect" value="org.hibernate.dialect.MySQL8Dialect"/>
             <property name="hibernate.format_sql" value="true"/>
             <property name="hibernate.show_sql" value="true"/>

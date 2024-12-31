@@ -167,9 +167,4 @@ public class RelatorioFuncionarioDAO implements IDao<RelatorioFuncionario> {
         }
         return funcionarios;
     }
-
-    @Override
-    public void update(RelatorioFuncionario obj) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
 }
