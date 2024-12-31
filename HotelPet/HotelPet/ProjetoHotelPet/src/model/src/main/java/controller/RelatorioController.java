@@ -1,67 +1,57 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package controller;
+
 import dao.RelatorioDAO;
-import java.util.List;
 import model.Relatorio;
 import model.exceptions.ReservaException;
+import java.util.List;
 
 /**
- *
- * @author thais
+ * Controlador para manipulação dos relatórios.
  */
 public class RelatorioController {
-    private RelatorioDAO RelatorioDAO;
-    private boolean usarSimulador;
+    private RelatorioDAO relatorioDAO;
 
-    public RelatorioController(boolean usarSimulador) {
-        this.usarSimulador = usarSimulador;
-        if (usarSimulador) {
-            this.RelatorioDAO = new RelatorioDAO();
-        } else {
-            this.RelatorioDAO = new RelatorioDAO();
+    public RelatorioController(RelatorioDAO relatorioDAO) {
+        this.relatorioDAO = relatorioDAO;
+    }
+
+    public void cadastrarRelatorio(Relatorio relatorio) throws ReservaException {
+        try {
+            relatorioDAO.save(relatorio);
+        } catch (Exception e) {
+            throw new ReservaException("Erro ao cadastrar relatório", e);
         }
     }
 
-    public void cadastrarRelatorio(Relatorio Relatorio) throws ReservaException {
-        if (usarSimulador) {
-            RelatorioDAO.save(Relatorio);
-        } else {
-            RelatorioDAO.save(Relatorio);
-        }
-    }
 
     public List<Relatorio> listarTodosRelatorios() {
-        return usarSimulador ? RelatorioDAO.findAll() : RelatorioDAO.findAll();
+        return relatorioDAO.findAll();
     }
 
+    /**
+     * Atualiza um relatório existente.
+     * @param relatorio Relatório a ser atualizado.
+     * @param novo Relatório com os novos dados.
+     * @throws ReservaException Exceção lançada em caso de erro durante a atualização.
+     */
     public void atualizarRelatorio(Relatorio relatorio, Relatorio novo) throws ReservaException {
-        RelatorioDAO relatorioDAO = new RelatorioDAO(); // Instancia o DAO
-
-     if (usarSimulador) {
-            // Passa ambos os objetos relatorio e novo para o método update
-            relatorioDAO.update(relatorio, novo);  // Chamada com dois parâmetros
-        } else {
-        // Passa ambos os objetos relatorio e novo para o método update
-            relatorioDAO.update(relatorio, novo);  // Chamada com dois parâmetros
+        try {
+            relatorioDAO.update(relatorio, novo);
+        } catch (Exception e) {
+            throw new ReservaException("Erro ao atualizar relatório", e);
         }
     }
 
 
-
-
-
-    public void excluirRelatorio(Relatorio Relatorio) {
-        if (usarSimulador) {
-            RelatorioDAO.delete(Relatorio);
-        } else {
-            RelatorioDAO.delete(Relatorio);
+    public void excluirRelatorio(Relatorio relatorio) throws ReservaException {
+        boolean sucesso = relatorioDAO.delete(relatorio);
+        if (!sucesso) {
+            throw new ReservaException("Erro ao excluir relatório: Relatório não encontrado.");
         }
     }
-    
-     public Relatorio findById(int id) {
-        return this.RelatorioDAO.findById(id);
+
+
+    public Relatorio findById(int id) {
+        return relatorioDAO.findById(id);
     }
 }

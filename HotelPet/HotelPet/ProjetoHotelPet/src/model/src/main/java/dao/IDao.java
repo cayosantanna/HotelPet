@@ -12,7 +12,7 @@ import java.util.List;
  */
 public interface IDao<T> {
     void save(T obj);
-    void update(T obj); 
+    void update(T obj, T novo); 
     boolean delete(T obj);
     T find(T obj);
     List<T> findAll();

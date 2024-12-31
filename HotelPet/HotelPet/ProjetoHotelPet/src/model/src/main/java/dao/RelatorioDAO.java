@@ -1,175 +1,96 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package dao;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
+
 import model.Relatorio;
-import factory.Persistencia;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
+import java.util.List;
 
 public class RelatorioDAO implements IDao<Relatorio> {
-    private final String tabela = "relatorios";
+    private EntityManager entityManager;
 
-    private String sql = "";
+    public RelatorioDAO() {
+        this.entityManager = entityManager;
+    }
 
     @Override
     public List<Relatorio> findAll() {
-        List<Relatorio> relatorios = new ArrayList<>();
-        this.sql = "SELECT * FROM " + this.tabela;
-
-        try (Connection connection = Persistencia.getConnection(); PreparedStatement statement = connection.prepareStatement(this.sql); ResultSet resultSet = statement.executeQuery()) {
-
-            while (resultSet.next()) {
-                Relatorio relatorio = new Relatorio(
-                        resultSet.getInt("id"),
-                        resultSet.getString("cpfUsuario"),
-                        resultSet.getString("dataCheckIn"),
-                        resultSet.getString("dataCheckOut"),
-                        resultSet.getString("dataRealizacaoReserva"),
-                        resultSet.getString("pet"),
-                        resultSet.getDouble("valorPago"),
-                        resultSet.getBoolean("checkBoxAlimentacaoEspecial"),
-                        resultSet.getBoolean("checkBoxBanho"),
-                        resultSet.getBoolean("checkBoxPasseio"),
-                        resultSet.getBoolean("checkBoxTosa")
-                );
-                relatorios.add(relatorio);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        return relatorios;
+        return entityManager.createQuery("SELECT r FROM Relatorio r", Relatorio.class).getResultList();
     }
 
     @Override
     public void save(Relatorio relatorio) {
-        this.sql = "INSERT INTO " + this.tabela + " (cpfUsuario, dataCheckIn, dataCheckOut, dataRealizacaoReserva, pet, valorPago, checkBoxAlimentacaoEspecial, checkBoxBanho, checkBoxPasseio, checkBoxTosa) "
-                + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-
-        try (Connection connection = Persistencia.getConnection(); PreparedStatement statement = connection.prepareStatement(this.sql)) {
-
-            statement.setString(1, relatorio.getCpfUsuario());
-            statement.setString(2, relatorio.getDataCheckIn());
-            statement.setString(3, relatorio.getDataCheckOut());
-            statement.setString(4, relatorio.getDataRealizacaoReserva());
-            statement.setString(5, relatorio.getPet());
-            statement.setDouble(6, relatorio.getValorPago());
-            statement.setBoolean(7, relatorio.isCheckBoxAlimentacaoEspecial());
-            statement.setBoolean(8, relatorio.isCheckBoxBanho());
-            statement.setBoolean(9, relatorio.isCheckBoxPasseio());
-            statement.setBoolean(10, relatorio.isCheckBoxTosa());
-
-            statement.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-    
-    public void update(Relatorio relatorio, Relatorio novo) {
-        this.sql = "UPDATE " + this.tabela + " SET cpfUsuario = ?, dataCheckIn = ?, dataCheckOut = ?, dataRealizacaoReserva = ?, pet = ?, valorPago = ?, checkBoxAlimentacaoEspecial = ?, "
-                + "checkBoxBanho = ?, checkBoxPasseio = ?, checkBoxTosa = ? WHERE id = ?";
-
-        try (Connection connection = Persistencia.getConnection(); PreparedStatement statement = connection.prepareStatement(this.sql)) {
-            statement.setString(1, novo.getCpfUsuario());
-            statement.setString(2, novo.getDataCheckIn());
-            statement.setString(3, novo.getDataCheckOut());
-            statement.setString(4, novo.getDataRealizacaoReserva());
-            statement.setString(5, novo.getPet());
-            statement.setDouble(6, novo.getValorPago());
-            statement.setBoolean(7, novo.isCheckBoxAlimentacaoEspecial());
-            statement.setBoolean(8, novo.isCheckBoxBanho());
-            statement.setBoolean(9, novo.isCheckBoxPasseio());
-            statement.setBoolean(10, novo.isCheckBoxTosa());
-            statement.setInt(11, relatorio.getId());  // Usando o ID do relatorio original para atualizar
-
-            statement.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
+        EntityTransaction transaction = entityManager.getTransaction();
+        try {
+            transaction.begin();
+            entityManager.persist(relatorio);
+            transaction.commit();
+        } catch (RuntimeException e) {
+            if (transaction.isActive()) {
+                transaction.rollback();
+            }
+            // Log the exception here for debugging purposes
+            throw new RuntimeException("Error saving Relatorio", e);
         }
     }
 
     @Override
     public boolean delete(Relatorio relatorio) {
-        this.sql = "DELETE FROM " + this.tabela + " WHERE id = ?";
-
-        try (Connection connection = Persistencia.getConnection(); PreparedStatement statement = connection.prepareStatement(this.sql)) {
-
-            statement.setInt(1, relatorio.getId());
-            int rowsAffected = statement.executeUpdate();
-            return rowsAffected > 0;
-        } catch (SQLException e) {
-            e.printStackTrace();
+        EntityTransaction transaction = entityManager.getTransaction();
+        try {
+            transaction.begin();
+            Relatorio found = entityManager.find(Relatorio.class, relatorio.getId());
+            if (found != null) {
+                entityManager.remove(found);
+                transaction.commit();
+                return true;
+            }
+            // Optionally, log or throw an exception if not found
+        } catch (RuntimeException e) {
+            if (transaction.isActive()) {
+                transaction.rollback();
+            }
+            // Log the exception here for debugging purposes
         }
         return false;
     }
 
     @Override
     public Relatorio find(Relatorio relatorio) {
-        this.sql = "SELECT * FROM " + this.tabela + " WHERE id = ?";
-
-        try (Connection connection = Persistencia.getConnection(); PreparedStatement statement = connection.prepareStatement(this.sql)) {
-
-            statement.setInt(1, relatorio.getId());
-            ResultSet resultSet = statement.executeQuery();
-
-            if (resultSet.next()) {
-                return new Relatorio(
-                        resultSet.getInt("id"),
-                        resultSet.getString("cpfUsuario"),
-                        resultSet.getString("dataCheckIn"),
-                        resultSet.getString("dataCheckOut"),
-                        resultSet.getString("dataRealizacaoReserva"),
-                        resultSet.getString("pet"),
-                        resultSet.getDouble("valorPago"),
-                        resultSet.getBoolean("checkBoxAlimentacaoEspecial"),
-                        resultSet.getBoolean("checkBoxBanho"),
-                        resultSet.getBoolean("checkBoxPasseio"),
-                        resultSet.getBoolean("checkBoxTosa")
-                );
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return null;
+        return entityManager.find(Relatorio.class, relatorio.getId());
     }
 
     public Relatorio findById(int id) {
-        this.sql = "SELECT * FROM " + this.tabela + " WHERE id = ?";
-
-        try (Connection connection = Persistencia.getConnection(); PreparedStatement statement = connection.prepareStatement(this.sql)) {
-
-            statement.setInt(1, id);
-            ResultSet resultSet = statement.executeQuery();
-
-            if (resultSet.next()) {
-                return new Relatorio(
-                        resultSet.getInt("id"),
-                        resultSet.getString("cpfUsuario"),
-                        resultSet.getString("dataCheckIn"),
-                        resultSet.getString("dataCheckOut"),
-                        resultSet.getString("dataRealizacaoReserva"),
-                        resultSet.getString("pet"),
-                        resultSet.getDouble("valorPago"),
-                        resultSet.getBoolean("checkBoxAlimentacaoEspecial"),
-                        resultSet.getBoolean("checkBoxBanho"),
-                        resultSet.getBoolean("checkBoxPasseio"),
-                        resultSet.getBoolean("checkBoxTosa")
-                );
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return null;
+        return entityManager.find(Relatorio.class, id);
     }
 
-    @Override
-    public void update(Relatorio obj) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    public void update(Relatorio relatorio, Relatorio novo) {
+        EntityTransaction transaction = entityManager.getTransaction();
+        try {
+            transaction.begin();
+            Relatorio existing = entityManager.find(Relatorio.class, relatorio.getId());
+            if (existing != null) {
+                existing.setCpfUsuario(novo.getCpfUsuario());
+                existing.setDataCheckIn(novo.getDataCheckIn());
+                existing.setDataCheckOut(novo.getDataCheckOut());
+                existing.setDataRealizacaoReserva(novo.getDataRealizacaoReserva());
+                existing.setPet(novo.getPet());
+                existing.setValorPago(novo.getValorPago());
+                existing.setCheckBoxAlimentacaoEspecial(novo.isCheckBoxAlimentacaoEspecial());
+                existing.setCheckBoxBanho(novo.isCheckBoxBanho());
+                existing.setCheckBoxPasseio(novo.isCheckBoxPasseio());
+                existing.setCheckBoxTosa(novo.isCheckBoxTosa());
+
+                entityManager.merge(existing);
+                transaction.commit();
+            } else {
+                // Log or throw exception if 'existing' is null
+            }
+        } catch (RuntimeException e) {
+            if (transaction.isActive()) {
+                transaction.rollback();
+            }
+            // Log the exception here for debugging purposes
+            throw new RuntimeException("Error updating Relatorio", e);
+        }
     }
 }

@@ -29,10 +29,6 @@ public class ClienteController {
 
         return clienteDAO.findByCPF(cpf);
     }
-    
-    public Cliente buscarClientePorId(Integer id) throws ReservaException {
-        return clienteDAO.findById(id);
-    }
 
     public List<Cliente> listarTodosClientes() {
         return clienteDAO.findAll();
@@ -42,14 +38,11 @@ public class ClienteController {
         return clienteDAO.findAll(nome, cpf);
     }
 
-    public void atualizarCliente(Cliente cliente) throws ReservaException {
-        
-        ValidateCliente.validateCPF(cliente.getCpf());
-        ValidateCliente.validateEmail(cliente.getEmail());
-     
-        clienteDAO.update(cliente);  
-        
-    }
+    public void atualizarCliente(Cliente cliente, Cliente novo) throws ReservaException {
+    ValidateCliente.validateCPF(cliente.getCpf());
+    ValidateCliente.validateEmail(cliente.getEmail());
+    clienteDAO.update(cliente, novo);  
+}
 
 
     public void excluirCliente(Cliente cliente) {
