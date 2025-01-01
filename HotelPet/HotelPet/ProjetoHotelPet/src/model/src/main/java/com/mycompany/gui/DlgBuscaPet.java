@@ -5,35 +5,26 @@
 package com.mycompany.gui;
 
 import controller.PetController;
-import controller.ClienteController;
 import model.Cliente;
 import model.Pet;
 import javax.swing.*;
 import java.util.List;
-import static org.hibernate.criterion.Projections.id;
 
 public class DlgBuscaPet extends javax.swing.JDialog {
 
-    private PetController petController;
-    private ClienteController clienteController;
-    private DefaultListModel<String> listModelPets;
-    private Cliente clienteAtual; // A variável que armazena o cliente atual
+    private final PetController petController;
+    private Cliente clienteAtual;
 
     public DlgBuscaPet(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
-        petController = new PetController(); 
-        clienteController = new ClienteController(); 
-        listModelPets = new DefaultListModel<>();
-        lstBuscaPet.setModel(listModelPets);
+        petController = new PetController();
     }
-    
-    public void setClienteAtual(Cliente cliente) {
-    this.clienteAtual = cliente;
-    atualizarListaDePets(); // Atualiza a lista sempre que o cliente for definido
-}
-    
 
+    public void setClienteAtual(Cliente cliente) {
+        this.clienteAtual = cliente;
+        atualizarListaDePets();
+    }
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -77,12 +68,6 @@ public class DlgBuscaPet extends javax.swing.JDialog {
         lblTitulo.setText("Buscar Pet");
 
         lblNome.setText("Nome:");
-
-        edtNomePet.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                edtNomePetActionPerformed(evt);
-            }
-        });
 
         lstBuscaPet.setModel(new javax.swing.AbstractListModel<String>() {
             String[] strings = { };
@@ -143,148 +128,133 @@ public class DlgBuscaPet extends javax.swing.JDialog {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void btnBuscaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscaActionPerformed
-                                       
-    String nomeBusca = edtNomePet.getText().trim().toLowerCase();
-    listModelPets.clear();
+    private void atualizarListaDePets() {
+        List<Pet> pets = petController.listarPetsPorCliente(clienteAtual.getId());
+        DefaultListModel<String> listModel = new DefaultListModel<>();
 
-    if (nomeBusca.isEmpty()) {
-        JOptionPane.showMessageDialog(this, "Por favor, insira um nome para buscar.", "Aviso", JOptionPane.WARNING_MESSAGE);
-        return;
-    }
-
-    if (clienteAtual == null) {
-        JOptionPane.showMessageDialog(this, "Nenhum cliente selecionado.", "Aviso", JOptionPane.WARNING_MESSAGE);
-        return;
-    }
-
-    List<Pet> pets = petController.listarPetsPorCliente(clienteAtual.getId());
-
-    boolean encontrouPet = false;
-    for (Pet pet : pets) {
-        if (pet.getStatus() && pet.getNome().toLowerCase().contains(nomeBusca)) {
-            listModelPets.addElement("ID: " + pet.getId() + " - Nome: " + pet.getNome());
-            encontrouPet = true;
+        for (Pet pet : pets) {
+            listModel.addElement("ID: " + pet.getId() + " - Nome: " + pet.getNome());
         }
+
+        lstBuscaPet.setModel(listModel);
     }
 
-    if (!encontrouPet) {
-        JOptionPane.showMessageDialog(this, "Nenhum pet encontrado com esse nome.", "Aviso", JOptionPane.INFORMATION_MESSAGE);
-    }
+    private void btnBuscaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscaActionPerformed
 
     }//GEN-LAST:event_btnBuscaActionPerformed
 
     private void btnEditarPetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditarPetActionPerformed
-                                             
-    // Obtém o pet selecionado na lista
-    String petSelecionado = lstBuscaPet.getSelectedValue();
+        String petSelecionado = lstBuscaPet.getSelectedValue();
 
-    if (petSelecionado == null) {
-        JOptionPane.showMessageDialog(this, "Por favor, selecione um pet.", "Aviso", JOptionPane.WARNING_MESSAGE);
-        return;
-    }
+        if (petSelecionado == null) {
+            JOptionPane.showMessageDialog(this, "Por favor, selecione um pet.", "Aviso", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
 
-    if (!petSelecionado.contains("ID: ")) {
-        JOptionPane.showMessageDialog(this, "Formato inválido da entrada selecionada.", "Erro", JOptionPane.ERROR_MESSAGE);
-        return;
-    }
+        if (!petSelecionado.contains("ID: ")) {
+            JOptionPane.showMessageDialog(this, "Formato inválido da entrada selecionada.", "Erro", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
 
-    // Extrai o nome do pet da string selecionada
-    String nomePet = petSelecionado.split("ID: ")[1].toString().split(" - Nome: ")[1];
+        String id = petSelecionado.split("ID: ")[1].toString().split(" - Nome: ")[0];
+        Pet pet = petController.findById(Integer.parseInt(id));
 
-    // Busca o pet pelo nome
-    Pet pet = petController.buscarPetPorNome(nomePet);
+        if (pet == null) {
+            JOptionPane.showMessageDialog(this, "Pet não encontrado.", "Erro", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
 
-    if (pet == null) {
-        JOptionPane.showMessageDialog(this, "Pet não encontrado.", "Erro", JOptionPane.ERROR_MESSAGE);
-        return;
-    }
+        DlgCadPet dlgCadPet = new DlgCadPet(new javax.swing.JFrame(), true);
+        dlgCadPet.setCPFResponsavel(pet.getCliente().getCpf());
+        dlgCadPet.setResponsavelId(pet.getCliente().getId());
+        dlgCadPet.setPet(pet);
+        dlgCadPet.setVisible(true);
 
-    // Obtém o CPF e ID do responsável (presumindo que você tenha esses dados disponíveis)
-    String cpfResponsavel = pet.getCliente().getCpf();  // Exemplo de como acessar o CPF do responsável
-    Integer responsavelId = pet.getCliente().getId();   // Exemplo de como acessar o ID do responsável
-
-    // Cria a janela de cadastro de pet com os dados do pet
-    DlgCadPet dlgCadPet;
-    dlgCadPet = new DlgCadPet(new javax.swing.JFrame(), true, cpfResponsavel, responsavelId, pet);
-    dlgCadPet.setDlgBuscaPet(this); // Passa a referência do DlgBuscaPet
-    dlgCadPet.setVisible(true);
-
-    // Após a edição, atualiza a lista de pets
-    atualizarListaDePets();
-
-
+        atualizarListaDePets();
     }//GEN-LAST:event_btnEditarPetActionPerformed
-
-    private void edtNomePetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_edtNomePetActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_edtNomePetActionPerformed
 
     private void btnReservaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReservaActionPerformed
 
-    String nomePetSelecionado = lstBuscaPet.getSelectedValue(); // Retorna o item selecionado
-    if (nomePetSelecionado != null && !nomePetSelecionado.trim().isEmpty()) {
-        // Busca o pet pelo nome
-        Pet petSelecionado = petController.buscarPetPorNome(nomePetSelecionado.split(" - Nome: ")[1].trim());
-        if (petSelecionado != null) {
-            // Obtém o cliente associado ao pet
-            Cliente clienteAssociado = petSelecionado.getCliente(); // Pet já tem um cliente associado
+        String petSelecionado = lstBuscaPet.getSelectedValue(); // Retorna o item selecionado
 
-            if (clienteAssociado != null) {
-                // Passa o 'this' como referência para a janela pai (DlgBuscaPet)
-                DlgReservas dlgReservas = new DlgReservas(new javax.swing.JFrame(), true, clienteAssociado.getId(), petSelecionado.getId());
-                dlgReservas.setVisible(true); // Exibe a tela de reserva
-            } else {
-                JOptionPane.showMessageDialog(this, "O pet não está associado a um cliente.", "Erro", JOptionPane.ERROR_MESSAGE);
-            }
-        } else {
-            JOptionPane.showMessageDialog(this, "Pet não encontrado.", "Erro", JOptionPane.ERROR_MESSAGE);
+        if (petSelecionado == null || petSelecionado.trim().isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Selecione um pet para realizar a reserva.", "Aviso", JOptionPane.WARNING_MESSAGE);
+            return;
         }
-    } else {
-        JOptionPane.showMessageDialog(this, "Selecione um pet para realizar a reserva.", "Erro", JOptionPane.ERROR_MESSAGE);
-    }
 
+        try {
+            // Busca o pet pelo id
+            String id = petSelecionado.split("ID: ")[1].toString().split(" - Nome: ")[0];
+            Pet pet = petController.findById(Integer.parseInt(id));
+
+            if (pet == null) {
+                JOptionPane.showMessageDialog(this, "Pet não encontrado.", "Erro", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            // Obtém o cliente associado ao pet
+            Cliente clienteAssociado = pet.getCliente();
+
+            if (clienteAssociado == null) {
+                JOptionPane.showMessageDialog(this, "O pet não está associado a um cliente.", "Erro", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            // Abre a tela de reservas
+            DlgReservas dlgReservas = new DlgReservas(new javax.swing.JFrame(), true, clienteAssociado.getId(), pet.getId());
+            dlgReservas.setVisible(true);
+
+        } catch (ArrayIndexOutOfBoundsException e) {
+            JOptionPane.showMessageDialog(this, "Formato inválido do item selecionado.", "Erro", JOptionPane.ERROR_MESSAGE);
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Erro ao processar a seleção do pet.", "Erro", JOptionPane.ERROR_MESSAGE);
+        }
     }//GEN-LAST:event_btnReservaActionPerformed
 
     private void btnExcluirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExcluirActionPerformed
-    String petSelecionado = lstBuscaPet.getSelectedValue();
-    if (petSelecionado == null) {
-        JOptionPane.showMessageDialog(this, "Por favor, selecione um pet.", "Aviso", JOptionPane.WARNING_MESSAGE);
-        return;
-    }
-    
-    // Extrai o ID do pet a partir do texto exibido
-    String idString = petSelecionado.split("ID: ")[1].split(" - Nome: ")[0];
-    int petId = Integer.parseInt(idString);
+        String petSelecionado = lstBuscaPet.getSelectedValue();
 
-    // Solicita a exclusão do pet
-    int resposta = JOptionPane.showConfirmDialog(this, "Tem certeza de que deseja excluir este pet?", "Confirmar Exclusão", JOptionPane.YES_NO_OPTION);
-    if (resposta == JOptionPane.YES_OPTION) {
-        petController.excluirPet(petId);  // Apenas chama o método sem capturar um valor de retorno
+        if (petSelecionado == null) {
+            JOptionPane.showMessageDialog(this, "Por favor, selecione um pet.", "Aviso", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
 
-        // Verificar se o pet foi marcado como inativo e se a operação foi bem-sucedida
-        Pet pet = petController.findById(petId); // Verifica o estado atual do pet
-        if (pet != null && !pet.getStatus()) {
-            JOptionPane.showMessageDialog(this, "Pet excluído com sucesso.", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
-            atualizarListaDePets();  // Atualiza a lista de pets após a exclusão
-        } else {
+        try {
+            // Extrai o ID do pet a partir do texto exibido
+            String id = petSelecionado.split("ID: ")[1].split(" - Nome: ")[0].trim();
+            
+            // Confirmação para exclusão
+            int resposta = JOptionPane.showConfirmDialog(this,
+                    "Tem certeza de que deseja excluir este pet?",
+                    "Confirmar Exclusão",
+                    JOptionPane.YES_NO_OPTION);
+
+            if (resposta != JOptionPane.YES_OPTION) {
+                return; // Usuário cancelou a exclusão
+            }
+
+            // Realiza a exclusão do pet
+            petController.excluirPet(Integer.parseInt(id));
+
+            // Verifica se o pet foi marcado como inativo
+            Pet pet = petController.findById(Integer.parseInt(id));
+            if (pet != null && !pet.getStatus()) {
+                JOptionPane.showMessageDialog(this, "Pet excluído com sucesso.", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
+                atualizarListaDePets(); // Atualiza a lista após a exclusão
+            } else {
+                JOptionPane.showMessageDialog(this, "Erro ao excluir o pet.", "Erro", JOptionPane.ERROR_MESSAGE);
+            }
+
+        } catch (ArrayIndexOutOfBoundsException e) {
+            JOptionPane.showMessageDialog(this, "Formato inválido do item selecionado.", "Erro", JOptionPane.ERROR_MESSAGE);
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, "ID do pet inválido.", "Erro", JOptionPane.ERROR_MESSAGE);
+        } catch (Exception e) {
             JOptionPane.showMessageDialog(this, "Erro ao excluir o pet.", "Erro", JOptionPane.ERROR_MESSAGE);
         }
-    }
+
 
     }//GEN-LAST:event_btnExcluirActionPerformed
-void atualizarListaDePets() {
-    listModelPets.clear();
-    if (clienteAtual != null) {
-        List<Pet> pets = petController.listarPetsPorCliente(clienteAtual.getId());
-        for (Pet pet : pets) {
-            if (pet.getStatus()) {  // Apenas pets ativos
-                listModelPets.addElement("ID: " + pet.getId() + " - Nome: " + pet.getNome());
-            }
-        }
-    }
-}
-
 
     /**
      * @param args the command line arguments

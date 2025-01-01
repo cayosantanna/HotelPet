@@ -95,6 +95,8 @@ public class DlgTelaPagamento extends javax.swing.JDialog {
         edtValorTotal = new javax.swing.JTextField();
         edtCheckOut = new javax.swing.JTextField();
         edtNomePet = new javax.swing.JTextField();
+        lblFeedback = new javax.swing.JLabel();
+        imgFeedBack = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -185,6 +187,11 @@ public class DlgTelaPagamento extends javax.swing.JDialog {
             }
         });
 
+        lblFeedback.setFont(new java.awt.Font("Liberation Sans", 0, 18)); // NOI18N
+        lblFeedback.setText("FeedBack");
+
+        imgFeedBack.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imgs/Design sem nome (2).png"))); // NOI18N
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -238,7 +245,12 @@ public class DlgTelaPagamento extends javax.swing.JDialog {
                                     .addComponent(lblNomePet)
                                     .addComponent(edtValorTotal, javax.swing.GroupLayout.DEFAULT_SIZE, 342, Short.MAX_VALUE)
                                     .addComponent(edtCheckOut))))
-                        .addGap(63, 63, 63))))
+                        .addGap(63, 63, 63))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(lblFeedback)
+                            .addComponent(imgFeedBack))
+                        .addGap(0, 0, Short.MAX_VALUE))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -281,7 +293,11 @@ public class DlgTelaPagamento extends javax.swing.JDialog {
                         .addComponent(checkBoxTosa)
                         .addComponent(checkBoxPasseio)
                         .addComponent(checkBoxAlimentacaoEspecial)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 105, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
+                .addComponent(lblFeedback)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(imgFeedBack)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 51, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnConfirmarPagamento, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnCancelar, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -354,9 +370,11 @@ public class DlgTelaPagamento extends javax.swing.JDialog {
     private javax.swing.JTextField edtCheckOut;
     private javax.swing.JTextField edtNomePet;
     private javax.swing.JTextField edtValorTotal;
+    private javax.swing.JLabel imgFeedBack;
     private javax.swing.JLabel lblCheckIn;
     private javax.swing.JLabel lblCheckOut;
     private javax.swing.JLabel lblCliente;
+    private javax.swing.JLabel lblFeedback;
     private javax.swing.JLabel lblNomePet;
     private javax.swing.JLabel lblServicosDisponiveis;
     private javax.swing.JLabel lblServicosDisponiveis1;

@@ -6,35 +6,42 @@ package model;
 
 import java.util.List;
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import lombok.Data;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @Data
 @Entity
-@NamedQuery(name = "Cliente.findAll", query = "SELECT c FROM Cliente c")
-@NamedQuery(name = "Cliente.findAllByNameCpf", query = "SELECT c FROM Cliente c WHERE (:nome IS NULL OR c.nome LIKE :nome) AND (:cpf IS NULL OR c.cpf LIKE :cpf)")
+@NamedQuery(name = "Cliente.findAll", query = "SELECT c FROM Cliente c WHERE c.funcionario = 0")
+@NamedQuery(name = "Cliente.findAllByNameCpf", query = "SELECT c FROM Cliente c WHERE (:nome IS NULL OR c.nome LIKE :nome) AND (:cpf IS NULL OR c.cpf LIKE :cpf) AND c.funcionario = 0")
 @NamedQuery(name = "Cliente.findById", query = "SELECT c FROM Cliente c WHERE c.id = :id")
+@NamedQuery(name = "Cliente.findByCpf", query = "SELECT c FROM Cliente c WHERE c.cpf = :cpf")
+@NamedQuery(name = "Cliente.findByCpfIgnoringId", query = "SELECT c FROM Cliente c WHERE c.cpf = :cpf AND c.id != :ignoreId")
+@NamedQuery(name = "Cliente.findByEmail", query = "SELECT c FROM Cliente c WHERE c.email = :email")
+@NamedQuery(name = "Cliente.findByEmailIgnoringId", query = "SELECT c FROM Cliente c WHERE c.email = :email AND c.id != :ignoreId")
 public class Cliente {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private String nome;
+    @Column(unique = true)
     private String cpf;
+    @Column(unique = true)
     private String email;
     private String telefone;
     private String endereco;
     private String cep;
     private String senha;
-    
-    @OneToMany(mappedBy = "cliente", cascade=CascadeType.ALL)
+    private Boolean funcionario = false;
+
+    @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL)
     private List<Pet> pet;
 
     public Cliente() {
@@ -43,12 +50,16 @@ public class Cliente {
     public Cliente(int id, String nome, String cpf, String email, String telefone, String endereco, String cep, String senha) {
         this.id = id;
         this.nome = nome;
-        this.cpf = cpf;
+        this.cpf = cpf.replaceAll("[^\\d]", "");
         this.email = email;
-        this.telefone = telefone;
+        this.telefone = telefone.replaceAll("[^\\d]", "");
         this.endereco = endereco;
-        this.cep = cep;
-        this.senha = senha;
+        this.cep = (cep != null) ? cep.replaceAll("[^\\d]", "") : null;
+        if (!(senha.isBlank() || senha.isEmpty())) {
+            BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+            this.senha = encoder.encode(senha);
+        }
+
     }
 
     public int getId() {
@@ -77,7 +88,7 @@ public class Cliente {
      * @param cpf the cpf to set
      */
     public void setCpf(String cpf) {
-        this.cpf = cpf;
+        this.cpf = cpf.replaceAll("[^\\d]", "");
     }
 
     /**
@@ -105,7 +116,7 @@ public class Cliente {
      * @param telefone the telefone to set
      */
     public void setTelefone(String telefone) {
-        this.telefone = telefone;
+        this.telefone = telefone.replaceAll("[^\\d]", "");
     }
 
     /**
@@ -133,7 +144,7 @@ public class Cliente {
      * @param cep the cep to set
      */
     public void setCep(String cep) {
-        this.cep = cep;
+        this.cep = cep.replaceAll("[^\\d]", "");
     }
 
     /**
@@ -147,9 +158,14 @@ public class Cliente {
      * @param senha the senha to set
      */
     public void setSenha(String senha) {
-        this.senha = senha;
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+        this.senha = encoder.encode(senha);
     }
-
+    
+    public void setHashedSenha(String hashedSenha){
+        this.senha = hashedSenha;
+    }
+    
     @Override
     public String toString() {
         return "Cliente{id=" + getId() + ", nome='" + getNome() + "', cpf='" + getCpf() + "', email='" + getEmail() + "', telefone='" + getTelefone() + "'}";
@@ -160,6 +176,14 @@ public class Cliente {
      */
     public void setId(int id) {
         this.id = id;
+    }
+
+    public Boolean getFuncionario() {
+        return this.funcionario;
+    }
+
+    public void setFuncionario(Boolean funcionario) {
+        this.funcionario = funcionario;
     }
 
 }

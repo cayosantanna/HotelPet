@@ -10,10 +10,13 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQuery;
 import lombok.Data;
 
 @Data
 @Entity
+@NamedQuery(name = "Pet.findByClienteId", query = "SELECT p FROM Pet p WHERE p.cliente.id = :clienteId AND p.Status = true")
+@NamedQuery(name = "Pet.findByClienteIdFilteredByName", query = "SELECT p FROM Pet p WHERE p.cliente.id = :clienteId AND p.Status = true AND (:nome IS NULL OR p.nome LIKE :nome)")
 public class Pet {
 
     @Id
@@ -64,7 +67,6 @@ public class Pet {
         this.Status = true;
     }
 
-    // Métodos getter e setter para acessar e modificar os atributos
     public int getId() {
         return id;
     }

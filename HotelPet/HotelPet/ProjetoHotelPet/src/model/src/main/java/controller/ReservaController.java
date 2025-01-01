@@ -13,7 +13,8 @@ import model.Pet;
 import model.Reserva;
 
 public class ReservaController {
-private ReservaDAO reservaDAO;
+
+    private ReservaDAO reservaDAO;
 
     public ReservaController() {
         this.reservaDAO = new ReservaDAO();
@@ -40,10 +41,18 @@ private ReservaDAO reservaDAO;
             diasDeEstadia = 20;
         }
         double valorTotal = diasDeEstadia * 75.0;
-        if (reserva.isServicoBanho()) valorTotal += 90.0;
-        if (reserva.isServicoTosa()) valorTotal += 70.0;
-        if (reserva.isServicoPasseio()) valorTotal += 60.0;
-        if (reserva.isServicoAlimentacaoEspecial()) valorTotal += 100.0;
+        if (reserva.isServicoBanho()) {
+            valorTotal += 90.0;
+        }
+        if (reserva.isServicoTosa()) {
+            valorTotal += 70.0;
+        }
+        if (reserva.isServicoPasseio()) {
+            valorTotal += 60.0;
+        }
+        if (reserva.isServicoAlimentacaoEspecial()) {
+            valorTotal += 100.0;
+        }
         reserva.setValorTotal(valorTotal);
         reservaDAO.save(reserva);
     }
