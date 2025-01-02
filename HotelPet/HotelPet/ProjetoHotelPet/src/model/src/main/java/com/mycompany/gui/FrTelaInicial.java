@@ -23,7 +23,28 @@ public class FrTelaInicial extends javax.swing.JFrame {
         initComponents();
         this.clienteController = new ClienteController();
         this.funcionarioController = new FuncionarioController(); // Inicializando o controlador de funcionários
+        verificarFuncionarioRH();
     }
+    
+private void verificarFuncionarioRH() {
+    try {
+        // Verifique se o funcionário RH já está cadastrado
+        Funcionario funcionarioRH = funcionarioController.findByCpf("97320260069"); // CPF do RH que você quer verificar
+
+        if (funcionarioRH == null) {
+            // Se não encontrar o funcionário RH, abra a tela de cadastro
+            JOptionPane.showMessageDialog(this, "Funcionário RH não encontrado. Realizando cadastro...", "Cadastro RH", JOptionPane.INFORMATION_MESSAGE);
+            abrirTelaCadastroRH(); // Abre a tela de cadastro do RH
+        }
+    } catch (Exception e) {
+        JOptionPane.showMessageDialog(this, e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
+    }
+}
+private void abrirTelaCadastroRH() {
+    // Instancia a tela de cadastro de funcionário RH
+    DlgCadFuncionario telaCadastroRH = new DlgCadFuncionario(new javax.swing.JFrame(), true);
+    telaCadastroRH.setVisible(true);
+}
 
     
     @SuppressWarnings("unchecked")

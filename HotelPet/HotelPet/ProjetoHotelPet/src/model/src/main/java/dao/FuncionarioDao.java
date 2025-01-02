@@ -68,4 +68,5 @@ public class FuncionarioDao {
             .setParameter("acao", acao)
             .executeUpdate();
     }
+    
 }

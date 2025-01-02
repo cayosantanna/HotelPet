@@ -81,4 +81,5 @@ public class FuncionarioController {
         // Filtra o histórico de acordo com os funcionários encontrados
         return funcionarioDao.getHistorico(funcionarios); // Chamando método de histórico filtrado
     }
+    
 }
