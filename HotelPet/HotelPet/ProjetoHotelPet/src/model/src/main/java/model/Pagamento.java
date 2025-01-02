@@ -1,18 +1,25 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package model;
 
-/**
- *
- * @author thais
- */
+import javax.persistence.*;
+
+@Entity
 public class Pagamento {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)  // Gerador automático para a chave primária
+    private Long id;  // Adicionando o identificador único
+
+    @ManyToOne
+    @JoinColumn(name = "reserva_id", referencedColumnName = "id", nullable = false)
     private Reserva reserva;
+
+    @Column(nullable = false)
     private String metodoPagamento;
+
+    @Column(nullable = false)
     private int parcelas;
 
+    // Construtor
     public Pagamento(Reserva reserva, String metodoPagamento, int parcelas) {
         this.reserva = reserva;
         this.metodoPagamento = metodoPagamento;
@@ -20,6 +27,14 @@ public class Pagamento {
     }
 
     // Getters e Setters
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     public Reserva getReserva() {
         return reserva;
     }

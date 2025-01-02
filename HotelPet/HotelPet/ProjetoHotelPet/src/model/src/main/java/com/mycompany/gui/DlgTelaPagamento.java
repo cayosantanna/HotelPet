@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JDialog.java to edit this template
- */
 package com.mycompany.gui;
 
 import java.text.SimpleDateFormat;
@@ -9,10 +5,6 @@ import javax.swing.JOptionPane;
 import model.Reserva;
 import controller.PagamentoController;
 
-/**
- *
- * @author thais
- */
 public class DlgTelaPagamento extends javax.swing.JDialog {
     private Reserva reserva;
 
@@ -31,13 +23,12 @@ public class DlgTelaPagamento extends javax.swing.JDialog {
         edtValorTotal.setText(String.format("%.2f", reserva.getValorTotal()));
         txtServicosExtras.setText(obterServicosExtras());
         
-        // Marcar checkboxes de acordo com os serviços selecionados
         checkBoxBanho.setSelected(reserva.isServicoBanho());
         checkBoxTosa.setSelected(reserva.isServicoTosa());
         checkBoxPasseio.setSelected(reserva.isServicoPasseio());
         checkBoxAlimentacaoEspecial.setSelected(reserva.isServicoAlimentacaoEspecial());
         
-        // Desabilitar edição dos campos
+        // Desabilitar edição
         edtCPFCliente.setEditable(false);
         edtNomePet.setEditable(false);
         edtCheckIn1.setEditable(false);
@@ -57,7 +48,6 @@ public class DlgTelaPagamento extends javax.swing.JDialog {
         if (reserva.isServicoPasseio()) servicos.append("Passeio ");
         if (reserva.isServicoAlimentacaoEspecial()) servicos.append("Alimentação Especial ");
         
-        // Incluir descrição adicional dos serviços extras
         if (reserva.getDescricaoServicosExtras() != null && !reserva.getDescricaoServicosExtras().isEmpty()) {
             servicos.append("Extras: ").append(reserva.getDescricaoServicosExtras());
         }
@@ -95,8 +85,6 @@ public class DlgTelaPagamento extends javax.swing.JDialog {
         edtValorTotal = new javax.swing.JTextField();
         edtCheckOut = new javax.swing.JTextField();
         edtNomePet = new javax.swing.JTextField();
-        lblFeedback = new javax.swing.JLabel();
-        imgFeedBack = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -187,11 +175,6 @@ public class DlgTelaPagamento extends javax.swing.JDialog {
             }
         });
 
-        lblFeedback.setFont(new java.awt.Font("Liberation Sans", 0, 18)); // NOI18N
-        lblFeedback.setText("FeedBack");
-
-        imgFeedBack.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imgs/Design sem nome (2).png"))); // NOI18N
-
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -245,12 +228,7 @@ public class DlgTelaPagamento extends javax.swing.JDialog {
                                     .addComponent(lblNomePet)
                                     .addComponent(edtValorTotal, javax.swing.GroupLayout.DEFAULT_SIZE, 342, Short.MAX_VALUE)
                                     .addComponent(edtCheckOut))))
-                        .addGap(63, 63, 63))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(lblFeedback)
-                            .addComponent(imgFeedBack))
-                        .addGap(0, 0, Short.MAX_VALUE))))
+                        .addGap(63, 63, 63))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -293,11 +271,7 @@ public class DlgTelaPagamento extends javax.swing.JDialog {
                         .addComponent(checkBoxTosa)
                         .addComponent(checkBoxPasseio)
                         .addComponent(checkBoxAlimentacaoEspecial)))
-                .addGap(18, 18, 18)
-                .addComponent(lblFeedback)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(imgFeedBack)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 51, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 50, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnConfirmarPagamento, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnCancelar, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -312,12 +286,24 @@ public class DlgTelaPagamento extends javax.swing.JDialog {
     }//GEN-LAST:event_btnCancelarActionPerformed
 
     private void btnConfirmarPagamentoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnConfirmarPagamentoActionPerformed
-        try {
+try {
+            // Lógica de pagamento
             PagamentoController pagamentoController = new PagamentoController();
             String metodo = comboboxMetodoPagamento.getSelectedItem().toString();
-            int parcelas = 1;
+            int parcelas = 1; // Aqui você pode adicionar a lógica para pegar o número de parcelas, se necessário.
             pagamentoController.salvarPagamento(reserva, metodo, parcelas);
+            
+            // Mensagem de sucesso
             JOptionPane.showMessageDialog(this, "Pagamento realizado com sucesso!");
+            
+            // Criar instância da tela de confirmação de reserva
+            ConfirmacaoReserva confirmacaoReserva = new ConfirmacaoReserva((java.awt.Frame) getParent(), true);
+            confirmacaoReserva.preencherCampos(reserva);  // Agora preenche corretamente os campos da tela de confirmação
+            
+            // Exibir a tela de confirmação
+            confirmacaoReserva.setVisible(true);
+            
+            // Fechar a tela de pagamento
             dispose();
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, "Não foi possível confirmar o pagamento: " + e.getMessage());
@@ -348,6 +334,7 @@ public class DlgTelaPagamento extends javax.swing.JDialog {
         // Permitir seleção da forma de pagamento
     }//GEN-LAST:event_comboboxMetodoPagamentoActionPerformed
 
+    
     private void atualizarValorTotal() {
         double valorTotal = reserva.getValorTotal();
         if (checkBoxBanho.isSelected()) valorTotal += 50.0;
@@ -356,6 +343,7 @@ public class DlgTelaPagamento extends javax.swing.JDialog {
         if (checkBoxAlimentacaoEspecial.isSelected()) valorTotal += 25.0;
         edtValorTotal.setText(String.format("%.2f", valorTotal));
     }
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCancelar;
@@ -370,11 +358,9 @@ public class DlgTelaPagamento extends javax.swing.JDialog {
     private javax.swing.JTextField edtCheckOut;
     private javax.swing.JTextField edtNomePet;
     private javax.swing.JTextField edtValorTotal;
-    private javax.swing.JLabel imgFeedBack;
     private javax.swing.JLabel lblCheckIn;
     private javax.swing.JLabel lblCheckOut;
     private javax.swing.JLabel lblCliente;
-    private javax.swing.JLabel lblFeedback;
     private javax.swing.JLabel lblNomePet;
     private javax.swing.JLabel lblServicosDisponiveis;
     private javax.swing.JLabel lblServicosDisponiveis1;

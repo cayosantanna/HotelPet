@@ -1,20 +1,36 @@
-
 package model;
-import model.Reserva;
+
+import javax.persistence.*;
 
 /**
  *
  * @author thais
  */
-
+@Entity
 public class Relatorio {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+
+    @Column(nullable = false)
     private String cpfUsuario;
+
+    @Column(nullable = false)
     private String dataCheckIn;
+
+    @Column(nullable = false)
     private String dataCheckOut;
+
+    @Column(nullable = false)
     private String dataRealizacaoReserva;
+
+    @Column(nullable = false)
     private String pet;
+
+    @Column(nullable = false)
     private double valorPago;
+
     private boolean checkBoxAlimentacaoEspecial;
     private boolean checkBoxBanho;
     private boolean checkBoxPasseio;
@@ -127,4 +143,3 @@ public class Relatorio {
         this.checkBoxTosa = checkBoxTosa;
     }
 }
-

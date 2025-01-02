@@ -1,59 +1,169 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package model;
 
-/**
- * @author neidi
- */
+import javax.persistence.*;
+import java.util.Date;
+
+@Entity
 public class Funcionario extends Pessoa {
-    private String cargo;
-    
-    public Funcionario(){
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
+
+    @Column(nullable = false)
+    private String nome;
+
+    @Column(nullable = false, unique = true)
+    private String cpf;
+
+    @Column(nullable = false)
+    private String email;
+
+    @Column(nullable = false)
+    private String telefone;
+
+    @Column(nullable = false)
+    private String senha;
+
+    @Column(nullable = false)
+    private String cargo; // "COMUM" ou "RH"
+
+    @Column(nullable = false)
+    private boolean ativo;
+
+    private Date dataDesligamento;
+
+    // Construtor padrão
+    public Funcionario() {
         super();
-        this.cargo = "";
+        this.cargo = "COMUM";
+        this.ativo = true;
+        this.dataDesligamento = null;
     }
-    
-  public Funcionario(int id, String nome, String cpf, String email, String telefone, String endereco, String cep, String senha, String cargo) {
-    super(id, nome, cpf, email, telefone, endereco, cep, senha);
-    this.cargo = cargo;
-}
-    
-    public void copiar(Funcionario outro){
-        this.id = outro.getId();
-        this.nome = outro.getNome();
-        this.cpf = outro.getCpf();
-        this.email = outro.getEmail();
-        this.telefone = outro.getTelefone();
-        this.endereco = outro.getEndereco(); 
-        this.cep = outro.getCep();
-        this.senha = outro.getSenha();
+
+    // Construtor completo
+    public Funcionario(int id, String nome, String cpf, String email, String telefone, String endereco, String cep, String senha, String cargo) {
+        super(id, nome, cpf, email, telefone, endereco, cep, senha);
+        this.cargo = cargo;
+        this.ativo = true;
+        this.dataDesligamento = null;
     }
-    
+
+    // Construtor simplificado
+    public Funcionario(String nome, String cpf, String email, String telefone, String senha, String cargo, boolean ativo) {
+        this.nome = nome;
+        this.cpf = cpf;
+        this.email = email;
+        this.telefone = telefone;
+        this.senha = senha;
+        this.cargo = cargo;
+        this.ativo = ativo;
+        this.dataDesligamento = null;
+    }
+
+    // Método para copiar dados de outro funcionário
+    public void copiar(Funcionario outro) {
+        this.setId(outro.getId());
+        this.setNome(outro.getNome());
+        this.setCpf(outro.getCpf());
+        this.setEmail(outro.getEmail());
+        this.setTelefone(outro.getTelefone());
+        this.setEndereco(outro.getEndereco());
+        this.setCep(outro.getCep());
+        this.setSenha(outro.getSenha());
+        this.setCargo(outro.getCargo());
+        this.setAtivo(outro.isAtivo());
+        this.setDataDesligamento(outro.getDataDesligamento());
+    }
+
     @Override
     public String toString() {
-        String txt = "---- Dados do aluno ------\n"
-        + super.toString()
-        +" Cargo: "+ this.getCargo()+ "\n"
-        +"-------------------------------------\n";    
-        
-        return txt;
-    }     
+        String txt = "---- Dados do Funcionário ------\n" +
+                     "Nome: " + this.getNome() + "\n" +
+                     "CPF: " + this.getCpf() + "\n" +
+                     "Email: " + this.getEmail() + "\n" +
+                     "Telefone: " + this.getTelefone() + "\n" +
+                     "Cargo: " + this.getCargo() + "\n" +
+                     "Status: " + (this.isAtivo() ? "Ativo" : "Inativo") + "\n";
 
-    /**
-     * @return the cargo
-     */
+        if (!this.isAtivo() && this.getDataDesligamento() != null) {
+            txt += "Data de Desligamento: " + this.getDataDesligamento() + "\n";
+        }
+
+        txt += "-------------------------------------\n";
+        return txt;
+    }
+
+    // Getters e Setters
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getNome() {
+        return nome;
+    }
+
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+
+    public String getCpf() {
+        return cpf;
+    }
+
+    public void setCpf(String cpf) {
+        this.cpf = cpf;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getTelefone() {
+        return telefone;
+    }
+
+    public void setTelefone(String telefone) {
+        this.telefone = telefone;
+    }
+
+    public String getSenha() {
+        return senha;
+    }
+
+    public void setSenha(String senha) {
+        this.senha = senha;
+    }
+
     public String getCargo() {
         return cargo;
     }
 
-    /**
-     * @param cargo the cargo to set
-     */
     public void setCargo(String cargo) {
         this.cargo = cargo;
     }
-    
-    
+
+    public boolean isAtivo() {
+        return ativo;
+    }
+
+    public void setAtivo(boolean ativo) {
+        this.ativo = ativo;
+    }
+
+    public Date getDataDesligamento() {
+        return dataDesligamento;
+    }
+
+    public void setDataDesligamento(Date dataDesligamento) {
+        this.dataDesligamento = dataDesligamento;
+    }
 }

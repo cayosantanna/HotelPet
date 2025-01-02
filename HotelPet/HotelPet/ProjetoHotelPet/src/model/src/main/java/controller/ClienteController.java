@@ -5,7 +5,6 @@ import dao.ClienteDAO;
 import java.util.List;
 import javax.security.auth.login.LoginException;
 import model.Cliente;
-import model.exceptions.ReservaException;
 import model.valid.ValidateCliente;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 

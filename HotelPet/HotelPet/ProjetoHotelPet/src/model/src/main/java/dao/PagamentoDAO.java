@@ -1,18 +1,11 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package dao;
 
 import javax.persistence.EntityManager;
 import model.Pagamento;
-import utils.EntityManagerUtil;
+import util.EntityManagerUtil;
 
-/**
- *
- * @author thais
- */
 public class PagamentoDAO {
+
     public void save(Pagamento pagamento) {
         EntityManager entityManager = EntityManagerUtil.getEntityManager();
         try {
@@ -23,9 +16,10 @@ public class PagamentoDAO {
             if (entityManager.getTransaction().isActive()) {
                 entityManager.getTransaction().rollback();
             }
-            throw e;
+            throw e;  // Re-lançamento da exceção
         } finally {
             entityManager.close();
         }
     }
 }
+

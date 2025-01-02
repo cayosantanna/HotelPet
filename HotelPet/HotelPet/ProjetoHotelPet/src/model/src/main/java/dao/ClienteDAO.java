@@ -5,7 +5,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 import model.Cliente;
 import org.hibernate.exception.ConstraintViolationException;
-import utils.EntityManagerUtil;
+import util.EntityManagerUtil;
 
 public class ClienteDAO implements IDao<Cliente> {
 

@@ -1,18 +1,18 @@
-package utils;
+package util;
 
-import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
-
 public class JPAUtil {
     private static final EntityManagerFactory entityManagerFactory;
 
     static {
         try {
-            // Use o nome correto da unidade de persistência
+            System.out.println("Tentando criar EntityManagerFactory...");
             entityManagerFactory = Persistence.createEntityManagerFactory("exemplo-jpa");
+            System.out.println("EntityManagerFactory criado com sucesso.");
         } catch (Throwable ex) {
             System.err.println("Erro ao criar EntityManagerFactory: " + ex);
+            ex.printStackTrace();  // Detalhamento do erro
             throw new ExceptionInInitializerError(ex);
         }
     }
@@ -21,3 +21,4 @@ public class JPAUtil {
         return entityManagerFactory;
     }
 }
+
