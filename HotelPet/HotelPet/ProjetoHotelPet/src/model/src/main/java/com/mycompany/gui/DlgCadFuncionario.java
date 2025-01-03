@@ -141,11 +141,11 @@ public class DlgCadFuncionario extends javax.swing.JDialog {
                     .addGroup(layout.createSequentialGroup()
                         .addGap(184, 184, 184)
                         .addComponent(btnConfirmar))
-                    .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                         .addComponent(comboboxCargo, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(inputEmail, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 279, Short.MAX_VALUE)
-                        .addComponent(inputNome, javax.swing.GroupLayout.Alignment.LEADING)))
+                        .addComponent(inputNome, javax.swing.GroupLayout.Alignment.LEADING))
+                    .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
@@ -201,6 +201,7 @@ public class DlgCadFuncionario extends javax.swing.JDialog {
 
 private void btnConfirmarActionPerformed(java.awt.event.ActionEvent evt) {
     try {
+        // Captura os valores inseridos
         String nome = inputNome.getText().trim();
         String cpf = inputCpf.getText().replaceAll("[^\\d]", "");
         String email = inputEmail.getText().trim();
@@ -208,19 +209,31 @@ private void btnConfirmarActionPerformed(java.awt.event.ActionEvent evt) {
         String senha = new String(inputSenha.getPassword());
         String cargo = comboboxCargo.getSelectedItem().toString();
 
+        // Valida os campos
         ValidateCliente.validateFuncionario(cpf, email, telefone, senha);
 
-        Funcionario funcionario = new Funcionario(nome, cpf, email, telefone, senha, cargo, true); /* o construtor é Funcionario()*/
-
+        // Cria um novo funcionário ou utiliza o existente para edição
+        Funcionario funcionario;
         if (funcionarioEdicao != null) {
-            funcionario.setId(funcionarioEdicao.getId());
+            funcionario = funcionarioEdicao; // Edição
+            funcionario.setNome(nome);
+            funcionario.setEmail(email);
+            funcionario.setTelefone(telefone);
+            funcionario.setSenha(senha);
+            funcionario.setCargo(cargo);
             funcionarioController.editFuncionario(funcionario, cpfRhLogado);
             JOptionPane.showMessageDialog(this, "Funcionário atualizado com sucesso!");
         } else {
+            // Evita CPF duplicado
+            if (funcionarioController.findByCpf(cpf) != null) {
+                throw new Exception("Já existe um funcionário cadastrado com este CPF.");
+            }
+            funcionario = new Funcionario(nome, cpf, email, telefone, senha, cargo, true); // Novo
             funcionarioController.createFuncionario(funcionario, cpfRhLogado);
             JOptionPane.showMessageDialog(this, "Funcionário cadastrado com sucesso!");
         }
 
+        // Fecha o diálogo
         this.dispose();
     } catch (Exception e) {
         JOptionPane.showMessageDialog(this, e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);

@@ -1,10 +1,14 @@
 package dao;
 
-import model.Funcionario;
+import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
-import java.util.List;
+
+import org.hibernate.exception.ConstraintViolationException;
+
+import model.Funcionario;
+import model.HistoricoRh;
 
 public class FuncionarioDao {
 
@@ -14,12 +18,60 @@ public class FuncionarioDao {
         this.em = em;
     }
 
-    public void create(Funcionario funcionario) {
-        em.persist(funcionario);
+    public void create(Funcionario funcionario) throws Exception {
+        try {
+            // Verifica se já existe funcionário com mesmo CPF
+            if (findByCpf(funcionario.getCpf()) != null) {
+                throw new Exception("Já existe um funcionário com este CPF.");
+            }
+            
+            em.getTransaction().begin();
+            em.persist(funcionario);
+            em.getTransaction().commit();
+        } catch (ConstraintViolationException e) {
+            em.getTransaction().rollback();
+            throw new Exception("Erro de restrição no banco de dados: " + e.getConstraintName());
+        } catch (Exception e) {
+            em.getTransaction().rollback();
+            throw new Exception("Erro ao criar funcionário: " + e.getMessage());
+        }
     }
 
-    public void update(Funcionario funcionario) {
-        em.merge(funcionario);
+    public List<String> getHistorico() {
+        return em.createQuery("SELECT h.acao FROM HistoricoRh h ORDER BY h.dataHora DESC", String.class)
+                .getResultList();
+    }
+
+    public void update(Funcionario funcionario) throws Exception {
+        try {
+            em.getTransaction().begin();
+            em.merge(funcionario);
+            em.getTransaction().commit();
+        } catch (ConstraintViolationException e) {
+            em.getTransaction().rollback();
+            throw new Exception("Erro de restrição no banco de dados: " + e.getConstraintName());
+        } catch (Exception e) {
+            em.getTransaction().rollback();
+            throw new Exception("Erro ao atualizar funcionário: " + e.getMessage());
+        }
+    }
+
+    public void registrarAcao(String cpfRh, String acao) {
+        try {
+            em.getTransaction().begin();
+
+            // Criação de uma nova entrada no histórico
+            HistoricoRh historico = new HistoricoRh();
+            historico.setCpfRh(cpfRh);
+            historico.setAcao(acao);
+
+            // Persiste a ação no banco
+            em.persist(historico);
+            em.getTransaction().commit();
+        } catch (Exception e) {
+            em.getTransaction().rollback();
+            throw e;
+        }
     }
 
     public Funcionario findByCpf(String cpf) {
@@ -41,11 +93,6 @@ public class FuncionarioDao {
         return query.getResultList();
     }
 
-    public List<String> getHistorico() {
-        return em.createQuery("SELECT h.acao FROM HistoricoRh h ORDER BY h.dataHora DESC", String.class)
-                .getResultList();
-    }
-
     // Método para obter histórico filtrado com base nos funcionários
     public List<String> getHistorico(List<Funcionario> funcionarios) {
         // Filtra o histórico com base nos funcionários
@@ -61,12 +108,4 @@ public class FuncionarioDao {
         return query.getResultStream().findFirst().orElse(null);
     }
 
-    public void registrarAcao(String cpfRh, String acao) {
-        String sql = "INSERT INTO historico_rh (cpf_rh, acao, data_hora) VALUES (:cpf, :acao, CURRENT_TIMESTAMP)";
-        em.createNativeQuery(sql)
-            .setParameter("cpf", cpfRh)
-            .setParameter("acao", acao)
-            .executeUpdate();
-    }
-    
 }

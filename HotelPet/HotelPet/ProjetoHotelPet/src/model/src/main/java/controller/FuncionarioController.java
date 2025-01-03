@@ -1,12 +1,13 @@
 package controller;
 
+import java.util.Date;
+import java.util.List;
+
+import javax.persistence.EntityManager;
+
 import dao.FuncionarioDao;
 import factory.Persistencia;
 import model.Funcionario;
-
-import javax.persistence.EntityManager;
-import java.util.Date;
-import java.util.List;
 
 public class FuncionarioController {
 
@@ -25,17 +26,21 @@ public class FuncionarioController {
         registrarAcao(cpfRhLogado, "Cadastrou funcionário: " + funcionario.getNome());
     }
 
+    public void editFuncionario(Funcionario funcionario, String cpfRhLogado) throws Exception {
+        funcionarioDao.update(funcionario);
+        registrarAcao(cpfRhLogado, "Editou funcionário: " + funcionario.getNome());
+    }
+
+    private void registrarAcao(String cpfRh, String acao) {
+        funcionarioDao.registrarAcao(cpfRh, acao);
+    }
+
     public Funcionario loginFuncionario(String email, String senha) throws Exception {
         Funcionario funcionario = funcionarioDao.findByEmail(email);
         if (funcionario == null || !funcionario.getSenha().equals(senha)) {
             throw new Exception("Email ou senha inválidos.");
         }
         return funcionario;
-    }
-
-    public void editFuncionario(Funcionario funcionario, String cpfRhLogado) throws Exception {
-        funcionarioDao.update(funcionario);
-        registrarAcao(cpfRhLogado, "Editou funcionário: " + funcionario.getNome());
     }
 
     public void demitirFuncionario(String cpf, String cpfRhLogado) throws Exception {
@@ -65,10 +70,6 @@ public class FuncionarioController {
 
     public List<String> getHistoricoRH() {
         return funcionarioDao.getHistorico();
-    }
-
-    private void registrarAcao(String cpfRh, String acao) {
-        funcionarioDao.registrarAcao(cpfRh, acao);
     }
 
     // Filtro de histórico

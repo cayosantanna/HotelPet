@@ -27,7 +27,7 @@ public class ClienteController {
         
         return cliente;
     }
-
+    
     public void cadastrarCliente(Cliente cliente) throws Exception {
         ValidateCliente.validateCPF(cliente.getCpf());
         ValidateCliente.validateEmail(cliente.getEmail());

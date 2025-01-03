@@ -119,6 +119,7 @@ com\mycompany\gui\DlgBuscaPet.class
 com\mycompany\gui\DlgBuscaUsuario$2.class
 com\mycompany\gui\DlgCadCliente.class
 model\exceptions\ClienteException.class
+model\HistoricoRh.class
 com\mycompany\gui\DlgHistoricoReservas$3.class
 com\mycompany\gui\DlgRelatorioFuncionario$10.class
 com\mycompany\gui\FrfuncionarioRH$5.class
