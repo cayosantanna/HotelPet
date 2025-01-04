@@ -19,23 +19,20 @@ public class FuncionarioDao {
     }
 
     public void create(Funcionario funcionario) throws Exception {
-        try {
-            // Verifica se já existe funcionário com mesmo CPF
-            if (findByCpf(funcionario.getCpf()) != null) {
-                throw new Exception("Já existe um funcionário com este CPF.");
-            }
-            
-            em.getTransaction().begin();
-            em.persist(funcionario);
-            em.getTransaction().commit();
-        } catch (ConstraintViolationException e) {
-            em.getTransaction().rollback();
-            throw new Exception("Erro de restrição no banco de dados: " + e.getConstraintName());
-        } catch (Exception e) {
-            em.getTransaction().rollback();
-            throw new Exception("Erro ao criar funcionário: " + e.getMessage());
+    try {
+        if (findByCpf(funcionario.getCpf()) != null) {
+            throw new Exception("Já existe um funcionário com este CPF.");
         }
+        em.getTransaction().begin();
+        em.persist(funcionario);
+        em.getTransaction().commit();
+    } catch (Exception e) {
+        em.getTransaction().rollback();
+        System.err.println("Erro ao criar funcionário: " + e.getMessage());
+        throw new Exception("Erro ao criar funcionário. Verifique os dados e tente novamente.");
     }
+}
+
 
     public List<String> getHistorico() {
         return em.createQuery("SELECT h.acao FROM HistoricoRh h ORDER BY h.dataHora DESC", String.class)

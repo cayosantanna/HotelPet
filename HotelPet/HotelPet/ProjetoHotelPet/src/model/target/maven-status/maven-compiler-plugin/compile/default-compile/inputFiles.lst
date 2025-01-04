@@ -30,11 +30,13 @@ C:\Users\famil\OneDrive\Documentos\NetBeansProjects\HotelPet\HotelPet\HotelPet\P
 C:\Users\famil\OneDrive\Documentos\NetBeansProjects\HotelPet\HotelPet\HotelPet\ProjetoHotelPet\src\model\src\main\java\model\Cliente.java
 C:\Users\famil\OneDrive\Documentos\NetBeansProjects\HotelPet\HotelPet\HotelPet\ProjetoHotelPet\src\model\src\main\java\model\exceptions\PetException.java
 C:\Users\famil\OneDrive\Documentos\NetBeansProjects\HotelPet\HotelPet\HotelPet\ProjetoHotelPet\src\model\src\main\java\com\mycompany\gui\HistoricoAcoesRH.java
+C:\Users\famil\OneDrive\Documentos\NetBeansProjects\HotelPet\HotelPet\HotelPet\ProjetoHotelPet\src\model\src\main\java\dao\HistoricoRhDAO.java
 C:\Users\famil\OneDrive\Documentos\NetBeansProjects\HotelPet\HotelPet\HotelPet\ProjetoHotelPet\src\model\src\main\java\dao\HistoricoReservaDao.java
 C:\Users\famil\OneDrive\Documentos\NetBeansProjects\HotelPet\HotelPet\HotelPet\ProjetoHotelPet\src\model\src\main\java\model\exceptions\ReservaException.java
 C:\Users\famil\OneDrive\Documentos\NetBeansProjects\HotelPet\HotelPet\HotelPet\ProjetoHotelPet\src\model\src\main\java\dao\IDao.java
 C:\Users\famil\OneDrive\Documentos\NetBeansProjects\HotelPet\HotelPet\HotelPet\ProjetoHotelPet\src\model\src\main\java\dao\PetDAO.java
 C:\Users\famil\OneDrive\Documentos\NetBeansProjects\HotelPet\HotelPet\HotelPet\ProjetoHotelPet\src\model\src\main\java\controller\ClienteController.java
+C:\Users\famil\OneDrive\Documentos\NetBeansProjects\HotelPet\HotelPet\HotelPet\ProjetoHotelPet\src\model\src\main\java\model\HistoricoRh.java
 C:\Users\famil\OneDrive\Documentos\NetBeansProjects\HotelPet\HotelPet\HotelPet\ProjetoHotelPet\src\model\src\main\java\model\Reserva.java
 C:\Users\famil\OneDrive\Documentos\NetBeansProjects\HotelPet\HotelPet\HotelPet\ProjetoHotelPet\src\model\src\main\java\com\mycompany\gui\DlgCadCliente.java
 C:\Users\famil\OneDrive\Documentos\NetBeansProjects\HotelPet\HotelPet\HotelPet\ProjetoHotelPet\src\model\src\main\java\model\valid\ValidatePet.java
@@ -51,6 +53,7 @@ C:\Users\famil\OneDrive\Documentos\NetBeansProjects\HotelPet\HotelPet\HotelPet\P
 C:\Users\famil\OneDrive\Documentos\NetBeansProjects\HotelPet\HotelPet\HotelPet\ProjetoHotelPet\src\model\src\main\java\model\valid\ValidateReserva.java
 C:\Users\famil\OneDrive\Documentos\NetBeansProjects\HotelPet\HotelPet\HotelPet\ProjetoHotelPet\src\model\src\main\java\dao\DAO.java
 C:\Users\famil\OneDrive\Documentos\NetBeansProjects\HotelPet\HotelPet\HotelPet\ProjetoHotelPet\src\model\src\main\java\com\mycompany\gui\DlgRelatorioFuncionario.java
+C:\Users\famil\OneDrive\Documentos\NetBeansProjects\HotelPet\HotelPet\HotelPet\ProjetoHotelPet\src\model\src\main\java\controller\FuncionarioRhController.java
 C:\Users\famil\OneDrive\Documentos\NetBeansProjects\HotelPet\HotelPet\HotelPet\ProjetoHotelPet\src\model\src\main\java\util\JPAUtil.java
 C:\Users\famil\OneDrive\Documentos\NetBeansProjects\HotelPet\HotelPet\HotelPet\ProjetoHotelPet\src\model\src\main\java\model\Pessoa.java
 C:\Users\famil\OneDrive\Documentos\NetBeansProjects\HotelPet\HotelPet\HotelPet\ProjetoHotelPet\src\model\src\main\java\com\mycompany\gui\DlgCadPet.java

@@ -17,6 +17,7 @@ controller\FuncionarioController.class
 com\mycompany\gui\DlgRelatorioFuncionario$5.class
 util\EntityManagerUtil.class
 controller\TMCadReserva.class
+dao\HistoricoRhDAO.class
 com\mycompany\gui\ConfirmacaoReserva$4.class
 com\mycompany\gui\DlgRelatorioFuncionario$8.class
 controller\PetController.class
@@ -74,6 +75,7 @@ dao\ClienteDAO.class
 dao\PagamentoDAO.class
 com\mycompany\gui\DlgCadFuncionario$1.class
 com\mycompany\gui\FrfuncionarioRH$1.class
+controller\FuncionarioRhController.class
 com\mycompany\gui\DlgCadPet$1.class
 controller\RelatorioController.class
 com\mycompany\gui\DlgHistoricoReservas$1.class

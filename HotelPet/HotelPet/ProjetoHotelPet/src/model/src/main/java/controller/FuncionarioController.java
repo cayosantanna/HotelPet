@@ -7,11 +7,13 @@ import javax.persistence.EntityManager;
 
 import dao.FuncionarioDao;
 import factory.Persistencia;
+import javax.persistence.TypedQuery;
 import model.Funcionario;
 
 public class FuncionarioController {
 
     private FuncionarioDao funcionarioDao;
+    EntityManager em = Persistencia.getEntityManager();
 
     public FuncionarioController() {
         EntityManager em = Persistencia.getEntityManager();
@@ -19,12 +21,19 @@ public class FuncionarioController {
     }
 
     public void createFuncionario(Funcionario funcionario, String cpfRhLogado) throws Exception {
-        if (findByCpf(funcionario.getCpf()) != null) {
-            throw new Exception("CPF já registrado no sistema.");
-        }
-        funcionarioDao.create(funcionario);
-        registrarAcao(cpfRhLogado, "Cadastrou funcionário: " + funcionario.getNome());
+    if (funcionario.getCpf() == null || funcionario.getCpf().isEmpty()) {
+        throw new Exception("CPF é obrigatório.");
     }
+    if (funcionario.getNome() == null || funcionario.getNome().isEmpty()) {
+        throw new Exception("Nome é obrigatório.");
+    }
+    if (findByCpf(funcionario.getCpf()) != null) {
+        throw new Exception("CPF já registrado no sistema.");
+    }
+    funcionarioDao.create(funcionario);
+    registrarAcao(cpfRhLogado, "Cadastrou funcionário: " + funcionario.getNome());
+}
+
 
     public void editFuncionario(Funcionario funcionario, String cpfRhLogado) throws Exception {
         funcionarioDao.update(funcionario);
@@ -44,21 +53,34 @@ public class FuncionarioController {
     }
 
     public void demitirFuncionario(String cpf, String cpfRhLogado) throws Exception {
-        Funcionario funcionario = funcionarioDao.findByCpf(cpf);
-        if (funcionario == null) {
-            throw new Exception("Funcionário não encontrado.");
-        }
-
-        funcionario.setAtivo(false);
-        funcionario.setDataDesligamento(new Date());
-        funcionarioDao.update(funcionario);
-
-        registrarAcao(cpfRhLogado, "Demitido funcionário: " + funcionario.getNome());
+    Funcionario funcionario = funcionarioDao.findByCpf(cpf);
+    if (funcionario == null) {
+        throw new Exception("Funcionário não encontrado.");
     }
+    if (!funcionario.isAtivo()) {
+        throw new Exception("Funcionário já está desligado.");
+    }
+
+    funcionario.setAtivo(false);
+    funcionario.setDataDesligamento(new Date());
+    funcionarioDao.update(funcionario);
+
+    registrarAcao(cpfRhLogado, "Demitido funcionário: " + funcionario.getNome());
+}
+
 
     public Funcionario findByCpf(String cpf) {
         return funcionarioDao.findByCpf(cpf);
     }
+    
+    public List<Funcionario> findByNomeOuCpf(String nome, String cpf) {
+    String jpql = "SELECT f FROM Funcionario f WHERE (:nome IS NULL OR f.nome LIKE :nome) AND (:cpf IS NULL OR f.cpf = :cpf)";
+    TypedQuery<Funcionario> query = em.createQuery(jpql, Funcionario.class);
+    query.setParameter("nome", nome != null ? "%" + nome + "%" : null);
+    query.setParameter("cpf", cpf != null ? cpf : null);
+    return query.getResultList();
+}
+
 
     public List<Funcionario> getAllFuncionarios() {
         return funcionarioDao.findAll();

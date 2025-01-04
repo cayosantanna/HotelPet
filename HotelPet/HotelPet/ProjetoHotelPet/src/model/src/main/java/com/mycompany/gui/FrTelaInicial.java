@@ -144,30 +144,42 @@ private void abrirTelaCadastroRH() {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnEntrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEntrarActionPerformed
-            try {
+try {
+        // Recupera os valores dos campos de email e senha
         String email = inputEmail.getText().trim();
         String senha = new String(inputSenha.getPassword());
 
-        // Login como cliente
+        // Verifica se os campos estão preenchidos
+        if (email.isEmpty()) {
+            throw new IllegalArgumentException("O campo de email está vazio. Por favor, preencha-o.");
+        }
+        if (senha.isEmpty()) {
+            throw new IllegalArgumentException("O campo de senha está vazio. Por favor, preencha-o.");
+        }
+
+        // Tentativa de login como cliente
         Cliente cliente = clienteController.login(email, senha);
         if (cliente != null) {
-            // Limpar os campos após login bem-sucedido
-            inputEmail.setText("");
-            inputSenha.setText("");
-            
+            // Login bem-sucedido como cliente
+            inputEmail.setText("");  // Limpa o campo de email
+            inputSenha.setText("");  // Limpa o campo de senha
+            JOptionPane.showMessageDialog(this, "Bem-vindo, " + cliente.getNome() + "!");
+
+            // Abre a tela do menu principal (adapte se necessário)
             FrMenu telaMenu = new FrMenu(this, true);
             telaMenu.setFuncionario(cliente.getFuncionario());
             telaMenu.setVisible(true);
             return;
         }
 
-        // Login como funcionário
-        Funcionario funcionario = funcionarioController.loginFuncionario(email, senha); // Verifique a implementação do controlador
+        // Tentativa de login como funcionário
+        Funcionario funcionario = funcionarioController.loginFuncionario(email, senha);
         if (funcionario != null) {
             if (!funcionario.isAtivo()) {
-                throw new IllegalArgumentException("Funcionário inativo.");
+                throw new IllegalArgumentException("Funcionário inativo. Entre em contato com o administrador do sistema.");
             }
 
+            // Verifica o cargo do funcionário
             if ("RH".equalsIgnoreCase(funcionario.getCargo())) {
                 FrfuncionarioRH telaRh = new FrfuncionarioRH(funcionario.getCpf());
                 telaRh.setVisible(true);
@@ -175,19 +187,23 @@ private void abrirTelaCadastroRH() {
                 JOptionPane.showMessageDialog(this, "Bem-vindo, " + funcionario.getNome() + "!");
             }
 
-            // Limpar os campos após login bem-sucedido
+            // Limpa os campos de entrada
             inputEmail.setText("");
             inputSenha.setText("");
             return;
         }
 
-        throw new LoginException("Email ou senha inválidos.");
+        // Caso nenhum login seja bem-sucedido
+        throw new LoginException("Email ou senha inválidos. Verifique suas credenciais e tente novamente.");
+    } catch (IllegalArgumentException e) {
+        // Exibe mensagens de erro específicas
+        JOptionPane.showMessageDialog(this, e.getMessage(), "Erro de Validação", JOptionPane.WARNING_MESSAGE);
     } catch (LoginException e) {
-        // Exibir mensagem de erro sem limpar os campos
-        JOptionPane.showMessageDialog(this, e.getMessage(), "Erro", JOptionPane.WARNING_MESSAGE);
+        // Exibe mensagem de erro de login
+        JOptionPane.showMessageDialog(this, e.getMessage(), "Erro de Login", JOptionPane.WARNING_MESSAGE);
     } catch (Exception e) {
-        // Exibir mensagem de erro sem limpar os campos
-        JOptionPane.showMessageDialog(this, e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
+        // Captura outros erros inesperados
+        JOptionPane.showMessageDialog(this, "Ocorreu um erro inesperado: " + e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
     }
     }//GEN-LAST:event_btnEntrarActionPerformed
 

@@ -1,36 +1,46 @@
 package model;
 
-import javax.persistence.*;
-import java.util.Date;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
+
+import java.io.Serializable;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "historico_rh")
-public class HistoricoRh {
+public class HistoricoRh implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private int id;
 
-    @Column(name = "cpf_rh")
+    @NotNull(message = "CPF não pode estar vazio.")
+    @Size(min = 11, max = 14, message = "CPF deve conter entre 11 e 14 caracteres.")
+    @Pattern(regexp = "\\d{11}|\\d{3}\\.\\d{3}\\.\\d{3}-\\d{2}", message = "CPF inválido.")
+    @Column(nullable = false, unique = true, length = 14)
     private String cpfRh;
 
-    @Column(name = "acao")
+    @NotNull(message = "Ação não pode estar vazia.")
+    @Column(name = "acao", nullable = false, columnDefinition = "TEXT")
     private String acao;
 
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "data_hora")
-    private Date dataHora;
+    @Column(name = "data_hora", updatable = false, nullable = false, columnDefinition = "TIMESTAMP")
+    private LocalDateTime dataHora;
 
-    public HistoricoRh() {
-        this.dataHora = new Date();
+    // Método que preenche automaticamente o campo dataHora ao criar o registro
+    @PrePersist
+    protected void onCreate() {
+        this.dataHora = LocalDateTime.now();
     }
 
-    // Getters and setters
-    public Long getId() {
+    // Getters e Setters
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -50,11 +60,11 @@ public class HistoricoRh {
         this.acao = acao;
     }
 
-    public Date getDataHora() {
+    public LocalDateTime getDataHora() {
         return dataHora;
     }
 
-    public void setDataHora(Date dataHora) {
+    public void setDataHora(LocalDateTime dataHora) {
         this.dataHora = dataHora;
     }
 }

@@ -1,7 +1,8 @@
 package util;
-
+import javax.persistence.EntityManager; /*Erro*/
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
+
 public class JPAUtil {
     private static final EntityManagerFactory entityManagerFactory;
 
@@ -20,5 +21,9 @@ public class JPAUtil {
     public static EntityManagerFactory getEntityManagerFactory() {
         return entityManagerFactory;
     }
-}
 
+    // Adicionando o método para criar EntityManager
+    public static EntityManager getEntityManager() {
+        return entityManagerFactory.createEntityManager();
+    }
+}
