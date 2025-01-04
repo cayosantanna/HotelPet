@@ -1,98 +1,109 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package controller;
 
 import dao.ReservaDAO;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+<<<<<<< HEAD
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
+=======
+import javax.swing.JOptionPane;
+import model.Cliente;
+>>>>>>> Main
 import model.Pet;
 import model.Reserva;
-import model.exceptions.ReservaException;
-import model.valid.ValidateReserva;
 
 public class ReservaController {
 
+<<<<<<< HEAD
     private ReservaDAO repositorio;
     private List<Reserva> listaDeReservas;
     ReservaDAO reservaDAO = new ReservaDAO();
+=======
+    private ReservaDAO reservaDAO;
+>>>>>>> Main
 
     public ReservaController() {
-        this.repositorio = new ReservaDAO();
+        this.reservaDAO = new ReservaDAO();
     }
 
-
-    public void cadastrarReserva(boolean servicoBanho, boolean servicoTosa, boolean servicoPasseio,
-                                 boolean servicoAlimentacaoEspecial, Date checkIn, Date checkOut,
-                                 double valorTotal, Date dataReserva) throws ParseException {
-        ValidateReserva valid = new ValidateReserva();
-        Reserva novaReserva = valid.validaCamposEntrada(servicoBanho, servicoTosa, servicoPasseio, servicoAlimentacaoEspecial, checkIn, checkOut, valorTotal, dataReserva);
-        repositorio.save(novaReserva); 
+    public List<Reserva> verificarReservasSemCheckout() {
+        return reservaDAO.findReservasSemCheckout();
     }
 
-  
-    public void atualizarReserva(int idReserva, boolean servicoBanho, boolean servicoTosa, boolean servicoPasseio,
-                                 boolean servicoAlimentacaoEspecial, Date checkIn, Date checkOut,
-                                 double valorTotal, Date dataReserva) throws ParseException {
-        ValidateReserva valid = new ValidateReserva();
-        Reserva novaReserva = valid.validaCamposEntrada(servicoBanho, servicoTosa, servicoPasseio, servicoAlimentacaoEspecial, checkIn, checkOut, valorTotal, dataReserva);
-        novaReserva.setId(idReserva);
-        repositorio.update(novaReserva); 
+    public int calcularDiasEstadia(Date checkIn, Date checkOut) {
+        long diffMillis = checkOut.getTime() - checkIn.getTime();
+        return (int) (diffMillis / (1000 * 60 * 60 * 24));
     }
 
-    /**
-     * Atualiza a tabela de reservas
-     */
-    public void atualizarTabela(JTable grd) {
-        List<Reserva> lst = repositorio.findAll(); 
-        DefaultTableModel model = new DefaultTableModel(
-            new Object[][]{},
-            new String[]{"ID", "Check-In", "Check-Out", "Serviços", "Valor Total", "Data Reserva"}
-        );
-
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy"); // Formato para a data
-
-        for (Reserva reserva : lst) {
-            model.addRow(new Object[]{
-                reserva.getId(),
-                dateFormat.format(reserva.getCheckIn()),  
-                dateFormat.format(reserva.getCheckOut()), 
-                (reserva.isServicoBanho() ? "Sim" : "Não"),
-                (reserva.isServicoTosa() ? "Sim" : "Não"),
-                (reserva.isServicoPasseio() ? "Sim" : "Não"),
-                (reserva.isServicoAlimentacaoEspecial() ? "Sim" : "Não"),
-                reserva.getValorTotal(),
-                dateFormat.format(reserva.getDataReserva())  
-            });
+    public void salvarReservaComValidacao(Reserva reserva) throws Exception {
+        if (reserva.getCheckIn() == null) {
+            throw new Exception("A data de Check-In é obrigatória.");
         }
-        grd.setModel(model); 
+        if (reserva.getCheckOut() == null) {
+            reserva.setCheckOut(calcularCheckOutAutomatico(reserva.getCheckIn()));
+        }
+        int diasDeEstadia = calcularDiasEstadia(reserva.getCheckIn(), reserva.getCheckOut());
+        if (diasDeEstadia > 20) {
+            diasDeEstadia = 20;
+        }
+        double valorTotal = diasDeEstadia * 75.0;
+        if (reserva.isServicoBanho()) {
+            valorTotal += 90.0;
+        }
+        if (reserva.isServicoTosa()) {
+            valorTotal += 70.0;
+        }
+        if (reserva.isServicoPasseio()) {
+            valorTotal += 60.0;
+        }
+        if (reserva.isServicoAlimentacaoEspecial()) {
+            valorTotal += 100.0;
+        }
+        reserva.setValorTotal(valorTotal);
+        reservaDAO.save(reserva);
     }
 
+    public boolean salvarReserva(Cliente cliente, Pet pet, String checkIn, String checkOut) {
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+            Date checkInDate = sdf.parse(checkIn);
+            Date checkOutDate = (checkOut != null && !checkOut.isEmpty()) ? sdf.parse(checkOut) : calcularCheckOutAutomatico(checkInDate);
 
-    public void excluirReserva(Reserva reserva) {
-        if (reserva == null || reserva.getId() == 0) {
-            throw new ReservaException("Erro - A reserva não existe ou não foi selecionada.");
+            int diasDeEstadia = calcularDiasEstadia(checkInDate, checkOutDate);
+            if (diasDeEstadia > 20) {
+                diasDeEstadia = 20;
+            }
+            double valorTotal = diasDeEstadia * 75.0;
+
+            Reserva reserva = new Reserva();
+            reserva.setCliente(cliente);
+            reserva.setPet(pet);
+            reserva.setCheckIn(checkInDate);
+            reserva.setCheckOut(checkOutDate);
+            reserva.setValorTotal(valorTotal);
+
+            reservaDAO.save(reserva);
+            return true; // Reserva salva com sucesso
+
+        } catch (ParseException e) {
+            JOptionPane.showMessageDialog(null, "Erro ao processar as datas. Verifique o formato: dd/MM/yyyy", "Erro", JOptionPane.ERROR_MESSAGE);
+            return false;
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Erro ao salvar a reserva: " + e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
+            return false;
         }
-        repositorio.delete(reserva);
     }
 
-  
-    public Reserva buscarReservaPorNomePet(String nomePet) {
-        if (nomePet == null || nomePet.trim().isEmpty()) {
-            throw new ReservaException("Erro - Nome do pet não pode ser vazio.");
-        }
-
-        Reserva reserva = repositorio.findByNomePet(nomePet);
-        if (reserva == null) {
-            throw new ReservaException("Erro - Reserva não encontrada para o pet: " + nomePet);
-        }
-
-        return reserva;
+    private Date calcularCheckOutAutomatico(Date checkIn) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(checkIn);
+        calendar.add(Calendar.DAY_OF_MONTH, 20);
+        return calendar.getTime();
     }
     
     public List<Reserva> buscarReservasPorNomeOuCpf(String nomePet, String cpfResponsavel) throws ParseException {

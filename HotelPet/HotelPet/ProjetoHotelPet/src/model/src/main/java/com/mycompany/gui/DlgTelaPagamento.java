@@ -1,21 +1,57 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JDialog.java to edit this template
- */
 package com.mycompany.gui;
 
-/**
- *
- * @author thais
- */
-public class DlgTelaPagamento extends javax.swing.JDialog {
+import java.text.SimpleDateFormat;
+import javax.swing.JOptionPane;
+import model.Reserva;
+import controller.PagamentoController;
 
-    /**
-     * Creates new form DlgTelaPagamento
-     */
-    public DlgTelaPagamento(java.awt.Frame parent, boolean modal) {
+public class DlgTelaPagamento extends javax.swing.JDialog {
+    private Reserva reserva;
+
+    public DlgTelaPagamento(java.awt.Frame parent, boolean modal, Reserva reserva) {
         super(parent, modal);
+        this.reserva = reserva;
         initComponents();
+        preencherCampos();
+    }
+
+    private void preencherCampos() {
+        edtCPFCliente.setText(reserva.getCliente().getCpf());
+        edtNomePet.setText(reserva.getPet().getNome());
+        edtCheckIn1.setText(new SimpleDateFormat("dd/MM/yyyy").format(reserva.getCheckIn()));
+        edtCheckOut.setText(reserva.getCheckOut() != null ? new SimpleDateFormat("dd/MM/yyyy").format(reserva.getCheckOut()) : "N/A");
+        edtValorTotal.setText(String.format("%.2f", reserva.getValorTotal()));
+        txtServicosExtras.setText(obterServicosExtras());
+        
+        checkBoxBanho.setSelected(reserva.isServicoBanho());
+        checkBoxTosa.setSelected(reserva.isServicoTosa());
+        checkBoxPasseio.setSelected(reserva.isServicoPasseio());
+        checkBoxAlimentacaoEspecial.setSelected(reserva.isServicoAlimentacaoEspecial());
+        
+        // Desabilitar edição
+        edtCPFCliente.setEditable(false);
+        edtNomePet.setEditable(false);
+        edtCheckIn1.setEditable(false);
+        edtCheckOut.setEditable(false);
+        edtValorTotal.setEditable(false);
+        txtServicosExtras.setEditable(false);
+        checkBoxBanho.setEnabled(false);
+        checkBoxTosa.setEnabled(false);
+        checkBoxPasseio.setEnabled(false);
+        checkBoxAlimentacaoEspecial.setEnabled(false);
+    }
+
+    private String obterServicosExtras() {
+        StringBuilder servicos = new StringBuilder();
+        if (reserva.isServicoBanho()) servicos.append("Banho ");
+        if (reserva.isServicoTosa()) servicos.append("Tosa ");
+        if (reserva.isServicoPasseio()) servicos.append("Passeio ");
+        if (reserva.isServicoAlimentacaoEspecial()) servicos.append("Alimentação Especial ");
+        
+        if (reserva.getDescricaoServicosExtras() != null && !reserva.getDescricaoServicosExtras().isEmpty()) {
+            servicos.append("Extras: ").append(reserva.getDescricaoServicosExtras());
+        }
+        return servicos.toString();
     }
 
     /**
@@ -34,14 +70,21 @@ public class DlgTelaPagamento extends javax.swing.JDialog {
         lblCheckOut = new javax.swing.JLabel();
         lblServicosDisponiveis = new javax.swing.JLabel();
         lblValorTotal = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
+        btnConfirmarPagamento = new javax.swing.JButton();
         btnCancelar = new javax.swing.JButton();
-        edtLblCliente = new javax.swing.JLabel();
-        edtLblNomePet = new javax.swing.JLabel();
-        edtLblCheckIn = new javax.swing.JLabel();
-        edtLblCheckOut = new javax.swing.JLabel();
-        edtLblServicos = new javax.swing.JLabel();
-        edtLblValorTotal = new javax.swing.JLabel();
+        edtCPFCliente = new javax.swing.JTextField();
+        edtCheckIn1 = new javax.swing.JTextField();
+        txtServicosExtras = new javax.swing.JTextField();
+        checkBoxAlimentacaoEspecial = new javax.swing.JCheckBox();
+        lblServicosDisponiveis1 = new javax.swing.JLabel();
+        checkBoxBanho = new javax.swing.JCheckBox();
+        checkBoxTosa = new javax.swing.JCheckBox();
+        checkBoxPasseio = new javax.swing.JCheckBox();
+        lblValorTotal1 = new javax.swing.JLabel();
+        comboboxMetodoPagamento = new javax.swing.JComboBox<>();
+        edtValorTotal = new javax.swing.JTextField();
+        edtCheckOut = new javax.swing.JTextField();
+        edtNomePet = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -62,15 +105,15 @@ public class DlgTelaPagamento extends javax.swing.JDialog {
         lblCheckOut.setText("Check-out:");
 
         lblServicosDisponiveis.setFont(new java.awt.Font("Liberation Sans", 0, 18)); // NOI18N
-        lblServicosDisponiveis.setText("Serviços Selecionados:");
+        lblServicosDisponiveis.setText("Serviços Extra:");
 
         lblValorTotal.setFont(new java.awt.Font("Liberation Sans", 0, 18)); // NOI18N
         lblValorTotal.setText("Valor Total:");
 
-        jButton1.setText("Confirmar Pagamento");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        btnConfirmarPagamento.setText("Confirmar Pagamento");
+        btnConfirmarPagamento.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                btnConfirmarPagamentoActionPerformed(evt);
             }
         });
 
@@ -81,17 +124,56 @@ public class DlgTelaPagamento extends javax.swing.JDialog {
             }
         });
 
-        edtLblCliente.setText("-");
+        txtServicosExtras.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtServicosExtrasActionPerformed(evt);
+            }
+        });
 
-        edtLblNomePet.setText("-");
+        checkBoxAlimentacaoEspecial.setFont(new java.awt.Font("Liberation Sans", 0, 18)); // NOI18N
+        checkBoxAlimentacaoEspecial.setText("Alimentação Especial");
+        checkBoxAlimentacaoEspecial.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                checkBoxAlimentacaoEspecialActionPerformed(evt);
+            }
+        });
 
-        edtLblCheckIn.setText("-");
+        lblServicosDisponiveis1.setFont(new java.awt.Font("Liberation Sans", 0, 18)); // NOI18N
+        lblServicosDisponiveis1.setText("Serviços Disponíveis:");
 
-        edtLblCheckOut.setText("-");
+        checkBoxBanho.setFont(new java.awt.Font("Liberation Sans", 0, 18)); // NOI18N
+        checkBoxBanho.setText("Banho");
+        checkBoxBanho.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                checkBoxBanhoActionPerformed(evt);
+            }
+        });
 
-        edtLblServicos.setText("-");
+        checkBoxTosa.setFont(new java.awt.Font("Liberation Sans", 0, 18)); // NOI18N
+        checkBoxTosa.setText("Tosa");
+        checkBoxTosa.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                checkBoxTosaActionPerformed(evt);
+            }
+        });
 
-        edtLblValorTotal.setText("-");
+        checkBoxPasseio.setFont(new java.awt.Font("Liberation Sans", 0, 18)); // NOI18N
+        checkBoxPasseio.setText("Passeio");
+        checkBoxPasseio.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                checkBoxPasseioActionPerformed(evt);
+            }
+        });
+
+        lblValorTotal1.setFont(new java.awt.Font("Liberation Sans", 0, 18)); // NOI18N
+        lblValorTotal1.setText("Forma de Pagemento:");
+
+        comboboxMetodoPagamento.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Debito", "Credito - à vista", "Credito - Parcelado 1x ", "Credito - Parcelado 2x", "Credito - Parcelado 3x"}));
+        comboboxMetodoPagamento.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                comboboxMetodoPagamentoActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -100,70 +182,100 @@ public class DlgTelaPagamento extends javax.swing.JDialog {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGap(258, 258, 258)
+                        .addComponent(btnConfirmarPagamento)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 64, Short.MAX_VALUE)
+                        .addComponent(btnCancelar)
+                        .addGap(327, 327, 327))
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(lblCheckIn)
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addComponent(lblTitulo, javax.swing.GroupLayout.DEFAULT_SIZE, 881, Short.MAX_VALUE)
+                        .addComponent(lblTitulo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addContainerGap())
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(jButton1)
-                            .addComponent(lblCliente, javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(lblServicosDisponiveis, javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(edtLblCliente, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(edtLblCheckIn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(edtLblServicos, javax.swing.GroupLayout.DEFAULT_SIZE, 399, Short.MAX_VALUE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(lblNomePet)
-                            .addComponent(lblCheckOut)
-                            .addComponent(lblValorTotal)
-                            .addComponent(btnCancelar)
-                            .addComponent(edtLblNomePet, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(edtLblCheckOut, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(edtLblValorTotal, javax.swing.GroupLayout.DEFAULT_SIZE, 399, Short.MAX_VALUE))))
-                .addContainerGap())
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                        .addComponent(txtServicosExtras, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 340, Short.MAX_VALUE)
+                                        .addComponent(lblCheckIn, javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(edtCheckIn1, javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(edtCPFCliente, javax.swing.GroupLayout.Alignment.LEADING))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(checkBoxBanho)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(checkBoxTosa)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(checkBoxPasseio)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(checkBoxAlimentacaoEspecial))
+                                    .addComponent(lblServicosDisponiveis1))
+                                .addGap(24, 24, 24)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(edtNomePet)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                            .addComponent(comboboxMetodoPagamento, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                            .addComponent(lblValorTotal1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                        .addGap(0, 0, Short.MAX_VALUE))))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(lblCliente, javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(lblServicosDisponiveis, javax.swing.GroupLayout.Alignment.LEADING))
+                                .addGap(344, 344, 344)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(lblCheckOut)
+                                    .addComponent(lblValorTotal)
+                                    .addComponent(lblNomePet)
+                                    .addComponent(edtValorTotal, javax.swing.GroupLayout.DEFAULT_SIZE, 342, Short.MAX_VALUE)
+                                    .addComponent(edtCheckOut))))
+                        .addGap(63, 63, 63))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(lblTitulo)
-                        .addGap(18, 18, 18)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(lblCliente)
-                            .addComponent(lblNomePet))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(edtLblCliente)
-                                .addGap(18, 18, 18))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addComponent(edtLblNomePet)
-                                .addGap(9, 9, 9)))
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(lblCheckIn)
-                            .addComponent(lblCheckOut))
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(12, 12, 12)
-                                .addComponent(edtLblCheckIn))
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(18, 18, 18)
-                                .addComponent(edtLblCheckOut)))
-                        .addGap(18, 18, 18)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(lblServicosDisponiveis)
-                            .addComponent(lblValorTotal))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(edtLblValorTotal))
-                    .addComponent(edtLblServicos))
-                .addGap(40, 40, 40)
+                .addComponent(lblTitulo)
+                .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblCliente)
+                    .addComponent(lblNomePet))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(edtCPFCliente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(edtNomePet, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblCheckIn)
+                    .addComponent(lblCheckOut))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(edtCheckIn1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(edtCheckOut, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblServicosDisponiveis)
+                    .addComponent(lblValorTotal))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txtServicosExtras, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(edtValorTotal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(lblValorTotal1, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(lblServicosDisponiveis1))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(comboboxMetodoPagamento, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(checkBoxBanho)
+                        .addComponent(checkBoxTosa)
+                        .addComponent(checkBoxPasseio)
+                        .addComponent(checkBoxAlimentacaoEspecial)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 50, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnConfirmarPagamento, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnCancelar, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(67, Short.MAX_VALUE))
+                .addGap(36, 36, 36))
         );
 
         pack();
@@ -173,26 +285,88 @@ public class DlgTelaPagamento extends javax.swing.JDialog {
         this.setVisible(false);      // TODO add your handling code here:
     }//GEN-LAST:event_btnCancelarActionPerformed
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        DlgRelatorio telaRelatorio = new DlgRelatorio(new javax.swing.JFrame(), true);
-        telaRelatorio.setVisible(true);        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton1ActionPerformed
+    private void btnConfirmarPagamentoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnConfirmarPagamentoActionPerformed
+try {
+            // Lógica de pagamento
+            PagamentoController pagamentoController = new PagamentoController();
+            String metodo = comboboxMetodoPagamento.getSelectedItem().toString();
+            int parcelas = 1; // Aqui você pode adicionar a lógica para pegar o número de parcelas, se necessário.
+            pagamentoController.salvarPagamento(reserva, metodo, parcelas);
+            
+            // Mensagem de sucesso
+            JOptionPane.showMessageDialog(this, "Pagamento realizado com sucesso!");
+            
+            // Criar instância da tela de confirmação de reserva
+            ConfirmacaoReserva confirmacaoReserva = new ConfirmacaoReserva((java.awt.Frame) getParent(), true);
+            confirmacaoReserva.preencherCampos(reserva);  // Agora preenche corretamente os campos da tela de confirmação
+            
+            // Exibir a tela de confirmação
+            confirmacaoReserva.setVisible(true);
+            
+            // Fechar a tela de pagamento
+            dispose();
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Não foi possível confirmar o pagamento: " + e.getMessage());
+        }
+    }//GEN-LAST:event_btnConfirmarPagamentoActionPerformed
+
+    private void txtServicosExtrasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtServicosExtrasActionPerformed
+        // Não permitir edição
+    }//GEN-LAST:event_txtServicosExtrasActionPerformed
+
+    private void checkBoxAlimentacaoEspecialActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_checkBoxAlimentacaoEspecialActionPerformed
+        // Não permitir edição
+    }//GEN-LAST:event_checkBoxAlimentacaoEspecialActionPerformed
+
+    private void checkBoxBanhoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_checkBoxBanhoActionPerformed
+        // Não permitir edição
+    }//GEN-LAST:event_checkBoxBanhoActionPerformed
+
+    private void checkBoxTosaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_checkBoxTosaActionPerformed
+        // Não permitir edição
+    }//GEN-LAST:event_checkBoxTosaActionPerformed
+
+    private void checkBoxPasseioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_checkBoxPasseioActionPerformed
+        // Não permitir edição
+    }//GEN-LAST:event_checkBoxPasseioActionPerformed
+
+    private void comboboxMetodoPagamentoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboboxMetodoPagamentoActionPerformed
+        // Permitir seleção da forma de pagamento
+    }//GEN-LAST:event_comboboxMetodoPagamentoActionPerformed
+
+    
+    private void atualizarValorTotal() {
+        double valorTotal = reserva.getValorTotal();
+        if (checkBoxBanho.isSelected()) valorTotal += 50.0;
+        if (checkBoxTosa.isSelected()) valorTotal += 70.0;
+        if (checkBoxPasseio.isSelected()) valorTotal += 30.0;
+        if (checkBoxAlimentacaoEspecial.isSelected()) valorTotal += 25.0;
+        edtValorTotal.setText(String.format("%.2f", valorTotal));
+    }
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCancelar;
-    private javax.swing.JLabel edtLblCheckIn;
-    private javax.swing.JLabel edtLblCheckOut;
-    private javax.swing.JLabel edtLblCliente;
-    private javax.swing.JLabel edtLblNomePet;
-    private javax.swing.JLabel edtLblServicos;
-    private javax.swing.JLabel edtLblValorTotal;
-    private javax.swing.JButton jButton1;
+    private javax.swing.JButton btnConfirmarPagamento;
+    private javax.swing.JCheckBox checkBoxAlimentacaoEspecial;
+    private javax.swing.JCheckBox checkBoxBanho;
+    private javax.swing.JCheckBox checkBoxPasseio;
+    private javax.swing.JCheckBox checkBoxTosa;
+    private javax.swing.JComboBox<String> comboboxMetodoPagamento;
+    private javax.swing.JTextField edtCPFCliente;
+    private javax.swing.JTextField edtCheckIn1;
+    private javax.swing.JTextField edtCheckOut;
+    private javax.swing.JTextField edtNomePet;
+    private javax.swing.JTextField edtValorTotal;
     private javax.swing.JLabel lblCheckIn;
     private javax.swing.JLabel lblCheckOut;
     private javax.swing.JLabel lblCliente;
     private javax.swing.JLabel lblNomePet;
     private javax.swing.JLabel lblServicosDisponiveis;
+    private javax.swing.JLabel lblServicosDisponiveis1;
     private javax.swing.JLabel lblTitulo;
     private javax.swing.JLabel lblValorTotal;
+    private javax.swing.JLabel lblValorTotal1;
+    private javax.swing.JTextField txtServicosExtras;
     // End of variables declaration//GEN-END:variables
 }

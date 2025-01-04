@@ -1,17 +1,11 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package model;
 
 import com.mycompany.gui.FrTelaInicial;
 
-/**
- *
- * @author cayo
- */
 public class ProjetoHotelPet {
-        public static void main(String[] args) {
+
+    public static void main(String[] args) {
+        // Abre a tela inicial diretamente
         FrTelaInicial telaInicial = new FrTelaInicial();
         telaInicial.setVisible(true);
     }

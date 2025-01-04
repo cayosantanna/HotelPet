@@ -1,84 +1,92 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package dao;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
 import model.Pet;
 import factory.Persistencia;
-import java.util.stream.Collectors;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
+import java.util.ArrayList;
+import java.util.List;
+import javax.persistence.TypedQuery;
+import util.EntityManagerUtil;
 
 public class PetDAO implements IDao<Pet> {
-    private final String tabela = "pets";
 
+    private final String tabela = "pets";
     private String sql = "";
 
     @Override
     public List<Pet> findAll() {
         List<Pet> pets = new ArrayList<>();
-        this.sql = "SELECT * FROM" + this.tabela;
+        EntityManager entityManager = Persistencia.getEntityManager();
 
-        try (Connection connection = Persistencia.getConnection(); PreparedStatement statement = connection.prepareStatement(this.sql); ResultSet resultSet = statement.executeQuery()) {
-
-            while (resultSet.next()) {
-                Pet pet = new Pet(
-                        resultSet.getInt("id"),
-                        resultSet.getString("cpfResponsavel"),
-                        resultSet.getString("datanascimento"),
-                        resultSet.getString("nome"),
-                        resultSet.getString("especie"),
-                        resultSet.getString("raca"),
-                        resultSet.getString("porte"),
-                        resultSet.getString("sexo"),
-                        resultSet.getString("caracteristicasFisicas"),
-                        resultSet.getString("historicoDoencas"),
-                        resultSet.getString("medicacoes")
-                );
-                pets.add(pet);
-            }
-        } catch (SQLException e) {
+        try {
+            pets = entityManager.createQuery("SELECT p FROM Pet p", Pet.class).getResultList();
+        } catch (Exception e) {
             e.printStackTrace();
+        } finally {
+            if (entityManager != null) {
+                entityManager.close();
+            }
         }
 
         return pets;
     }
 
     public List<Pet> findByResponsavel(String cpfResponsavel) {
-        return findAll().stream()
-                .filter(pet -> pet.getCpfResponsavel().equals(cpfResponsavel))
-                .collect(Collectors.toList());
+        EntityManager entityManager = Persistencia.getEntityManager();
+        List<Pet> pets = new ArrayList<>();
+
+        try {
+            pets = entityManager.createQuery("SELECT p FROM Pet p WHERE p.cliente.cpf = :cpfResponsavel", Pet.class)
+                    .setParameter("cpfResponsavel", cpfResponsavel)
+                    .getResultList();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (entityManager != null) {
+                entityManager.close();
+            }
+        }
+
+        return pets;
     }
 
     @Override
     public void save(Pet pet) {
-        this.sql = "INSERT INTO " + this.tabela + " (nome, cpfResponsavel, especie, raca, porte) VALUES (?, ?, ?, ?, ?)";
+        EntityManager entityManager = Persistencia.getEntityManager();
+        EntityTransaction transaction = entityManager.getTransaction();
 
-        try (Connection connection = Persistencia.getConnection(); PreparedStatement statement = connection.prepareStatement(this.sql)) {
+        try {
+            // Verifica se já existe um pet com o mesmo nome, espécie e data de nascimento para o mesmo cliente
+            List<Pet> petsExistentes = entityManager.createQuery("SELECT p FROM Pet p WHERE p.cliente.id = :clienteId AND p.nome = :nome AND p.especie = :especie AND p.datanascimento = :datanascimento", Pet.class)
+                    .setParameter("clienteId", pet.getCliente().getId()) // A chave do cliente
+                    .setParameter("nome", pet.getNome())
+                    .setParameter("especie", pet.getEspecie())
+                    .setParameter("datanascimento", pet.getDatanascimento())
+                    .getResultList();
 
-            statement.setString(1, pet.getNome());
-            statement.setString(2, pet.getCpfResponsavel());
-            statement.setString(3, pet.getEspecie());
-            statement.setString(4, pet.getRaca());
-            statement.setString(5, pet.getPorte());
-            statement.setInt(6, pet.getId());
-            statement.setString(7, pet.getSexo());
-            statement.setString(8, pet.getCaracteristicasFisicas());
-            statement.setString(9, pet.getHistoricoDoencas());
-            statement.setString(10, pet.getMedicacoes());
+            if (!petsExistentes.isEmpty()) {
+                throw new IllegalArgumentException("Erro: Já existe um pet com o mesmo nome, espécie e data de nascimento para esse cliente.");
+            }
 
-            statement.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
+            // Se a validação passar, persiste o pet
+            transaction.begin();
+            entityManager.persist(pet);
+            transaction.commit();
+        } catch (Exception e) {
+            if (transaction.isActive()) {
+                transaction.rollback();
+            }
+            System.out.println("Erro: " + e.getMessage());
+        } finally {
+            if (entityManager != null) {
+                entityManager.close();
+            }
         }
     }
 
     @Override
+<<<<<<< HEAD
     public void update(Pet pet, Pet novo1) {
         this.sql = "UPDATE " + this.tabela + " SET nome = ?, cpfResponsavel = ?, especie = ?, raca = ?, porte = ? WHERE id = ?";
 
@@ -98,79 +106,115 @@ public class PetDAO implements IDao<Pet> {
             statement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
+=======
+    public void update(Pet pet, Pet novo) {
+        EntityManager entityManager = EntityManagerUtil.getEntityManager();
+        try {
+            entityManager.getTransaction().begin();
+            entityManager.merge(novo);
+            entityManager.getTransaction().commit();
+        } catch (Exception e) {
+            entityManager.getTransaction().rollback();
+            System.out.println("Erro: " + e.getMessage());
+        } finally {
+            if (entityManager != null) {
+                entityManager.close();
+            }
+>>>>>>> Main
         }
     }
-
+    
+    public void update(Pet novo) {
+        EntityManager entityManager = EntityManagerUtil.getEntityManager();
+        try {
+            entityManager.getTransaction().begin();
+            entityManager.merge(novo);
+            entityManager.getTransaction().commit();
+        } catch (Exception e) {
+            entityManager.getTransaction().rollback();
+            System.out.println("Erro: " + e.getMessage());
+        } finally {
+            if (entityManager != null) {
+                entityManager.close();
+            }
+        }
+    }
+    
     @Override
     public boolean delete(Pet pet) {
-        this.sql = "DELETE FROM " + this.tabela + " WHERE id = ?";
+        EntityManager entityManager = Persistencia.getEntityManager();
+        EntityTransaction transaction = entityManager.getTransaction();
 
-        try (Connection connection = Persistencia.getConnection(); PreparedStatement statement = connection.prepareStatement(this.sql)) {
-
-            statement.setInt(1, pet.getId());
-            int rowsAffected = statement.executeUpdate();
-            return rowsAffected > 0;
-        } catch (SQLException e) {
-            e.printStackTrace();
+        try {
+            transaction.begin();
+            Pet petToUpdate = entityManager.find(Pet.class, pet.getId());
+            if (petToUpdate != null) {
+                petToUpdate.setStatus(false);  // Marca o pet como inativo
+            }
+            transaction.commit();
+            return true;
+        } catch (Exception e) {
+            if (transaction.isActive()) {
+                transaction.rollback();
+            }
+            System.out.println("Erro: " + e.getMessage());
+        } finally {
+            if (entityManager != null) {
+                entityManager.close();
+            }
         }
         return false;
     }
 
     @Override
     public Pet find(Pet pet) {
-        this.sql = "SELECT * FROM " + this.tabela + " WHERE id = ?";
+        EntityManager entityManager = Persistencia.getEntityManager();
+        Pet foundPet = null;
 
-        try (Connection connection = Persistencia.getConnection(); PreparedStatement statement = connection.prepareStatement(this.sql)) {
-
-            statement.setInt(1, pet.getId());
-            ResultSet resultSet = statement.executeQuery();
-
-            if (resultSet.next()) {
-                return new Pet(
-                        resultSet.getInt("id"),
-                        resultSet.getString("nome"),
-                        resultSet.getString("datanascimento"),
-                        resultSet.getString("cpfResponsavel"),
-                        resultSet.getString("especie"),
-                        resultSet.getString("raca"),
-                        resultSet.getString("porte"),
-                        resultSet.getString("Sexo"),
-                        resultSet.getString("CaracteristicasFisicas"),
-                        resultSet.getString("HistoricoDoencas"),
-                        resultSet.getString("Medicacoes"));
-            }
-        } catch (SQLException e) {
+        try {
+            foundPet = entityManager.find(Pet.class, pet.getId());
+        } catch (Exception e) {
             e.printStackTrace();
+        } finally {
+            if (entityManager != null) {
+                entityManager.close();
+            }
         }
-        return null;
+
+        return foundPet;
+    }
+
+    public List<Pet> findByClienteId(int clienteId) {
+        EntityManager entityManager = EntityManagerUtil.getEntityManager();
+        try {
+            TypedQuery<Pet> query = entityManager.createNamedQuery("Pet.findByClienteId", Pet.class);
+            query.setParameter("clienteId", clienteId);
+            return query.getResultList();
+        } catch (Exception e) {
+            entityManager.getTransaction().rollback();
+            System.out.println("Erro: " + e.getMessage());
+            return null;
+        } finally {
+            if (entityManager != null) {
+                entityManager.close();
+            }
+        }
     }
 
     public Pet findById(int id) {
-        this.sql = "SELECT * FROM " + this.tabela + " WHERE id = ?";
+        EntityManager entityManager = Persistencia.getEntityManager();
+        Pet pet = null;
 
-        try (Connection connection = Persistencia.getConnection(); PreparedStatement statement = connection.prepareStatement(this.sql)) {
-
-            statement.setInt(1, id);
-            ResultSet resultSet = statement.executeQuery();
-
-            if (resultSet.next()) {
-                return new Pet(
-                        resultSet.getInt("id"),
-                        resultSet.getString("nome"),
-                        resultSet.getString("datanascimento"),
-                        resultSet.getString("cpfResponsavel"),
-                        resultSet.getString("especie"),
-                        resultSet.getString("raca"),
-                        resultSet.getString("porte"),
-                        resultSet.getString("Sexo"),
-                        resultSet.getString("CaracteristicasFisicas"),
-                        resultSet.getString("HistoricoDoencas"),
-                        resultSet.getString("Medicacoes")
-                );
-            }
-        } catch (SQLException e) {
+        try {
+            pet = entityManager.find(Pet.class, id);
+        } catch (Exception e) {
             e.printStackTrace();
+        } finally {
+            if (entityManager != null) {
+                entityManager.close();
+            }
         }
-        return null;
+
+        return pet;
     }
 }

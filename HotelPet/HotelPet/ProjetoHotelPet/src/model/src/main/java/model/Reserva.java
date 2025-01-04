@@ -1,27 +1,46 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package model;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import java.io.Serializable;
 import java.util.Date;
 
-public class Reserva {
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.Temporal;
 
-    private int id;
-    private String NomePet;
+@Entity
+public class Reserva implements Serializable {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
+
+    @ManyToOne
+    private Cliente cliente; // Cliente associado à reserva
+
+    @ManyToOne
+    private Pet pet; // Pet associado à reserva
+
     private boolean servicoBanho;
     private boolean servicoTosa;
     private boolean servicoPasseio;
     private boolean servicoAlimentacaoEspecial;
+    
+    @Temporal(javax.persistence.TemporalType.DATE)
     private Date checkIn;
+    
+    @Temporal(javax.persistence.TemporalType.DATE)
     private Date checkOut;
+  
     private double valorTotal;
+    
+    @Temporal(javax.persistence.TemporalType.DATE)
     private Date dataReserva;
     private Pet pet; // Cada reserva tem um pet associado
 
+<<<<<<< HEAD
     public Reserva() throws ParseException {
         super();
         this.servicoBanho = true;
@@ -33,36 +52,73 @@ public class Reserva {
         this.valorTotal = 0;
         this.dataReserva = new SimpleDateFormat("dd/MM/yyyy").parse("01/01/1970");
         this.pet = pet;
+=======
+    private String descricaoServicosExtras;
+    private String statusServico;
+
+    public Reserva() {
+        // Construtor padrão
+>>>>>>> Main
     }
 
-    public Reserva(
-            int id,
-            boolean servicoBanho,
-            boolean servicoTosa,
-            boolean servicoPasseio,
-            boolean servicoAlimentacaoEspecial,
-            Date checkIn,
-            Date checkOut,
-            double valorTotal,
-            Date dataReserva
-    ) {
+    public Reserva(Cliente cliente, Pet pet, boolean servicoBanho, boolean servicoTosa, boolean servicoPasseio,
+                   boolean servicoAlimentacaoEspecial, Date checkIn, Date checkOut, Date dataReserva, String statusServico) {
+        this.cliente = cliente;
+        this.pet = pet;
         this.servicoBanho = servicoBanho;
         this.servicoTosa = servicoTosa;
         this.servicoPasseio = servicoPasseio;
         this.servicoAlimentacaoEspecial = servicoAlimentacaoEspecial;
         this.checkIn = checkIn;
         this.checkOut = checkOut;
-        this.valorTotal = valorTotal;
         this.dataReserva = dataReserva;
+<<<<<<< HEAD
         this.pet = pet;
+=======
+        this.statusServico = statusServico;
+        calcularValorTotal();
+>>>>>>> Main
     }
 
-    public int getId() {
+    private void calcularValorTotal() {
+        double valorServicos = 0.0;
+
+        if (servicoBanho) valorServicos += 90.0; // Exemplo de valor para banho
+        if (servicoTosa) valorServicos += 70.0; // Exemplo de valor para tosa
+        if (servicoPasseio) valorServicos += 60.0; // Exemplo de valor para passeio
+        if (servicoAlimentacaoEspecial) valorServicos += 100.0; // Exemplo de valor para alimentação especial
+
+        // Calcular o valor total baseado na duração da reserva
+        long diff = checkOut.getTime() - checkIn.getTime();
+        long dias = diff / (1000 * 60 * 60 * 24); // Diferença em dias
+
+        this.valorTotal = dias * 75.0 + valorServicos; // Exemplo de valor fixo por dia
+    }
+
+    // Getters e Setters
+
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
+    }
+
+    public Cliente getCliente() {
+        return cliente;
+    }
+
+    public void setCliente(Cliente cliente) {
+        this.cliente = cliente;
+    }
+
+    public Pet getPet() {
+        return pet;
+    }
+
+    public void setPet(Pet pet) {
+        this.pet = pet;
     }
 
     public boolean isServicoBanho() {
@@ -129,6 +185,7 @@ public class Reserva {
         this.dataReserva = dataReserva;
     }
 
+<<<<<<< HEAD
     /**
      * @return the NomePet
      */
@@ -151,4 +208,21 @@ public class Reserva {
     }
 
    
+=======
+    public String getDescricaoServicosExtras() {
+        return descricaoServicosExtras;
+    }
+
+    public void setDescricaoServicosExtras(String descricaoServicosExtras) {
+        this.descricaoServicosExtras = descricaoServicosExtras;
+    }
+    public boolean isFinalizado() {
+    return "Finalizado".equals(this.statusServico);
+}
+
+    public void setFinalizado(boolean finalizado) {
+    this.statusServico = finalizado ? "Finalizado" : "Em Andamento";
+    }
+
+>>>>>>> Main
 }

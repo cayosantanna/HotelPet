@@ -5,45 +5,40 @@
 package com.mycompany.gui;
 
 import controller.PetController;
-import controller.ClienteController;
 import model.Cliente;
 import model.Pet;
-
 import javax.swing.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.List;
 
 public class DlgBuscaPet extends javax.swing.JDialog {
 
-    private PetController petController;
-    private ClienteController clienteController;
-    private DefaultListModel<String> listModelPets;
+    private final PetController petController;
+    private Cliente clienteAtual;
 
-    /**
-     * Creates new form DlgBuscaPet
-     */
     public DlgBuscaPet(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
-        petController = new PetController(true); 
-        clienteController = new ClienteController(false); 
-        listModelPets = new DefaultListModel<>();
-        lstBuscaPet.setModel(listModelPets);
+        petController = new PetController();
     }
+
+    public void setClienteAtual(Cliente cliente) {
+        this.clienteAtual = cliente;
+        atualizarListaDePets();
+    }
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
         btnBusca = new javax.swing.JButton();
         btnReserva = new javax.swing.JButton();
-        btnEditarCliente = new javax.swing.JButton();
+        btnEditarPet = new javax.swing.JButton();
         lblTitulo = new javax.swing.JLabel();
         lblNome = new javax.swing.JLabel();
         edtNomePet = new javax.swing.JTextField();
         jScrollPane1 = new javax.swing.JScrollPane();
         lstBuscaPet = new javax.swing.JList<>();
-        jButton1 = new javax.swing.JButton();
+        btnExcluir = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -61,10 +56,10 @@ public class DlgBuscaPet extends javax.swing.JDialog {
             }
         });
 
-        btnEditarCliente.setText("Editar");
-        btnEditarCliente.addActionListener(new java.awt.event.ActionListener() {
+        btnEditarPet.setText("Editar");
+        btnEditarPet.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnEditarClienteActionPerformed(evt);
+                btnEditarPetActionPerformed(evt);
             }
         });
 
@@ -74,12 +69,6 @@ public class DlgBuscaPet extends javax.swing.JDialog {
 
         lblNome.setText("Nome:");
 
-        edtNomePet.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                edtNomePetActionPerformed(evt);
-            }
-        });
-
         lstBuscaPet.setModel(new javax.swing.AbstractListModel<String>() {
             String[] strings = { };
             public int getSize() { return strings.length; }
@@ -87,7 +76,12 @@ public class DlgBuscaPet extends javax.swing.JDialog {
         });
         jScrollPane1.setViewportView(lstBuscaPet);
 
-        jButton1.setText("Selecionar");
+        btnExcluir.setText("Excluir");
+        btnExcluir.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnExcluirActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -95,20 +89,20 @@ public class DlgBuscaPet extends javax.swing.JDialog {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addGap(36, 36, 36)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 564, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 564, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(lblNome)
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(btnBusca)
                                 .addGap(18, 18, 18)
-                                .addComponent(jButton1)
-                                .addGap(18, 18, 18)
                                 .addComponent(btnReserva)))
                         .addGap(18, 18, 18)
-                        .addComponent(btnEditarCliente))
-                    .addComponent(edtNomePet, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(btnEditarPet)
+                        .addGap(18, 18, 18)
+                        .addComponent(btnExcluir))
+                    .addComponent(edtNomePet))
                 .addContainerGap(24, Short.MAX_VALUE))
             .addComponent(lblTitulo, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
@@ -121,12 +115,11 @@ public class DlgBuscaPet extends javax.swing.JDialog {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(edtNomePet, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(btnEditarCliente)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(btnBusca)
-                        .addComponent(jButton1)
-                        .addComponent(btnReserva)))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnBusca)
+                    .addComponent(btnReserva)
+                    .addComponent(btnEditarPet)
+                    .addComponent(btnExcluir))
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 305, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(31, Short.MAX_VALUE))
@@ -135,67 +128,143 @@ public class DlgBuscaPet extends javax.swing.JDialog {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void btnBuscaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscaActionPerformed
-        String nomeBusca = edtNomePet.getText().trim().toLowerCase();
-        List<Pet> pets = petController.listarTodosPets();
-        listModelPets.clear();
+    private void atualizarListaDePets() {
+        List<Pet> pets = petController.listarPetsPorCliente(clienteAtual.getId());
+        DefaultListModel<String> listModel = new DefaultListModel<>();
 
         for (Pet pet : pets) {
-            if (pet.getNome().toLowerCase().contains(nomeBusca)) {
-                listModelPets.addElement("ID: " + pet.getId() + " - Nome: " + pet.getNome());
-            }
+            listModel.addElement("ID: " + pet.getId() + " - Nome: " + pet.getNome());
         }
+
+        lstBuscaPet.setModel(listModel);
+    }
+
+    private void btnBuscaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscaActionPerformed
+
     }//GEN-LAST:event_btnBuscaActionPerformed
 
-    private void btnEditarClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditarClienteActionPerformed
-         String selectedValue = lstBuscaPet.getSelectedValue();
+    private void btnEditarPetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditarPetActionPerformed
+        String petSelecionado = lstBuscaPet.getSelectedValue();
 
-        if (selectedValue != null) {
-            int petId = Integer.parseInt(selectedValue.split(":")[1].trim().split(" ")[0]);
-            Pet petSelecionado = petController.listarTodosPets().stream()
-                    .filter(pet -> pet.getId() == petId).findFirst().orElse(null);
-
-            if (petSelecionado != null) {
-                Cliente clienteResponsavel = clienteController.buscarClientePorCPF(petSelecionado.getCpfResponsavel());
-
-                if (clienteResponsavel != null) {
-                    JOptionPane.showMessageDialog(this,
-                            "Reserva Criada!\nCliente: " + clienteResponsavel.getNome() + "\nCPF: "
-                                    + clienteResponsavel.getCpf() + "\nPet: " + petSelecionado.getNome(),
-                            "Sucesso", JOptionPane.INFORMATION_MESSAGE);
-                } else {
-                    JOptionPane.showMessageDialog(this, "Cliente não encontrado para este pet!", "Erro",
-                            JOptionPane.ERROR_MESSAGE);
-                }
-            } else {
-                JOptionPane.showMessageDialog(this, "Pet não encontrado!", "Erro", JOptionPane.ERROR_MESSAGE);
-            }
-        } else {
-            JOptionPane.showMessageDialog(this, "Selecione um pet antes de reservar!", "Aviso",
-                    JOptionPane.WARNING_MESSAGE);
+        if (petSelecionado == null) {
+            JOptionPane.showMessageDialog(this, "Por favor, selecione um pet.", "Aviso", JOptionPane.WARNING_MESSAGE);
+            return;
         }
-    }//GEN-LAST:event_btnEditarClienteActionPerformed
 
-    private void edtNomePetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_edtNomePetActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_edtNomePetActionPerformed
+        if (!petSelecionado.contains("ID: ")) {
+            JOptionPane.showMessageDialog(this, "Formato inválido da entrada selecionada.", "Erro", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        String id = petSelecionado.split("ID: ")[1].toString().split(" - Nome: ")[0];
+        Pet pet = petController.findById(Integer.parseInt(id));
+
+        if (pet == null) {
+            JOptionPane.showMessageDialog(this, "Pet não encontrado.", "Erro", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        DlgCadPet dlgCadPet = new DlgCadPet(new javax.swing.JFrame(), true);
+        dlgCadPet.setCPFResponsavel(pet.getCliente().getCpf());
+        dlgCadPet.setResponsavelId(pet.getCliente().getId());
+        dlgCadPet.setPet(pet);
+        dlgCadPet.setVisible(true);
+
+        atualizarListaDePets();
+    }//GEN-LAST:event_btnEditarPetActionPerformed
 
     private void btnReservaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReservaActionPerformed
-        int clienteId = 1;
-        int petId = 1;
-        DlgReservas telaReservas = new DlgReservas(new javax.swing.JFrame(), true, clienteId, petId);
-        telaReservas.setVisible(true);      
+
+        String petSelecionado = lstBuscaPet.getSelectedValue(); // Retorna o item selecionado
+
+        if (petSelecionado == null || petSelecionado.trim().isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Selecione um pet para realizar a reserva.", "Aviso", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        try {
+            // Busca o pet pelo id
+            String id = petSelecionado.split("ID: ")[1].toString().split(" - Nome: ")[0];
+            Pet pet = petController.findById(Integer.parseInt(id));
+
+            if (pet == null) {
+                JOptionPane.showMessageDialog(this, "Pet não encontrado.", "Erro", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            // Obtém o cliente associado ao pet
+            Cliente clienteAssociado = pet.getCliente();
+
+            if (clienteAssociado == null) {
+                JOptionPane.showMessageDialog(this, "O pet não está associado a um cliente.", "Erro", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            // Abre a tela de reservas
+            DlgReservas dlgReservas = new DlgReservas(new javax.swing.JFrame(), true, clienteAssociado.getId(), pet.getId());
+            dlgReservas.setVisible(true);
+
+        } catch (ArrayIndexOutOfBoundsException e) {
+            JOptionPane.showMessageDialog(this, "Formato inválido do item selecionado.", "Erro", JOptionPane.ERROR_MESSAGE);
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Erro ao processar a seleção do pet.", "Erro", JOptionPane.ERROR_MESSAGE);
+        }
     }//GEN-LAST:event_btnReservaActionPerformed
+
+    private void btnExcluirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExcluirActionPerformed
+        String petSelecionado = lstBuscaPet.getSelectedValue();
+
+        if (petSelecionado == null) {
+            JOptionPane.showMessageDialog(this, "Por favor, selecione um pet.", "Aviso", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        try {
+            // Extrai o ID do pet a partir do texto exibido
+            String id = petSelecionado.split("ID: ")[1].split(" - Nome: ")[0].trim();
+            
+            // Confirmação para exclusão
+            int resposta = JOptionPane.showConfirmDialog(this,
+                    "Tem certeza de que deseja excluir este pet?",
+                    "Confirmar Exclusão",
+                    JOptionPane.YES_NO_OPTION);
+
+            if (resposta != JOptionPane.YES_OPTION) {
+                return; // Usuário cancelou a exclusão
+            }
+
+            // Realiza a exclusão do pet
+            petController.excluirPet(Integer.parseInt(id));
+
+            // Verifica se o pet foi marcado como inativo
+            Pet pet = petController.findById(Integer.parseInt(id));
+            if (pet != null && !pet.getStatus()) {
+                JOptionPane.showMessageDialog(this, "Pet excluído com sucesso.", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
+                atualizarListaDePets(); // Atualiza a lista após a exclusão
+            } else {
+                JOptionPane.showMessageDialog(this, "Erro ao excluir o pet.", "Erro", JOptionPane.ERROR_MESSAGE);
+            }
+
+        } catch (ArrayIndexOutOfBoundsException e) {
+            JOptionPane.showMessageDialog(this, "Formato inválido do item selecionado.", "Erro", JOptionPane.ERROR_MESSAGE);
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, "ID do pet inválido.", "Erro", JOptionPane.ERROR_MESSAGE);
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Erro ao excluir o pet.", "Erro", JOptionPane.ERROR_MESSAGE);
+        }
+
+
+    }//GEN-LAST:event_btnExcluirActionPerformed
 
     /**
      * @param args the command line arguments
      */
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnBusca;
-    private javax.swing.JButton btnEditarCliente;
+    private javax.swing.JButton btnEditarPet;
+    private javax.swing.JButton btnExcluir;
     private javax.swing.JButton btnReserva;
     private javax.swing.JTextField edtNomePet;
-    private javax.swing.JButton jButton1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel lblNome;
     private javax.swing.JLabel lblTitulo;

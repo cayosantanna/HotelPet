@@ -5,18 +5,26 @@
 package com.mycompany.gui;
 
 import controller.ClienteController;
+import java.text.ParseException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.persistence.PersistenceException;
 import javax.swing.JOptionPane;
+import javax.swing.text.MaskFormatter;
 import model.Cliente;
+import org.hibernate.exception.ConstraintViolationException;
 
 public class DlgCadCliente extends javax.swing.JDialog {
 
-    private int id = 0; 
+    private int id = 0;
     private ClienteController clienteController;
+    private String hashedSenha;
 
     public DlgCadCliente(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
-        clienteController = new ClienteController(true); 
+        clienteController = new ClienteController();
         initComponents();
+        this.adicionarMascaraNosCampos();
     }
 
     public void setCliente(Cliente cliente) {
@@ -27,9 +35,10 @@ public class DlgCadCliente extends javax.swing.JDialog {
         edtTelefone.setText(cliente.getTelefone());
         edtEndereço.setText(cliente.getEndereco());
         edtCEP.setText(cliente.getCep());
-        jPasswordField2.setText(cliente.getSenha());
-        edtCPF.setEditable(false); 
+
+        this.hashedSenha = cliente.getSenha();
     }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -41,10 +50,8 @@ public class DlgCadCliente extends javax.swing.JDialog {
 
         edtEmail = new javax.swing.JTextField();
         jLabel5 = new javax.swing.JLabel();
-        edtTelefone = new javax.swing.JTextField();
         jLabel6 = new javax.swing.JLabel();
         lblTitulo = new javax.swing.JLabel();
-        edtCEP = new javax.swing.JTextField();
         jLabel7 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         edtEndereço = new javax.swing.JTextField();
@@ -52,10 +59,12 @@ public class DlgCadCliente extends javax.swing.JDialog {
         btnConfirma = new javax.swing.JButton();
         jLabel3 = new javax.swing.JLabel();
         btnCancelar = new javax.swing.JButton();
-        edtCPF = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
-        jPasswordField2 = new javax.swing.JPasswordField();
+        edtSenha = new javax.swing.JPasswordField();
+        edtCPF = new javax.swing.JFormattedTextField();
+        edtTelefone = new javax.swing.JFormattedTextField();
+        edtCEP = new javax.swing.JFormattedTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -67,21 +76,9 @@ public class DlgCadCliente extends javax.swing.JDialog {
         lblTitulo.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lblTitulo.setText("Cadastro Usuário");
 
-        edtCEP.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                edtCEPActionPerformed(evt);
-            }
-        });
-
         jLabel7.setText("Endereço:");
 
         jLabel2.setText("Nome");
-
-        edtEndereço.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                edtEndereçoActionPerformed(evt);
-            }
-        });
 
         btnConfirma.setText("Confirma");
         btnConfirma.addActionListener(new java.awt.event.ActionListener() {
@@ -103,12 +100,6 @@ public class DlgCadCliente extends javax.swing.JDialog {
 
         jLabel1.setText("Senha:");
 
-        jPasswordField2.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jPasswordField2ActionPerformed(evt);
-            }
-        });
-
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -118,35 +109,31 @@ public class DlgCadCliente extends javax.swing.JDialog {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addGap(60, 60, 60)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                .addComponent(edtCEP, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 300, Short.MAX_VALUE)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                        .addComponent(edtEmail, javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(edtNome, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 300, Short.MAX_VALUE))
-                                    .addComponent(jLabel4)))
-                            .addComponent(jLabel6)))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(edtEmail)
+                            .addComponent(jLabel2)
+                            .addComponent(edtNome, javax.swing.GroupLayout.DEFAULT_SIZE, 300, Short.MAX_VALUE)
+                            .addComponent(jLabel4)
+                            .addComponent(jLabel6)
+                            .addComponent(edtCEP)))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(280, 280, 280)
                         .addComponent(btnConfirma)))
                 .addGap(60, 60, 60)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(btnCancelar)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addComponent(jLabel7)
-                        .addComponent(jLabel5)
-                        .addComponent(jLabel3)
-                        .addComponent(edtCPF)
-                        .addComponent(edtTelefone)
-                        .addComponent(edtEndereço, javax.swing.GroupLayout.DEFAULT_SIZE, 300, Short.MAX_VALUE)))
+                    .addComponent(jLabel7)
+                    .addComponent(jLabel5)
+                    .addComponent(jLabel3)
+                    .addComponent(edtEndereço, javax.swing.GroupLayout.DEFAULT_SIZE, 300, Short.MAX_VALUE)
+                    .addComponent(edtCPF)
+                    .addComponent(edtTelefone))
                 .addGap(0, 0, Short.MAX_VALUE))
             .addGroup(layout.createSequentialGroup()
-                .addGap(260, 260, 260)
+                .addGap(299, 299, 299)
                 .addComponent(jLabel1)
                 .addGap(18, 18, 18)
-                .addComponent(jPasswordField2, javax.swing.GroupLayout.PREFERRED_SIZE, 205, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(edtSenha, javax.swing.GroupLayout.PREFERRED_SIZE, 205, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -161,7 +148,7 @@ public class DlgCadCliente extends javax.swing.JDialog {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(edtNome, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(edtCPF, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 50, Short.MAX_VALUE)
+                .addGap(50, 50, 50)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel4)
                     .addComponent(jLabel5))
@@ -169,19 +156,19 @@ public class DlgCadCliente extends javax.swing.JDialog {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(edtEmail, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(edtTelefone, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 51, Short.MAX_VALUE)
+                .addGap(51, 51, 51)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel6)
                     .addComponent(jLabel7))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(edtCEP, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(edtCEP)
                     .addComponent(edtEndereço, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 62, Short.MAX_VALUE)
+                .addGap(92, 92, 92)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
-                    .addComponent(jPasswordField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 60, Short.MAX_VALUE)
+                    .addComponent(edtSenha, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(60, 60, 60)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnConfirma)
                     .addComponent(btnCancelar))
@@ -191,31 +178,21 @@ public class DlgCadCliente extends javax.swing.JDialog {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void edtCEPActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_edtCEPActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_edtCEPActionPerformed
-
-    private void edtEndereçoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_edtEndereçoActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_edtEndereçoActionPerformed
-
     private void btnConfirmaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnConfirmaActionPerformed
-    try {
+        try {
+            String nome = edtNome.getText();
+            String cpf = edtCPF.getText().replaceAll("[^\\d]", "");
+            String email = edtEmail.getText();
+            String telefone = edtTelefone.getText().replaceAll("[^\\d]", "");
+            String endereco = edtEndereço.getText();
+            String cep = edtCEP.getText().replaceAll("[^\\d]", "");
+            String senha = new String(edtSenha.getPassword());
 
-        String nome = edtNome.getText();
-        String cpf = edtCPF.getText();
-        String email = edtEmail.getText();
-        String telefone = edtTelefone.getText();
-        String endereco = edtEndereço.getText();
-        String cep = edtCEP.getText();
-        String senha = new String(jPasswordField2.getPassword()); 
-
-
-       if (nome.isEmpty() || cpf.isEmpty() || email.isEmpty() || telefone.isEmpty() ||
-                endereco.isEmpty() || cep.isEmpty() || senha.isEmpty()) {
+            if (nome.isEmpty() || cpf.isEmpty() || email.isEmpty() || telefone.isEmpty() || endereco.isEmpty() || cep.isEmpty() || (senha.isEmpty() && id == 0)) {
                 throw new IllegalArgumentException("Todos os campos devem ser preenchidos.");
             }
 
+<<<<<<< HEAD
             if (cpf.length() != 11 || !cpf.matches("\\d+")) {
                 throw new IllegalArgumentException("CPF inválido. Deve conter exatamente 11 dígitos.");
             }
@@ -230,44 +207,69 @@ public class DlgCadCliente extends javax.swing.JDialog {
 
             Cliente cliente = new Cliente(id, nome, cpf, email, telefone, endereco, cep, senha);
 
+=======
+>>>>>>> Main
             if (id == 0) {
-
+                Cliente cliente = new Cliente(id, nome, cpf, email, telefone, endereco, cep, senha);
                 clienteController.cadastrarCliente(cliente);
                 JOptionPane.showMessageDialog(this, "Cliente cadastrado com sucesso!");
             } else {
-
-                clienteController.atualizarCliente(cliente);
+                Cliente clienteNovo = new Cliente(id, nome, cpf, email, telefone, endereco, cep, senha);
+                if (clienteNovo.getSenha() == null) {
+                    clienteNovo.setHashedSenha(hashedSenha);
+                }
+                clienteController.atualizarCliente(clienteNovo);
                 JOptionPane.showMessageDialog(this, "Cliente atualizado com sucesso!");
             }
 
             this.dispose();
 
+        } catch (PersistenceException e) {
+            if (e.getCause() instanceof org.hibernate.exception.ConstraintViolationException) {
+                Throwable cause = e.getCause();
+                if (cause instanceof ConstraintViolationException) {
+                    ConstraintViolationException constraintException = (ConstraintViolationException) cause;
+                    String constraintName = constraintException.getConstraintName();
+                    JOptionPane.showMessageDialog(this, "Erro ao salvar cliente: " + constraintName, "Erro", JOptionPane.ERROR_MESSAGE);
+
+                }
+            }
         } catch (IllegalArgumentException e) {
             JOptionPane.showMessageDialog(this, e.getMessage(), "Erro de validação", JOptionPane.WARNING_MESSAGE);
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, "Erro ao salvar cliente: " + e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
         }
-
-
     }//GEN-LAST:event_btnConfirmaActionPerformed
 
     private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
         this.dispose();
-        this.setVisible(false);   
+        this.setVisible(false);
     }//GEN-LAST:event_btnCancelarActionPerformed
 
-    private void jPasswordField2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jPasswordField2ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jPasswordField2ActionPerformed
+    public void adicionarMascaraNosCampos() {
+        try {
+            MaskFormatter maskCpf = new MaskFormatter("###.###.###-##");
+            maskCpf.install(edtCPF);
+            MaskFormatter maskCep = new MaskFormatter("#####-###");
+            maskCep.install(edtCEP);
+            MaskFormatter maskTelefone = new MaskFormatter("(##) #####-####");
+            maskTelefone.install(edtTelefone);
+
+        } catch (ParseException ex) {
+            Logger.getLogger(DlgCadCliente.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCancelar;
     private javax.swing.JButton btnConfirma;
-    private javax.swing.JTextField edtCEP;
-    private javax.swing.JTextField edtCPF;
+    private javax.swing.JFormattedTextField edtCEP;
+    private javax.swing.JFormattedTextField edtCPF;
     private javax.swing.JTextField edtEmail;
     private javax.swing.JTextField edtEndereço;
     private javax.swing.JTextField edtNome;
-    private javax.swing.JTextField edtTelefone;
+    private javax.swing.JPasswordField edtSenha;
+    private javax.swing.JFormattedTextField edtTelefone;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -275,7 +277,6 @@ public class DlgCadCliente extends javax.swing.JDialog {
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
-    private javax.swing.JPasswordField jPasswordField2;
     private javax.swing.JLabel lblTitulo;
     // End of variables declaration//GEN-END:variables
 }

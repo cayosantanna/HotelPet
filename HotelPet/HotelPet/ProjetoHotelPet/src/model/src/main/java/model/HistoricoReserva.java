@@ -1,22 +1,26 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package model;
 
-/**
- *
- * @author neidi
- */
-public class HistoricoReserva {
-    private String nomePet;
-    private String cpf;
-    
-    public HistoricoReserva(){
+import javax.persistence.*;
 
+@Entity
+public class HistoricoReserva {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;  // Chave primária para a entidade
+
+    @Column(nullable = false)
+    private String nomePet;
+
+    @Column(nullable = false)
+    private String cpf;
+
+    // Construtor
+    public HistoricoReserva() {
         this.nomePet = "";
         this.cpf = "000.000.000-00";
     }
+<<<<<<< HEAD
     
      public HistoricoReserva(String nomePet,String cpf) {
         this.nomePet = nomePet;
@@ -62,14 +66,25 @@ public class HistoricoReserva {
     }
     
      public String getCpf() {
+=======
+
+    // Método para copiar dados de outro histórico de reserva
+    public void copiar(HistoricoReserva outro) {
+        this.nomePet = outro.getNomePet();
+        this.cpf = outro.getCpf();
+    }
+
+    // Getters e Setters
+    public String getCpf() {
+>>>>>>> Main
         return cpf;
     }
 
     public void setCpf(String cpf) {
         this.cpf = cpf;
     }
-    
-     public String getNomePet() {
+
+    public String getNomePet() {
         return nomePet;
     }
 
@@ -77,4 +92,14 @@ public class HistoricoReserva {
         this.nomePet = nomePet;
     }
 
+<<<<<<< HEAD
+=======
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+>>>>>>> Main
 }

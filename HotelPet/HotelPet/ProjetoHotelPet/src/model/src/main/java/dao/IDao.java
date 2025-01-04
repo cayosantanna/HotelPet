@@ -12,6 +12,7 @@ import model.Pet;
  * @author thais
  */
 public interface IDao<T> {
+<<<<<<< HEAD
     public void save(T obj);
     
     public void update(T obj, Pet novo);
@@ -22,3 +23,11 @@ public interface IDao<T> {
         
     public List<T> findAll();
 }
+=======
+    void save(T obj);
+    void update(T obj, T novo); 
+    boolean delete(T obj);
+    T find(T obj);
+    List<T> findAll();
+}
+>>>>>>> Main

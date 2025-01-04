@@ -1,49 +1,39 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package factory;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
 
-/**
- *
- * @author thais
- */
 public class Persistencia {
-    private static Persistencia instance = null;
-    private Connection connection = null;
-    private static final String DB_URL = "jdbc:sqlite:dbHotelPet.sqlite";
+    
+    // Criando um EntityManagerFactory com o nome da unidade de persistência
+    private static final EntityManagerFactory entityManagerFactory =
+            Persistence.createEntityManagerFactory("exemplo-jpa"); // Nome da unidade de persistência definido no persistence.xml
 
-    private Persistencia() {
-        try {
-            Class.forName("org.sqlite.JDBC");
-            this.connection = DriverManager.getConnection(DB_URL);
-        } catch (ClassNotFoundException | SQLException ex) {
-            System.err.println("Error - Ao abrir conexão." + ex.toString());
-        }
+    // Método para obter o EntityManager
+    public static EntityManager getEntityManager() {
+        return entityManagerFactory.createEntityManager();
     }
+    public static void beginTransaction(EntityManager em) {
+    if (!em.getTransaction().isActive()) {
+        em.getTransaction().begin();
+    }
+}
 
-    public static Connection getConnection() {
-        if (instance == null) {
-            instance = new Persistencia();
-        }
-        return instance.connection;
+public static void commitTransaction(EntityManager em) {
+    if (em.getTransaction().isActive()) {
+        em.getTransaction().commit();
     }
+}
 
-    // Método para fechar a conexão (se necessário)
-    public static void closeConnection() {
-        if (instance != null && instance.connection != null) {
-            try {
-                instance.connection.close();
-                instance = null;
-            } catch (SQLException ex) {
-                Logger.getLogger(Persistencia.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
+public static void rollbackTransaction(EntityManager em) {
+    if (em.getTransaction().isActive()) {
+        em.getTransaction().rollback();
     }
+}
+public static void closeEntityManager(EntityManager em) {
+    if (em != null && em.isOpen()) {
+        em.close();
+    }
+}
 }
