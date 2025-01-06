@@ -6,15 +6,22 @@ package model;
  * @author neidi
  */
 public class Pessoa {
+
+    /**
+     * @param id the id to set
+     */
+    public void setId(int id) {
+        this.id = id;
+    }
     
-    protected int id;
-    protected String nome;
-    protected String cpf;
-    protected String email;
-    protected String telefone;
-    protected String endereco;
-    protected String cep;
-    protected String senha;
+    private int id;
+    private String nome;
+    private String cpf;
+    private String email;
+    private String telefone;
+    private String endereco;
+    private String cep;
+    private String senha;
     
     public Pessoa() {
         this.id = 0;
@@ -40,14 +47,14 @@ public class Pessoa {
     
     @Override
     public String toString() {
-        String txt ="Id: " + this.id +"\n"+ 
-        "Nome: " + this.nome +"\n"
-        +"Cpf: "+ this.cpf + "\n"
-        +"Email: "+ this.email+"\n"
-        +"Telefone: "+ this.telefone+"\n"
-        +"Endereco: "+ this.endereco+"\n"
-        +"Cep: "+ this.cep+"\n"
-        +"Senha: "+ this.email+"\n";
+        String txt ="Id: " + this.getId() +"\n"+ 
+        "Nome: " + this.getNome() +"\n"
+        +"Cpf: "+ this.getCpf() + "\n"
+        +"Email: "+ this.getEmail()+"\n"
+        +"Telefone: "+ this.getTelefone()+"\n"
+        +"Endereco: "+ this.getEndereco()+"\n"
+        +"Cep: "+ this.getCep()+"\n"
+        +"Senha: "+ this.getEmail()+"\n";
         return txt;
     }  
     
@@ -61,7 +68,7 @@ public class Pessoa {
     Pessoa outro = (Pessoa) obj;
 
     // Compara atributos relevantes
-    if (this.id != outro.id) 
+    if (this.getId() != outro.getId()) 
         return false;
     if (!this.nome.equals(outro.nome)) 
         return false;

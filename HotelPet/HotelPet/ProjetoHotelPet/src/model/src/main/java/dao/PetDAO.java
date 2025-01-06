@@ -7,7 +7,7 @@ import javax.persistence.EntityTransaction;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.TypedQuery;
-import utils.EntityManagerUtil;
+import util.EntityManagerUtil;
 
 public class PetDAO implements IDao<Pet> {
 

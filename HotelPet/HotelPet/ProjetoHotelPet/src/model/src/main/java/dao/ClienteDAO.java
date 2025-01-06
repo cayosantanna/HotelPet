@@ -1,11 +1,12 @@
 package dao;
 
 import java.util.List;
+
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
+
 import model.Cliente;
-import org.hibernate.exception.ConstraintViolationException;
-import utils.EntityManagerUtil;
+import util.EntityManagerUtil;
 
 public class ClienteDAO implements IDao<Cliente> {
 
@@ -195,8 +196,11 @@ public class ClienteDAO implements IDao<Cliente> {
             query.setParameter("email", email);
 
             return query.getSingleResult();
+        } catch (javax.persistence.NoResultException e) {
+            // Não exibe erro para ausência de resultado
+            return null;
         } catch (Exception e) {
-            System.out.println("Erro: " + e.getMessage());
+            System.out.println("Erro ao buscar por email: " + e.getMessage());
             return null;
         } finally {
             if (entityManager != null) {

@@ -61,6 +61,15 @@ public class DlgBuscaUsuario extends javax.swing.JDialog {
             public int getSize() { return strings.length; }
             public String getElementAt(int i) { return strings[i]; }
         });
+        lstBuscaUsuario.addAncestorListener(new javax.swing.event.AncestorListener() {
+            public void ancestorAdded(javax.swing.event.AncestorEvent evt) {
+                lstBuscaUsuarioAncestorAdded(evt);
+            }
+            public void ancestorMoved(javax.swing.event.AncestorEvent evt) {
+            }
+            public void ancestorRemoved(javax.swing.event.AncestorEvent evt) {
+            }
+        });
         jScrollPane1.setViewportView(lstBuscaUsuario);
 
         btnBusca.setText("Buscar");
@@ -284,6 +293,10 @@ public class DlgBuscaUsuario extends javax.swing.JDialog {
         }
 
     }//GEN-LAST:event_btnNovoPetActionPerformed
+
+    private void lstBuscaUsuarioAncestorAdded(javax.swing.event.AncestorEvent evt) {//GEN-FIRST:event_lstBuscaUsuarioAncestorAdded
+        // TODO add your handling code here:
+    }//GEN-LAST:event_lstBuscaUsuarioAncestorAdded
 
      public void adicionarMascaraNosCampos() {
         try {

@@ -40,13 +40,14 @@ public class Reserva implements Serializable {
     private Date dataReserva;
 
     private String descricaoServicosExtras;
+    private String statusServico;
 
     public Reserva() {
         // Construtor padrão
     }
 
     public Reserva(Cliente cliente, Pet pet, boolean servicoBanho, boolean servicoTosa, boolean servicoPasseio,
-                   boolean servicoAlimentacaoEspecial, Date checkIn, Date checkOut, Date dataReserva) {
+                   boolean servicoAlimentacaoEspecial, Date checkIn, Date checkOut, Date dataReserva, String statusServico) {
         this.cliente = cliente;
         this.pet = pet;
         this.servicoBanho = servicoBanho;
@@ -56,6 +57,7 @@ public class Reserva implements Serializable {
         this.checkIn = checkIn;
         this.checkOut = checkOut;
         this.dataReserva = dataReserva;
+        this.statusServico = statusServico;
         calcularValorTotal();
     }
 
@@ -171,4 +173,12 @@ public class Reserva implements Serializable {
     public void setDescricaoServicosExtras(String descricaoServicosExtras) {
         this.descricaoServicosExtras = descricaoServicosExtras;
     }
+    public boolean isFinalizado() {
+    return "Finalizado".equals(this.statusServico);
+}
+
+    public void setFinalizado(boolean finalizado) {
+    this.statusServico = finalizado ? "Finalizado" : "Em Andamento";
+    }
+
 }

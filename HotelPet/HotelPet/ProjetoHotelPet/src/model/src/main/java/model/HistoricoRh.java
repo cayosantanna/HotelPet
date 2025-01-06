@@ -1,0 +1,68 @@
+package model;
+
+import java.util.Date;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+
+@Entity
+@Table(name = "historico_rh")
+public class HistoricoRh {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(name = "cpf_rh", nullable = false)
+    private String cpfRh;
+
+    @Column(name = "acao", nullable = false)
+    private String acao;
+
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "data_hora", nullable = false)
+    private Date dataHora;
+
+    public HistoricoRh() {
+        this.dataHora = new Date();
+    }
+
+    // Getters and setters
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getCpfRh() {
+        return cpfRh;
+    }
+
+    public void setCpfRh(String cpfRh) {
+        this.cpfRh = cpfRh;
+    }
+
+    public String getAcao() {
+        return acao;
+    }
+
+    public void setAcao(String acao) {
+        this.acao = acao;
+    }
+
+    public Date getDataHora() {
+        return dataHora;
+    }
+
+    public void setDataHora(Date dataHora) {
+        this.dataHora = dataHora;
+    }
+}

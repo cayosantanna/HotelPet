@@ -9,6 +9,7 @@ import java.sql.DriverManager;
 import javax.swing.JOptionPane;
 import model.RelatorioFuncionario;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import model.Reserva;
 
 
@@ -33,7 +34,31 @@ public class DlgRelatorioFuncionario extends javax.swing.JDialog {
             JOptionPane.showMessageDialog(this, "Erro ao conectar ao banco de dados: " + e.getMessage());
         }
     }
-    // Suponha que você tenha uma classe de conexão como exemplo:
+    // Suponha que você tenha uma classe de conexão como exemplo
+    private void preencherCampos(Reserva reserva) {
+    edtCliente.setText(reserva.getCliente().getCpf());
+    edtPet.setText(reserva.getPet().getNome());
+    checkboxCheckin.setText(new SimpleDateFormat("dd/MM/yyyy").format(reserva.getCheckIn()));
+    checkboxCheckOut.setText(reserva.getCheckOut() != null ? 
+        new SimpleDateFormat("dd/MM/yyyy").format(reserva.getCheckOut()) : "N/A");
+    edtValorPago.setText(String.format("%.2f", reserva.getValorTotal()));
+    
+    // Marcar checkboxes de acordo com os serviços selecionados
+    checkBoxBanho.setSelected(reserva.isServicoBanho());
+    checkBoxTosa.setSelected(reserva.isServicoTosa());
+    checkBoxPasseio.setSelected(reserva.isServicoPasseio());
+    checkBoxAlimentacaoEspecial.setSelected(reserva.isServicoAlimentacaoEspecial());
+    
+    // Desabilitar edição dos campos
+    edtCliente.setEditable(false);
+    edtPet.setEditable(false);
+    checkboxCheckin.setEnabled(false);
+    edtValorPago.setEditable(false);
+    checkBoxBanho.setEnabled(false);
+    checkBoxTosa.setEnabled(false);
+    checkBoxPasseio.setEnabled(false);
+    checkBoxAlimentacaoEspecial.setEnabled(false);
+}
 
 
     public void setRelatorioFuncionario(RelatorioFuncionario relatorioFuncionario) {
@@ -52,6 +77,15 @@ public class DlgRelatorioFuncionario extends javax.swing.JDialog {
         txtServicoEspecial.setText(relatorioFuncionario.getRotinaEspecial());
         txtComportamentoPet.setText(relatorioFuncionario.getServicosExtras()); // Alterado para servicosExtras
     }
+    
+    public void setRelatorioFuncionario(RelatorioFuncionario relatorioFuncionario, Reserva reserva) {
+    this.relatorioFuncionario = relatorioFuncionario;
+    relatorioFuncionario.setCpfResponsavel(reserva.getCliente().getCpf());
+    relatorioFuncionario.setNomePet(reserva.getPet().getNome());
+}
+
+    
+
 
 
     /**
@@ -133,6 +167,11 @@ public class DlgRelatorioFuncionario extends javax.swing.JDialog {
         lbtObservacao.setText("Observação sobre estadia:");
 
         edtValorPago.setFont(new java.awt.Font("Liberation Sans", 0, 18)); // NOI18N
+        edtValorPago.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                edtValorPagoActionPerformed(evt);
+            }
+        });
 
         lblData.setFont(new java.awt.Font("Liberation Sans", 0, 18)); // NOI18N
         lblData.setText("Data Realização Reserva:");
@@ -152,6 +191,11 @@ public class DlgRelatorioFuncionario extends javax.swing.JDialog {
         lblCliente.setText("Cliente:");
 
         edtPet.setFont(new java.awt.Font("Liberation Sans", 0, 18)); // NOI18N
+        edtPet.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                edtPetActionPerformed(evt);
+            }
+        });
 
         lblPet.setFont(new java.awt.Font("Liberation Sans", 0, 18)); // NOI18N
         lblPet.setText("Nome Pet:");
@@ -196,6 +240,12 @@ public class DlgRelatorioFuncionario extends javax.swing.JDialog {
         bntCancelar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 bntCancelarActionPerformed(evt);
+            }
+        });
+
+        checkboxCheckin.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                checkboxCheckinActionPerformed(evt);
             }
         });
 
@@ -355,36 +405,37 @@ public class DlgRelatorioFuncionario extends javax.swing.JDialog {
     }//GEN-LAST:event_checkBoxTosaActionPerformed
 
     private void btnSalvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalvarActionPerformed
-        // Verifica se o relatório já foi criado para o funcionário
-        if (relatorioFuncionario != null) {
-            // Cria um novo objeto com os dados atualizados
-            RelatorioFuncionario novoRelatorio = new RelatorioFuncionario(
-                relatorioFuncionario.getId(), // Passa o ID do relatorio original
-                relatorioFuncionario.getCpfResponsavel(),
-                relatorioFuncionario.getNomePet(),
-                txtObservacao.getText(),
-                checkBoxBanho.isSelected(),
-                checkBoxTosa.isSelected(),
-                checkBoxPasseio.isSelected(),
-                checkBoxAlimentacaoEspecial.isSelected(),
-                txtServicoEspecial.getText(),
-                txtComportamentoPet.getText(),
-                relatorioFuncionario.getDataEntrada(), // Se a data de entrada não mudou
-                relatorioFuncionario.getDataSaida(),   // Se a data de saída não mudou
-                Double.parseDouble(edtValorPago.getText()), // Atualiza o valor pago
-                relatorioFuncionario.getStatusServico()
-            );
+    if (relatorioFuncionario.isFinalizado()) {
+        JOptionPane.showMessageDialog(this, "Este relatório já foi finalizado e não pode ser editado.", "Aviso", JOptionPane.WARNING_MESSAGE);
+        return;
+    }
 
-            // Salva ou atualiza o relatório no banco de dados
-            RelatorioFuncionarioDAO dao = new RelatorioFuncionarioDAO(connection);
-            dao.update(relatorioFuncionario, novoRelatorio); // Passa o original e o novo
+    // Cria um novo objeto com os dados atualizados
+    RelatorioFuncionario novoRelatorio = new RelatorioFuncionario();
+    novoRelatorio.setId(relatorioFuncionario.getId());
+    novoRelatorio.setCpfResponsavel(relatorioFuncionario.getCpfResponsavel());
+    novoRelatorio.setNomePet(relatorioFuncionario.getNomePet());
+    novoRelatorio.setObservacoes(txtObservacao.getText());
+    novoRelatorio.setServicoBanho(checkBoxBanho.isSelected());
+    novoRelatorio.setServicoTosa(checkBoxTosa.isSelected());
+    novoRelatorio.setServicoPasseio(checkBoxPasseio.isSelected());
+    novoRelatorio.setServicoAlimentacaoEspecial(checkBoxAlimentacaoEspecial.isSelected());
+    novoRelatorio.setRotinaEspecial(txtServicoEspecial.getText());
+    novoRelatorio.setServicosExtras(txtComportamentoPet.getText());
+    novoRelatorio.setDataEntrada(relatorioFuncionario.getDataEntrada());
+    novoRelatorio.setDataSaida(relatorioFuncionario.getDataSaida());
+    novoRelatorio.setValorTotal(Double.parseDouble(edtValorPago.getText()));
+    novoRelatorio.setStatusServico(checkboxCheckOut.isSelected() ? "Finalizado" : "Em Andamento");
 
-            // Exibe uma mensagem de sucesso
-            JOptionPane.showMessageDialog(this, "Relatório salvo com sucesso!");
+    try {
+        RelatorioFuncionarioDAO dao = new RelatorioFuncionarioDAO(connection);
+        dao.update(relatorioFuncionario, novoRelatorio); // Passa o original e o novo
+        JOptionPane.showMessageDialog(this, "Relatório salvo com sucesso!");
+        dispose(); // Fecha a tela
+    } catch (RuntimeException e) {
+        JOptionPane.showMessageDialog(this, "Erro ao salvar o relatório: " + e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
+    }
 
-            // Fecha a tela
-            this.dispose();
-        }
     }//GEN-LAST:event_btnSalvarActionPerformed
 
     private void checkboxCheckOutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_checkboxCheckOutActionPerformed
@@ -401,8 +452,19 @@ public class DlgRelatorioFuncionario extends javax.swing.JDialog {
     private void bntCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bntCancelarActionPerformed
     this.dispose();
     }//GEN-LAST:event_bntCancelarActionPerformed
-private void toggleCamposEdicao(boolean habilitar) {
-    // Ativa ou desativa os campos de edição
+
+    private void edtValorPagoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_edtValorPagoActionPerformed
+    relatorioFuncionario.calcularValorTotal();
+    }//GEN-LAST:event_edtValorPagoActionPerformed
+
+    private void edtPetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_edtPetActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_edtPetActionPerformed
+
+    private void checkboxCheckinActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_checkboxCheckinActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_checkboxCheckinActionPerformed
+ private void toggleCamposEdicao(boolean habilitar) {
     txtObservacao.setEnabled(habilitar);
     checkBoxBanho.setEnabled(habilitar);
     checkBoxTosa.setEnabled(habilitar);
@@ -411,9 +473,11 @@ private void toggleCamposEdicao(boolean habilitar) {
     txtServicoEspecial.setEnabled(habilitar);
     txtComportamentoPet.setEnabled(habilitar);
     edtValorPago.setEnabled(habilitar);
+    checkboxCheckOut.setEnabled(habilitar);
 }
-void carregarRelatorioExistente(RelatorioFuncionario relatorio) {
-    // Preenche os campos com os dados do relatório existente
+
+    public void carregarRelatorioExistente(RelatorioFuncionario relatorio) {
+    // Preenche os campos com os dados do relatório
     txtObservacao.setText(relatorio.getObservacoes());
     checkBoxBanho.setSelected(relatorio.isServicoBanho());
     checkBoxTosa.setSelected(relatorio.isServicoTosa());
@@ -422,8 +486,11 @@ void carregarRelatorioExistente(RelatorioFuncionario relatorio) {
     txtServicoEspecial.setText(relatorio.getRotinaEspecial());
     txtComportamentoPet.setText(relatorio.getServicosExtras());
     edtValorPago.setText(String.valueOf(relatorio.getValorTotal()));
-    checkboxCheckOut.setSelected(relatorio.getStatusServico().equals("Finalizado"));
-    toggleCamposEdicao(!checkboxCheckOut.isSelected());
+
+    // Verifica se o relatório está finalizado e desativa os campos se necessário
+    boolean finalizado = relatorio.isFinalizado();
+    toggleCamposEdicao(!finalizado); // Desativa os campos se finalizado
+    checkboxCheckOut.setSelected(finalizado);
 }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

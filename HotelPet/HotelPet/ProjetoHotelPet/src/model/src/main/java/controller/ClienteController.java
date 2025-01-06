@@ -1,13 +1,12 @@
 package controller;
 
-import dao.ClienteDAO;
-
 import java.util.List;
+
 import javax.security.auth.login.LoginException;
+
+import dao.ClienteDAO;
 import model.Cliente;
-import model.exceptions.ReservaException;
 import model.valid.ValidateCliente;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 public class ClienteController {
 
@@ -20,15 +19,14 @@ public class ClienteController {
     public Cliente login(String email, String senha) throws LoginException {
         ValidateCliente.validateEmail(email);
         Cliente cliente = this.clienteDAO.findByEmail(email);
-        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
         
-        if(cliente == null || !encoder.matches(senha, cliente.getSenha())){
-            throw new LoginException();
+        if (cliente == null || !cliente.getSenha().equals(senha)) {
+            throw new LoginException("Email ou senha inválidos.");
         }
         
         return cliente;
     }
-
+    
     public void cadastrarCliente(Cliente cliente) throws Exception {
         ValidateCliente.validateCPF(cliente.getCpf());
         ValidateCliente.validateEmail(cliente.getEmail());

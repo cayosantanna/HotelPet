@@ -5,14 +5,15 @@
 package com.mycompany.gui;
 
 import controller.ClienteController;
+import controller.FuncionarioController;
 import java.text.ParseException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.persistence.PersistenceException;
 import javax.swing.JOptionPane;
 import javax.swing.text.MaskFormatter;
 import model.Cliente;
-import org.hibernate.exception.ConstraintViolationException;
+import model.Funcionario;
+import model.valid.ValidateCliente;
 
 /**
  *
@@ -21,19 +22,55 @@ import org.hibernate.exception.ConstraintViolationException;
 public class DlgCadFuncionario extends javax.swing.JDialog {
 
     private final ClienteController clienteController;
+    private final FuncionarioController funcionarioController;
+    private Funcionario funcionarioEdicao;
+    private String cpfRhLogado;
+    private Funcionario funcionarioEmEdicao;
 
     public DlgCadFuncionario(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
         this.clienteController = new ClienteController();
+        this.funcionarioController = new FuncionarioController();
         this.adicionarMascaraNosCampos();
+    }
+
+    public DlgCadFuncionario(java.awt.Frame parent, boolean modal, Funcionario funcionario, String cpfRhLogado) {
+        super(parent, modal);
+        initComponents();
+        this.clienteController = new ClienteController();
+        this.funcionarioController = new FuncionarioController();
+        this.cpfRhLogado = cpfRhLogado;
+        this.adicionarMascaraNosCampos();
+        this.funcionarioEdicao = funcionario;
+        if (funcionarioEdicao != null) {
+            inputNome.setText(funcionarioEdicao.getNome());
+            inputCpf.setText(funcionarioEdicao.getCpf());
+            inputEmail.setText(funcionarioEdicao.getEmail());
+            inputTelefone.setText(funcionarioEdicao.getTelefone());
+            inputSenha.setText(funcionarioEdicao.getSenha());
+            comboboxCargo.setSelectedItem(funcionarioEdicao.getCargo());
+            setTitle("Edição de Funcionário");
+            inputCpf.setEditable(false); // Impede edição do CPF
+        }
+    }
+
+    public DlgCadFuncionario(java.awt.Frame parent, boolean modal, String cpfRhLogado) {
+        super(parent, modal);
+        initComponents();
+        this.clienteController = new ClienteController();
+        this.funcionarioController = new FuncionarioController();
+        this.cpfRhLogado = cpfRhLogado;
+        this.adicionarMascaraNosCampos();
+        // Define edição como nula, pois é novo cadastro
+        funcionarioEdicao = null;
+        setTitle("Novo Funcionário");
     }
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        lblTitulo = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
@@ -47,12 +84,11 @@ public class DlgCadFuncionario extends javax.swing.JDialog {
         inputSenha = new javax.swing.JPasswordField();
         inputTelefone = new javax.swing.JFormattedTextField();
         inputCpf = new javax.swing.JFormattedTextField();
+        jLabel8 = new javax.swing.JLabel();
+        comboboxCargo = new javax.swing.JComboBox<>();
+        lblTitulo = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-
-        lblTitulo.setFont(new java.awt.Font("Liberation Sans", 1, 36)); // NOI18N
-        lblTitulo.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        lblTitulo.setText("Cadastro Funcionário");
 
         jLabel1.setText("Nome");
 
@@ -78,55 +114,57 @@ public class DlgCadFuncionario extends javax.swing.JDialog {
 
         jLabel7.setText("Senha");
 
+        jLabel8.setText("Cargo:");
+
+        comboboxCargo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] {"Recepcionista","Gestor de RH"}));
+        comboboxCargo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                comboboxCargoActionPerformed(evt);
+            }
+        });
+
+        lblTitulo.setFont(new java.awt.Font("Liberation Sans", 1, 36)); // NOI18N
+        lblTitulo.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblTitulo.setText("Cadastro Funcionário");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
+                .addGap(34, 34, 34)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(lblTitulo, javax.swing.GroupLayout.DEFAULT_SIZE, 703, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(197, 197, 197)
-                                .addComponent(inputSenha, javax.swing.GroupLayout.PREFERRED_SIZE, 279, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addGap(34, 34, 34)
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addGroup(layout.createSequentialGroup()
-                                                .addComponent(jLabel1)
-                                                .addGap(279, 279, 279)
-                                                .addComponent(jLabel3))
-                                            .addComponent(jLabel4)
-                                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                                .addComponent(inputEmail, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 279, Short.MAX_VALUE)
-                                                .addComponent(inputNome, javax.swing.GroupLayout.Alignment.LEADING))
-                                            .addGroup(layout.createSequentialGroup()
-                                                .addGap(184, 184, 184)
-                                                .addComponent(btnConfirmar))))
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addGap(197, 197, 197)
-                                        .addComponent(jLabel7)))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(btnCancelar)
-                                    .addComponent(jLabel5)
-                                    .addComponent(jLabel2)
-                                    .addComponent(inputTelefone)
-                                    .addComponent(inputCpf, javax.swing.GroupLayout.DEFAULT_SIZE, 279, Short.MAX_VALUE))))
-                        .addGap(0, 0, Short.MAX_VALUE)))
-                .addContainerGap())
+                        .addComponent(jLabel1)
+                        .addGap(279, 279, 279)
+                        .addComponent(jLabel3))
+                    .addComponent(jLabel4)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(184, 184, 184)
+                        .addComponent(btnConfirmar))
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                        .addComponent(comboboxCargo, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(inputEmail, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 279, Short.MAX_VALUE)
+                        .addComponent(inputNome, javax.swing.GroupLayout.Alignment.LEADING))
+                    .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addComponent(btnCancelar)
+                        .addComponent(jLabel5)
+                        .addComponent(jLabel2)
+                        .addComponent(inputTelefone)
+                        .addComponent(inputCpf, javax.swing.GroupLayout.DEFAULT_SIZE, 279, Short.MAX_VALUE)
+                        .addComponent(jLabel7))
+                    .addComponent(inputSenha, javax.swing.GroupLayout.PREFERRED_SIZE, 279, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(78, Short.MAX_VALUE))
+            .addComponent(lblTitulo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(lblTitulo, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addComponent(lblTitulo, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
                     .addComponent(jLabel3)
@@ -143,49 +181,70 @@ public class DlgCadFuncionario extends javax.swing.JDialog {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(inputEmail, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(inputTelefone, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(41, 41, 41)
-                .addComponent(jLabel7)
+                .addGap(40, 40, 40)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel8)
+                    .addComponent(jLabel7))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(inputSenha, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(63, 63, 63)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(comboboxCargo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(inputSenha, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(60, 60, 60)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnConfirmar)
                     .addComponent(btnCancelar))
-                .addContainerGap(65, Short.MAX_VALUE))
+                .addContainerGap(20, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void btnConfirmarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnConfirmarActionPerformed
 
-        try {
-            String nome = inputNome.getText();
-            String cpf = inputCpf.getText().replaceAll("[^\\d]", "");;
-            String email = inputEmail.getText();
-            String telefone = inputTelefone.getText().replaceAll("[^\\d]", "");;
-            String senha = new String(inputSenha.getPassword());
+private void btnConfirmarActionPerformed(java.awt.event.ActionEvent evt) {
+    try {
+        String nome = inputNome.getText().trim();
+        String cpf = inputCpf.getText().replaceAll("[^\\d]", "");
+        String email = inputEmail.getText().trim();
+        String telefone = inputTelefone.getText().replaceAll("[^\\d]", "");
+        String senha = new String(inputSenha.getPassword());
+        String cargo = comboboxCargo.getSelectedItem().toString();
 
-            if (nome.isEmpty() || cpf.isEmpty() || email.isEmpty() || telefone.isEmpty() || senha.isEmpty()) {
-                throw new IllegalArgumentException("Todos os campos devem ser preenchidos.");
+        // Valida os campos
+        ValidateCliente.validateFuncionario(cpf, email, telefone, senha);
+
+        if (funcionarioEdicao != null) {
+            // Não altera o CPF na edição
+            funcionarioEdicao.setNome(nome);
+            funcionarioEdicao.setEmail(email);
+            funcionarioEdicao.setTelefone(telefone);
+            funcionarioEdicao.setSenha(senha);
+            // Só altera o cargo se não for RH
+            if (!funcionarioEdicao.getCargo().equalsIgnoreCase("Gestor de RH")) {
+                funcionarioEdicao.setCargo(cargo);
             }
-            
-            Cliente funcionario = new Cliente(0, nome, cpf, email, telefone, null, null, senha);
-            clienteController.cadastrarFuncionario(funcionario);
+            funcionarioController.editFuncionario(funcionarioEdicao, cpfRhLogado);
+            JOptionPane.showMessageDialog(this, "Funcionário atualizado com sucesso!");
+        } else {
+            // Novo funcionário
+            Funcionario funcionario = new Funcionario(nome, cpf, email, telefone, senha, cargo, true);
+            funcionarioController.createFuncionario(funcionario, cpfRhLogado);
             JOptionPane.showMessageDialog(this, "Funcionário cadastrado com sucesso!");
-
-            this.dispose();
-
-        } catch (IllegalArgumentException e) {
-            JOptionPane.showMessageDialog(this, e.getMessage(), "Erro de validação", JOptionPane.WARNING_MESSAGE);
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(this, "Erro ao salvar funcionário: " + e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
         }
-    }//GEN-LAST:event_btnConfirmarActionPerformed
+
+        this.dispose();
+    } catch (Exception e) {
+        JOptionPane.showMessageDialog(this, e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
+    }
+}
+
 
     private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
         this.dispose();
     }//GEN-LAST:event_btnCancelarActionPerformed
+
+    private void comboboxCargoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboboxCargoActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_comboboxCargoActionPerformed
 
     public void adicionarMascaraNosCampos() {
         try {
@@ -199,10 +258,32 @@ public class DlgCadFuncionario extends javax.swing.JDialog {
             Logger.getLogger(DlgCadFuncionario.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+
+    public void setFuncionarioParaEdicao(Funcionario funcionario, String cpfRhLogado) {
+        inputNome.setText(funcionario.getNome());
+        inputCpf.setText(funcionario.getCpf());
+        inputEmail.setText(funcionario.getEmail());
+        inputTelefone.setText(funcionario.getTelefone());
+        inputSenha.setText(funcionario.getSenha());
+        comboboxCargo.setSelectedItem(funcionario.getCargo());
+        
+        // Desabilita a edição do CPF
+        inputCpf.setEditable(false);
+        
+        // Se o funcionário for RH, desabilita a mudança de cargo
+        if (funcionario.getCargo().equalsIgnoreCase("Gestor de RH")) {
+            comboboxCargo.setEnabled(false);
+        }
+        
+        // Guarda referência do funcionário sendo editado
+        this.funcionarioEdicao = funcionario;
+        this.cpfRhLogado = cpfRhLogado;
+    }
      
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCancelar;
     private javax.swing.JButton btnConfirmar;
+    private javax.swing.JComboBox<String> comboboxCargo;
     private javax.swing.JFormattedTextField inputCpf;
     private javax.swing.JTextField inputEmail;
     private javax.swing.JTextField inputNome;
@@ -214,6 +295,7 @@ public class DlgCadFuncionario extends javax.swing.JDialog {
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel lblTitulo;
     // End of variables declaration//GEN-END:variables
 }

@@ -6,6 +6,7 @@ package com.mycompany.gui;
 
 import controller.RelatorioController;
 import dao.RelatorioDAO;
+import model.Reserva;
 
 /*Cayo: Renomeei a tela relatorio para comfirmacaoreserva por ser mais intuitivo, 
 ela confirma os dados da resevar após o pagamento */
@@ -36,8 +37,22 @@ public class ConfirmacaoReserva extends javax.swing.JDialog {
         checkBoxPasseio.setEnabled(false);
         checkBoxAlimentacaoEspecial.setEnabled(false);
     }
-
     
+public void preencherCampos(Reserva reserva) {
+    // Preenche os campos com os dados da reserva
+    edtCliente.setText(reserva.getCliente().getCpf());  // Supondo que o método 'getCpf()' exista
+    edtPet.setText(reserva.getPet().getNome());  // Supondo que o método 'getNome()' exista
+    edtDataCheckIn.setText(reserva.getCheckIn().toString());
+    edtDataCheckOut.setText(reserva.getCheckOut().toString());
+    edtDataRealizaçãoReserva.setText(reserva.getDataReserva().toString());
+    edtValorPago.setText(String.valueOf(reserva.getValorTotal()));
+
+    // Preenche os checkboxes dos serviços realizados
+    checkBoxBanho.setSelected(reserva.isServicoBanho());
+    checkBoxTosa.setSelected(reserva.isServicoTosa());
+    checkBoxPasseio.setSelected(reserva.isServicoPasseio());
+    checkBoxAlimentacaoEspecial.setSelected(reserva.isServicoAlimentacaoEspecial());
+}
 
 
     /**
@@ -71,6 +86,7 @@ public class ConfirmacaoReserva extends javax.swing.JDialog {
         edtDataCheckOut = new javax.swing.JTextField();
         edtValorPago = new javax.swing.JTextField();
         btnFecharTela = new javax.swing.JButton();
+        imgFeedBack = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -147,6 +163,13 @@ public class ConfirmacaoReserva extends javax.swing.JDialog {
         edtValorPago.setFont(new java.awt.Font("Liberation Sans", 0, 18)); // NOI18N
 
         btnFecharTela.setText("Fechar");
+        btnFecharTela.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnFecharTelaActionPerformed(evt);
+            }
+        });
+
+        imgFeedBack.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imgs/Design sem nome (2).png"))); // NOI18N
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -179,7 +202,6 @@ public class ConfirmacaoReserva extends javax.swing.JDialog {
                                 .addComponent(lblData)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(edtDataRealizaçãoReserva, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(jLabel4)
                             .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                                     .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
@@ -199,16 +221,23 @@ public class ConfirmacaoReserva extends javax.swing.JDialog {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(checkBoxPasseio)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(checkBoxAlimentacaoEspecial))))
+                                .addComponent(checkBoxAlimentacaoEspecial))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(206, 206, 206)
+                                .addComponent(jLabel4))))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(329, 329, 329)
                         .addComponent(btnFecharTela)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(99, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(imgFeedBack)
+                .addGap(525, 525, 525))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
+                .addGap(18, 18, 18)
                 .addComponent(lblTitulo)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
@@ -247,9 +276,11 @@ public class ConfirmacaoReserva extends javax.swing.JDialog {
                     .addComponent(edtValorPago, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addComponent(jLabel1)
-                .addGap(77, 77, 77)
+                .addGap(18, 18, 18)
                 .addComponent(jLabel4)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 77, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(imgFeedBack)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(btnFecharTela)
                 .addGap(27, 27, 27))
         );
@@ -273,6 +304,15 @@ public class ConfirmacaoReserva extends javax.swing.JDialog {
         // TODO add your handling code here:
     }//GEN-LAST:event_checkBoxBanhoActionPerformed
 
+    private void btnFecharTelaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFecharTelaActionPerformed
+
+    this.dispose(); 
+    DlgBuscaUsuario dlgBuscaCliente = new DlgBuscaUsuario(new javax.swing.JFrame(), true);
+    dlgBuscaCliente.setVisible(true); // Torna a tela de busca de cliente visível
+
+    }//GEN-LAST:event_btnFecharTelaActionPerformed
+
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnFecharTela;
     private javax.swing.JCheckBox checkBoxAlimentacaoEspecial;
@@ -285,6 +325,7 @@ public class ConfirmacaoReserva extends javax.swing.JDialog {
     private javax.swing.JTextField edtDataRealizaçãoReserva;
     private javax.swing.JTextField edtPet;
     private javax.swing.JTextField edtValorPago;
+    private javax.swing.JLabel imgFeedBack;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;

@@ -9,9 +9,19 @@ import model.exceptions.ClienteException;
 public class ValidateCliente {
 
     public static void validateCPF(String cpf) throws ClienteException {
+        if (cpf == null || !cpf.matches("\\d{11}")) {
+            throw new ClienteException("CPF inválido. Deve conter 11 dígitos.");
+        }
+        // Implementar validação de CPF conforme algoritmo
+        if (!isValidCPF(cpf)) {
+            throw new ClienteException("CPF inválido.");
+        }
+    }
+
+    private static boolean isValidCPF(String cpf) {
         //vamos verificar o tamanho primeiro        
         if (cpf.length() != 11 && cpf.length() != 14) {
-            throw new ClienteException("CPF inválido -  Tamanho inválido.");
+            return false;
         }
 
         //Retira os caracteres deixando apenas digitos
@@ -42,7 +52,7 @@ public class ValidateCliente {
             }
 
             if (resultado1 != digito1) {
-                throw new ClienteException("CPF inválido");
+                return false;
             }
 
             //vamos calcular o segundo verificador
@@ -60,7 +70,7 @@ public class ValidateCliente {
             }
 
             if (resultado2 != digito2) {
-                throw new ClienteException("CPF inválido");
+                return false;
             }
 
             //agora so basta verificar se todos são iguais
@@ -68,13 +78,12 @@ public class ValidateCliente {
                 int val = Integer.parseInt(vet[i]);
                 int valProx = Integer.parseInt(vet[i + 1]);
                 if (val != valProx) {
-                    return;
+                    return true;
                 }
             }
         }
 
-        throw new ClienteException("CPF inválido");
-
+        return false;
     }
 
     public static void validateEmail(String email) throws ClienteException {
@@ -94,5 +103,38 @@ public class ValidateCliente {
         if(telefone == null || telefone.length() < 10 || telefone.length() > 11 || !telefone.matches("\\d+")){
             throw new ClienteException("Telefone inválido!");
         }
+    }
+
+    public static void validateSenha(String senha) throws IllegalArgumentException {
+    if (senha == null || senha.isEmpty()) {
+        throw new IllegalArgumentException("A senha não pode ser vazia.");
+    }
+
+    if (senha.length() < 8) {
+        throw new IllegalArgumentException("A senha deve ter pelo menos 8 caracteres.");
+    }
+
+    if (!senha.matches(".*[A-Z].*")) {
+        throw new IllegalArgumentException("A senha deve conter pelo menos uma letra maiúscula.");
+    }
+
+    if (!senha.matches(".*[a-z].*")) {
+        throw new IllegalArgumentException("A senha deve conter pelo menos uma letra minúscula.");
+    }
+
+    if (!senha.matches(".*\\d.*")) {
+        throw new IllegalArgumentException("A senha deve conter pelo menos um número.");
+    }
+
+    if (!senha.matches(".*[!@#$%^&*(),.?\":{}|<>].*")) {
+        throw new IllegalArgumentException("A senha deve conter pelo menos um caractere especial (!@#$%^&* etc.).");
+    }
+}
+
+    public static void validateFuncionario(String cpf, String email, String telefone, String senha) throws IllegalArgumentException {
+        validateCPF(cpf);
+        validateEmail(email);
+        validateTelefone(telefone);
+        validateSenha(senha);
     }
 }
