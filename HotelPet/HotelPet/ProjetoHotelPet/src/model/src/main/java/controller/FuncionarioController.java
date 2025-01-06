@@ -7,13 +7,11 @@ import javax.persistence.EntityManager;
 
 import dao.FuncionarioDao;
 import factory.Persistencia;
-import javax.persistence.TypedQuery;
 import model.Funcionario;
 
 public class FuncionarioController {
 
     private FuncionarioDao funcionarioDao;
-    EntityManager em = Persistencia.getEntityManager();
 
     public FuncionarioController() {
         EntityManager em = Persistencia.getEntityManager();
@@ -21,21 +19,34 @@ public class FuncionarioController {
     }
 
     public void createFuncionario(Funcionario funcionario, String cpfRhLogado) throws Exception {
-    if (funcionario.getCpf() == null || funcionario.getCpf().isEmpty()) {
-        throw new Exception("CPF é obrigatório.");
+        try {
+            funcionarioDao.create(funcionario);
+            funcionarioDao.registrarAcao(cpfRhLogado, "Cadastrou funcionário: " + funcionario.getNome());
+        } catch (Exception e) {
+            e.printStackTrace();
+            Funcionario check = funcionarioDao.findByCpf(funcionario.getCpf());
+            if (check != null) {
+                return; // Funcionário já existe
+            }
+            throw new Exception("Erro ao criar funcionário: " + e.getMessage());
+        }
     }
-    if (funcionario.getNome() == null || funcionario.getNome().isEmpty()) {
-        throw new Exception("Nome é obrigatório.");
-    }
-    if (findByCpf(funcionario.getCpf()) != null) {
-        throw new Exception("CPF já registrado no sistema.");
-    }
-    funcionarioDao.create(funcionario);
-    registrarAcao(cpfRhLogado, "Cadastrou funcionário: " + funcionario.getNome());
-}
-
 
     public void editFuncionario(Funcionario funcionario, String cpfRhLogado) throws Exception {
+        // Verifica se existe outro funcionário com o mesmo email (exceto o próprio)
+        Funcionario existente = funcionarioDao.findByEmail(funcionario.getEmail());
+        if (existente != null && existente.getId() != funcionario.getId()) {
+            throw new Exception("Email já está em uso por outro funcionário.");
+        }
+
+        // Se estiver tentando mudar cargo de um RH
+        if (funcionario.getCargo().equalsIgnoreCase("Gestor de RH")) {
+            Funcionario original = funcionarioDao.findByCpf(funcionario.getCpf());
+            if (original != null && !original.getCargo().equals(funcionario.getCargo())) {
+                throw new Exception("Não é possível alterar o cargo de um Gestor de RH.");
+            }
+        }
+
         funcionarioDao.update(funcionario);
         registrarAcao(cpfRhLogado, "Editou funcionário: " + funcionario.getNome());
     }
@@ -49,38 +60,35 @@ public class FuncionarioController {
         if (funcionario == null || !funcionario.getSenha().equals(senha)) {
             throw new Exception("Email ou senha inválidos.");
         }
+        if (!funcionario.isAtivo()) {
+            throw new Exception("Funcionário inativo no sistema.");
+        }
         return funcionario;
     }
 
     public void demitirFuncionario(String cpf, String cpfRhLogado) throws Exception {
-    Funcionario funcionario = funcionarioDao.findByCpf(cpf);
-    if (funcionario == null) {
-        throw new Exception("Funcionário não encontrado.");
+        try {
+            Funcionario funcionario = funcionarioDao.findByCpf(cpf);
+            if (funcionario == null) {
+                throw new Exception("Funcionário não encontrado.");
+            }
+            if (!funcionario.isAtivo()) {
+                throw new Exception("Este funcionário já está inativo.");
+            }
+
+            funcionario.setAtivo(false);
+            funcionario.setDataDesligamento(new Date());
+            funcionarioDao.update(funcionario);
+            funcionarioDao.registrarAcao(cpfRhLogado, "Demitiu funcionário: " + funcionario.getNome());
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new Exception("Erro ao demitir funcionário: " + e.getMessage());
+        }
     }
-    if (!funcionario.isAtivo()) {
-        throw new Exception("Funcionário já está desligado.");
-    }
-
-    funcionario.setAtivo(false);
-    funcionario.setDataDesligamento(new Date());
-    funcionarioDao.update(funcionario);
-
-    registrarAcao(cpfRhLogado, "Demitido funcionário: " + funcionario.getNome());
-}
-
 
     public Funcionario findByCpf(String cpf) {
         return funcionarioDao.findByCpf(cpf);
     }
-    
-    public List<Funcionario> findByNomeOuCpf(String nome, String cpf) {
-    String jpql = "SELECT f FROM Funcionario f WHERE (:nome IS NULL OR f.nome LIKE :nome) AND (:cpf IS NULL OR f.cpf = :cpf)";
-    TypedQuery<Funcionario> query = em.createQuery(jpql, Funcionario.class);
-    query.setParameter("nome", nome != null ? "%" + nome + "%" : null);
-    query.setParameter("cpf", cpf != null ? cpf : null);
-    return query.getResultList();
-}
-
 
     public List<Funcionario> getAllFuncionarios() {
         return funcionarioDao.findAll();
@@ -103,6 +111,15 @@ public class FuncionarioController {
 
         // Filtra o histórico de acordo com os funcionários encontrados
         return funcionarioDao.getHistorico(funcionarios); // Chamando método de histórico filtrado
+    }
+
+    public void testarConexao() {
+        try {
+            List<Funcionario> funcionarios = funcionarioDao.findAll();
+            System.out.println("TestarConexao -> Funcionários encontrados: " + (funcionarios != null && !funcionarios.isEmpty()));
+        } catch (Exception e) {
+            System.out.println("Erro ao testar conexão: " + e.getMessage());
+        }
     }
     
 }

@@ -1,11 +1,14 @@
 package dao;
 
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
+import javax.persistence.NoResultException;
 import javax.persistence.TypedQuery;
-
-import org.hibernate.exception.ConstraintViolationException;
 
 import model.Funcionario;
 import model.HistoricoRh;
@@ -19,55 +22,92 @@ public class FuncionarioDao {
     }
 
     public void create(Funcionario funcionario) throws Exception {
-    try {
-        if (findByCpf(funcionario.getCpf()) != null) {
-            throw new Exception("Já existe um funcionário com este CPF.");
+        EntityTransaction tx = em.getTransaction();
+        try {
+            tx.begin();
+            em.persist(funcionario);
+            em.flush();
+            tx.commit();
+            em.clear();
+            System.out.println("Funcionário criado com sucesso: " + funcionario.getNome());
+        } catch (Exception e) {
+            if (tx != null && tx.isActive()) {
+                tx.rollback();
+            }
+            Funcionario check = findByCpf(funcionario.getCpf());
+            if (check != null) {
+                System.out.println("Funcionário já existe no banco");
+                return;
+            }
+            throw e;
         }
-        em.getTransaction().begin();
-        em.persist(funcionario);
-        em.getTransaction().commit();
-    } catch (Exception e) {
-        em.getTransaction().rollback();
-        System.err.println("Erro ao criar funcionário: " + e.getMessage());
-        throw new Exception("Erro ao criar funcionário. Verifique os dados e tente novamente.");
     }
-}
-
 
     public List<String> getHistorico() {
-        return em.createQuery("SELECT h.acao FROM HistoricoRh h ORDER BY h.dataHora DESC", String.class)
-                .getResultList();
+        try {
+            em.clear();
+            String jpql = "SELECT CONCAT('Gerente RH (', f.nome, ' - CPF: ', h.cpfRh, ') ', h.acao, ' em ', " +
+                         "DATE_FORMAT(h.dataHora, '%d/%m/%Y %H:%i')) " +
+                         "FROM HistoricoRh h " +
+                         "JOIN Funcionario f ON f.cpf = h.cpfRh " +
+                         "ORDER BY h.dataHora DESC";
+            
+            TypedQuery<String> query = em.createQuery(jpql, String.class);
+            return query.getResultList();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ArrayList<>();
+        }
     }
 
     public void update(Funcionario funcionario) throws Exception {
+        EntityTransaction tx = em.getTransaction();
         try {
-            em.getTransaction().begin();
-            em.merge(funcionario);
-            em.getTransaction().commit();
-        } catch (ConstraintViolationException e) {
-            em.getTransaction().rollback();
-            throw new Exception("Erro de restrição no banco de dados: " + e.getConstraintName());
+            tx.begin();
+            if (!funcionario.isAtivo()) {
+                String timestamp = String.valueOf(System.currentTimeMillis());
+                funcionario.setEmail("inativo." + timestamp + "." + funcionario.getEmail());
+                funcionario.setTelefone("ex." + timestamp + "." + funcionario.getTelefone());
+            }
+            funcionario = em.merge(funcionario);
+            em.flush();
+            tx.commit();
+            em.clear();
+            System.out.println("Funcionário atualizado com sucesso: " + funcionario.getNome());
         } catch (Exception e) {
-            em.getTransaction().rollback();
-            throw new Exception("Erro ao atualizar funcionário: " + e.getMessage());
+            if (tx != null && tx.isActive()) {
+                tx.rollback();
+            }
+            throw e;
         }
     }
 
     public void registrarAcao(String cpfRh, String acao) {
+        EntityTransaction tx = em.getTransaction();
         try {
-            em.getTransaction().begin();
-
-            // Criação de uma nova entrada no histórico
+            tx.begin();
+            
+            // Busca o funcionário para verificar o cargo
+            Funcionario funcionario = findByCpf(cpfRh);
+            String cargoPrefix = funcionario.getCargo().equalsIgnoreCase("Gestor de RH") ? 
+                               "RH" : "Recepcionista";
+            
             HistoricoRh historico = new HistoricoRh();
             historico.setCpfRh(cpfRh);
-            historico.setAcao(acao);
-
-            // Persiste a ação no banco
+            historico.setAcao(cargoPrefix + " - " + acao);
+            historico.setDataHora(new Date());
+            
             em.persist(historico);
-            em.getTransaction().commit();
+            em.flush();
+            tx.commit();
+            em.clear();
+            
+            System.out.println("Ação registrada por " + cargoPrefix + ": " + acao);
         } catch (Exception e) {
-            em.getTransaction().rollback();
-            throw e;
+            if (tx != null && tx.isActive()) {
+                tx.rollback();
+            }
+            e.printStackTrace();
         }
     }
 
@@ -78,8 +118,16 @@ public class FuncionarioDao {
     }
 
     public List<Funcionario> findAll() {
-        TypedQuery<Funcionario> query = em.createQuery("SELECT f FROM Funcionario f", Funcionario.class);
-        return query.getResultList();
+        try {
+            em.clear(); // Limpa o cache antes de buscar
+            return em.createQuery(
+                "SELECT f FROM Funcionario f WHERE f.ativo = true ORDER BY f.nome", 
+                Funcionario.class
+            ).getResultList();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ArrayList<>();
+        }
     }
 
     public List<Funcionario> findByNomeOuCpf(String nome, String cpf) {
@@ -92,17 +140,49 @@ public class FuncionarioDao {
 
     // Método para obter histórico filtrado com base nos funcionários
     public List<String> getHistorico(List<Funcionario> funcionarios) {
-        // Filtra o histórico com base nos funcionários
-        String jpql = "SELECT h.acao FROM HistoricoRh h WHERE h.funcionario IN :funcionarios ORDER BY h.dataHora DESC";
-        TypedQuery<String> query = em.createQuery(jpql, String.class);
-        query.setParameter("funcionarios", funcionarios);
-        return query.getResultList();
+        try {
+            TypedQuery<String> query = em.createQuery(
+                "SELECT CONCAT('RH (CPF: ', h.cpfRh, ') ', h.acao, ' em ', function('DATE_FORMAT', h.dataHora, '%d/%m/%Y %H:%i')) " +
+                "FROM HistoricoRh h WHERE h.cpfRh IN :cpfs ORDER BY h.dataHora DESC", String.class);
+            List<String> cpfs = funcionarios.stream().map(Funcionario::getCpf).collect(Collectors.toList());
+            query.setParameter("cpfs", cpfs);
+            return query.getResultList();
+        } catch (Exception e) {
+            System.out.println("Erro ao buscar histórico filtrado: " + e.getMessage());
+            return new ArrayList<>();
+        }
     }
 
     public Funcionario findByEmail(String email) {
-        TypedQuery<Funcionario> query = em.createQuery("SELECT f FROM Funcionario f WHERE f.email = :email", Funcionario.class);
-        query.setParameter("email", email);
-        return query.getResultStream().findFirst().orElse(null);
+        try {
+            TypedQuery<Funcionario> query = em.createQuery(
+                "SELECT f FROM Funcionario f WHERE f.email = :email AND f.ativo = true", 
+                Funcionario.class
+            );
+            query.setParameter("email", email);
+            return query.getSingleResult();
+        } catch (NoResultException e) {
+            return null;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public long countRhAtivos() {
+        try {
+            TypedQuery<Long> query = em.createQuery(
+                "SELECT COUNT(f) FROM Funcionario f WHERE f.cargo = :cargo AND f.ativo = true",
+                Long.class
+            );
+            query.setParameter("cargo", "Gestor de RH");
+            return query.getSingleResult();
+        } catch (NoResultException e) {
+            return 0;
+        } catch (Exception e) {
+            System.out.println("Erro ao contar RH ativos: " + e.getMessage());
+            return 0;
+        }
     }
 
 }

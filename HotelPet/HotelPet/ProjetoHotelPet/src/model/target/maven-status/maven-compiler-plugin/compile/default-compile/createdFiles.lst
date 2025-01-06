@@ -53,6 +53,7 @@ com\mycompany\gui\DlgBuscaUsuario.class
 com\mycompany\gui\FrfuncionarioRH$2.class
 com\mycompany\gui\ConfirmacaoReserva$2.class
 com\mycompany\gui\DlgBuscaUsuario$5.class
+controller\HistoricoRHController.class
 com\mycompany\gui\DlgServicos$1.class
 model\Relatorio.class
 util\DatabaseValidator.class
@@ -100,6 +101,7 @@ com\mycompany\gui\FrMenu$2.class
 com\mycompany\gui\DlgTelaPagamento$7.class
 controller\ClienteController.class
 model\valid\ValidatePet.class
+com\mycompany\gui\FrfuncionarioRH$6.class
 model\RelatorioFuncionario.class
 com\mycompany\gui\DlgReservas$6.class
 com\mycompany\gui\DlgReservas.class

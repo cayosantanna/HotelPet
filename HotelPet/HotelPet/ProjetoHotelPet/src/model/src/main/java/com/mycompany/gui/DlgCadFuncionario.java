@@ -25,6 +25,7 @@ public class DlgCadFuncionario extends javax.swing.JDialog {
     private final FuncionarioController funcionarioController;
     private Funcionario funcionarioEdicao;
     private String cpfRhLogado;
+    private Funcionario funcionarioEmEdicao;
 
     public DlgCadFuncionario(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
@@ -201,7 +202,6 @@ public class DlgCadFuncionario extends javax.swing.JDialog {
 
 private void btnConfirmarActionPerformed(java.awt.event.ActionEvent evt) {
     try {
-        // Captura os valores inseridos
         String nome = inputNome.getText().trim();
         String cpf = inputCpf.getText().replaceAll("[^\\d]", "");
         String email = inputEmail.getText().trim();
@@ -212,28 +212,25 @@ private void btnConfirmarActionPerformed(java.awt.event.ActionEvent evt) {
         // Valida os campos
         ValidateCliente.validateFuncionario(cpf, email, telefone, senha);
 
-        // Cria um novo funcionário ou utiliza o existente para edição
-        Funcionario funcionario;
         if (funcionarioEdicao != null) {
-            funcionario = funcionarioEdicao; // Edição
-            funcionario.setNome(nome);
-            funcionario.setEmail(email);
-            funcionario.setTelefone(telefone);
-            funcionario.setSenha(senha);
-            funcionario.setCargo(cargo);
-            funcionarioController.editFuncionario(funcionario, cpfRhLogado);
+            // Não altera o CPF na edição
+            funcionarioEdicao.setNome(nome);
+            funcionarioEdicao.setEmail(email);
+            funcionarioEdicao.setTelefone(telefone);
+            funcionarioEdicao.setSenha(senha);
+            // Só altera o cargo se não for RH
+            if (!funcionarioEdicao.getCargo().equalsIgnoreCase("Gestor de RH")) {
+                funcionarioEdicao.setCargo(cargo);
+            }
+            funcionarioController.editFuncionario(funcionarioEdicao, cpfRhLogado);
             JOptionPane.showMessageDialog(this, "Funcionário atualizado com sucesso!");
         } else {
-            // Evita CPF duplicado
-            if (funcionarioController.findByCpf(cpf) != null) {
-                throw new Exception("Já existe um funcionário cadastrado com este CPF.");
-            }
-            funcionario = new Funcionario(nome, cpf, email, telefone, senha, cargo, true); // Novo
+            // Novo funcionário
+            Funcionario funcionario = new Funcionario(nome, cpf, email, telefone, senha, cargo, true);
             funcionarioController.createFuncionario(funcionario, cpfRhLogado);
             JOptionPane.showMessageDialog(this, "Funcionário cadastrado com sucesso!");
         }
 
-        // Fecha o diálogo
         this.dispose();
     } catch (Exception e) {
         JOptionPane.showMessageDialog(this, e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
@@ -260,6 +257,27 @@ private void btnConfirmarActionPerformed(java.awt.event.ActionEvent evt) {
         } catch (ParseException ex) {
             Logger.getLogger(DlgCadFuncionario.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+
+    public void setFuncionarioParaEdicao(Funcionario funcionario, String cpfRhLogado) {
+        inputNome.setText(funcionario.getNome());
+        inputCpf.setText(funcionario.getCpf());
+        inputEmail.setText(funcionario.getEmail());
+        inputTelefone.setText(funcionario.getTelefone());
+        inputSenha.setText(funcionario.getSenha());
+        comboboxCargo.setSelectedItem(funcionario.getCargo());
+        
+        // Desabilita a edição do CPF
+        inputCpf.setEditable(false);
+        
+        // Se o funcionário for RH, desabilita a mudança de cargo
+        if (funcionario.getCargo().equalsIgnoreCase("Gestor de RH")) {
+            comboboxCargo.setEnabled(false);
+        }
+        
+        // Guarda referência do funcionário sendo editado
+        this.funcionarioEdicao = funcionario;
+        this.cpfRhLogado = cpfRhLogado;
     }
      
     // Variables declaration - do not modify//GEN-BEGIN:variables

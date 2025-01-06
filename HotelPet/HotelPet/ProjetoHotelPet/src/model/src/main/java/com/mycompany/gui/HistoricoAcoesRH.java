@@ -12,20 +12,29 @@ public class HistoricoAcoesRH extends javax.swing.JDialog {
     public HistoricoAcoesRH(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
-        this.funcionarioController = new FuncionarioController();
+        this.funcionarioController = new FuncionarioController(); // Ajuste seu EntityManager aqui
         carregarHistorico();
     }
 
     private void carregarHistorico() {
-    try {
-        List<String> historico = funcionarioController.getHistoricoRH();
+        try {
+            List<String> historico = funcionarioController.getHistoricoRH();
+            atualizarLista(historico);
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, 
+                "Erro ao carregar histórico. " + e.getMessage(), 
+                "Erro", 
+                JOptionPane.ERROR_MESSAGE);
+        }
+    }
+    
+      private void atualizarLista(List<String> historico) {
         DefaultListModel<String> model = new DefaultListModel<>();
         historico.forEach(model::addElement);
         lstAtividadesRH.setModel(model);
-    } catch (Exception e) {
-        JOptionPane.showMessageDialog(this, "Erro ao carregar histórico: " + e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
+        lstAtividadesRH.revalidate();
+        lstAtividadesRH.repaint();
     }
-}
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -117,17 +126,25 @@ public class HistoricoAcoesRH extends javax.swing.JDialog {
     }//GEN-LAST:event_edtCPFActionPerformed
 
     private void btnFiltrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFiltrarActionPerformed
-    try {
-        String nome = edtNome.getText().trim();
-        String cpf = edtCPF.getText().trim();
+        try {
+            String nome = edtNome.getText().trim();
+            String cpf = edtCPF.getText().trim();
 
-        List<String> historico = funcionarioController.filtrarHistorico(nome, cpf); /* Erro: filtrarHistorico criar em controllerFuncionario*/
-        DefaultListModel<String> model = new DefaultListModel<>();
-        historico.forEach(model::addElement);
-        lstAtividadesRH.setModel(model);
-    } catch (Exception e) {
-        JOptionPane.showMessageDialog(this, "Erro ao filtrar histórico: " + e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
-    }
+            List<String> historico;
+            if (nome.isEmpty() && cpf.isEmpty()) {
+                historico = funcionarioController.getHistoricoRH();
+            } else {
+                historico = funcionarioController.filtrarHistorico(nome, cpf);
+            }
+
+            atualizarLista(historico);
+
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, 
+                "Erro ao filtrar histórico: " + e.getMessage(), 
+                "Erro", 
+                JOptionPane.ERROR_MESSAGE);
+        }
     }//GEN-LAST:event_btnFiltrarActionPerformed
 
 

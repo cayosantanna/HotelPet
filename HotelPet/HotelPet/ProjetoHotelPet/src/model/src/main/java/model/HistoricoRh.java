@@ -1,46 +1,44 @@
 package model;
 
-import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Size;
+import java.util.Date;
 
-import java.io.Serializable;
-import java.time.LocalDateTime;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 @Entity
 @Table(name = "historico_rh")
-public class HistoricoRh implements Serializable {
+public class HistoricoRh {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Long id;
 
-    @NotNull(message = "CPF não pode estar vazio.")
-    @Size(min = 11, max = 14, message = "CPF deve conter entre 11 e 14 caracteres.")
-    @Pattern(regexp = "\\d{11}|\\d{3}\\.\\d{3}\\.\\d{3}-\\d{2}", message = "CPF inválido.")
-    @Column(nullable = false, unique = true, length = 14)
+    @Column(name = "cpf_rh", nullable = false)
     private String cpfRh;
 
-    @NotNull(message = "Ação não pode estar vazia.")
-    @Column(name = "acao", nullable = false, columnDefinition = "TEXT")
+    @Column(name = "acao", nullable = false)
     private String acao;
 
-    @Column(name = "data_hora", updatable = false, nullable = false, columnDefinition = "TIMESTAMP")
-    private LocalDateTime dataHora;
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "data_hora", nullable = false)
+    private Date dataHora;
 
-    // Método que preenche automaticamente o campo dataHora ao criar o registro
-    @PrePersist
-    protected void onCreate() {
-        this.dataHora = LocalDateTime.now();
+    public HistoricoRh() {
+        this.dataHora = new Date();
     }
 
-    // Getters e Setters
-    public Integer getId() {
+    // Getters and setters
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -60,11 +58,11 @@ public class HistoricoRh implements Serializable {
         this.acao = acao;
     }
 
-    public LocalDateTime getDataHora() {
+    public Date getDataHora() {
         return dataHora;
     }
 
-    public void setDataHora(LocalDateTime dataHora) {
+    public void setDataHora(Date dataHora) {
         this.dataHora = dataHora;
     }
 }

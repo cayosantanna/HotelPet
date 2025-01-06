@@ -24,27 +24,33 @@ public class FrTelaInicial extends javax.swing.JFrame {
         this.clienteController = new ClienteController();
         this.funcionarioController = new FuncionarioController(); // Inicializando o controlador de funcionários
         verificarFuncionarioRH();
+        // Teste de conexão com o banco
+    funcionarioController.testarConexao();
+
     }
     
 private void verificarFuncionarioRH() {
     try {
-        // Verifique se o funcionário RH já está cadastrado
-        Funcionario funcionarioRH = funcionarioController.findByCpf("97320260069"); // CPF do RH que você quer verificar
+        System.out.println("Verificando funcionários no banco...");
+        boolean hasFuncionarios = !funcionarioController.getAllFuncionarios().isEmpty();
+        System.out.println("Funcionários encontrados: " + hasFuncionarios);
 
-        if (funcionarioRH == null) {
-            // Se não encontrar o funcionário RH, abra a tela de cadastro
-            JOptionPane.showMessageDialog(this, "Funcionário RH não encontrado. Realizando cadastro...", "Cadastro RH", JOptionPane.INFORMATION_MESSAGE);
-            abrirTelaCadastroRH(); // Abre a tela de cadastro do RH
+        if (!hasFuncionarios) {
+            JOptionPane.showMessageDialog(this, "Nenhum funcionário encontrado. Realize o cadastro do primeiro funcionário.", "Cadastro Inicial", JOptionPane.INFORMATION_MESSAGE);
+            abrirTelaCadastroRH();
         }
     } catch (Exception e) {
-        JOptionPane.showMessageDialog(this, e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
+        System.out.println("Erro ao verificar funcionários: " + e.getMessage());
+        e.printStackTrace(); // Mostra o stack trace completo no console
+        JOptionPane.showMessageDialog(this, "Erro ao verificar funcionários: " + e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
     }
 }
+
 private void abrirTelaCadastroRH() {
-    // Instancia a tela de cadastro de funcionário RH
     DlgCadFuncionario telaCadastroRH = new DlgCadFuncionario(new javax.swing.JFrame(), true);
     telaCadastroRH.setVisible(true);
 }
+
 
     
     @SuppressWarnings("unchecked")
@@ -144,66 +150,40 @@ private void abrirTelaCadastroRH() {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnEntrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEntrarActionPerformed
-try {
-        // Recupera os valores dos campos de email e senha
+    try {
         String email = inputEmail.getText().trim();
         String senha = new String(inputSenha.getPassword());
 
-        // Verifica se os campos estão preenchidos
-        if (email.isEmpty()) {
-            throw new IllegalArgumentException("O campo de email está vazio. Por favor, preencha-o.");
-        }
-        if (senha.isEmpty()) {
-            throw new IllegalArgumentException("O campo de senha está vazio. Por favor, preencha-o.");
+        if (email.isEmpty() || senha.isEmpty()) {
+            throw new IllegalArgumentException("Email e senha são obrigatórios");
         }
 
-        // Tentativa de login como cliente
-        Cliente cliente = clienteController.login(email, senha);
-        if (cliente != null) {
-            // Login bem-sucedido como cliente
-            inputEmail.setText("");  // Limpa o campo de email
-            inputSenha.setText("");  // Limpa o campo de senha
-            JOptionPane.showMessageDialog(this, "Bem-vindo, " + cliente.getNome() + "!");
-
-            // Abre a tela do menu principal (adapte se necessário)
-            FrMenu telaMenu = new FrMenu(this, true);
-            telaMenu.setFuncionario(cliente.getFuncionario());
-            telaMenu.setVisible(true);
-            return;
-        }
-
-        // Tentativa de login como funcionário
+        // Tenta primeiro como funcionário
         Funcionario funcionario = funcionarioController.loginFuncionario(email, senha);
         if (funcionario != null) {
-            if (!funcionario.isAtivo()) {
-                throw new IllegalArgumentException("Funcionário inativo. Entre em contato com o administrador do sistema.");
-            }
-
-            // Verifica o cargo do funcionário
-            if ("RH".equalsIgnoreCase(funcionario.getCargo())) {
-                FrfuncionarioRH telaRh = new FrfuncionarioRH(funcionario.getCpf());
-                telaRh.setVisible(true);
+            System.out.println("Cargo do funcionário: " + funcionario.getCargo()); // Debug
+            if (funcionario.getCargo().contains("RH") || 
+                funcionario.getCargo().contains("gestor") || 
+                funcionario.getCargo().equalsIgnoreCase("Gestor de RH")) {
+                abrirMenuFuncionarioRH(funcionario);
             } else {
                 JOptionPane.showMessageDialog(this, "Bem-vindo, " + funcionario.getNome() + "!");
+                abrirMenuFuncionario(funcionario);
             }
-
-            // Limpa os campos de entrada
-            inputEmail.setText("");
-            inputSenha.setText("");
             return;
         }
 
-        // Caso nenhum login seja bem-sucedido
-        throw new LoginException("Email ou senha inválidos. Verifique suas credenciais e tente novamente.");
-    } catch (IllegalArgumentException e) {
-        // Exibe mensagens de erro específicas
-        JOptionPane.showMessageDialog(this, e.getMessage(), "Erro de Validação", JOptionPane.WARNING_MESSAGE);
-    } catch (LoginException e) {
-        // Exibe mensagem de erro de login
-        JOptionPane.showMessageDialog(this, e.getMessage(), "Erro de Login", JOptionPane.WARNING_MESSAGE);
+        // Se não encontrou funcionário, tenta como cliente
+        Cliente cliente = clienteController.login(email, senha);
+        if (cliente != null) {
+            JOptionPane.showMessageDialog(this, "Bem-vindo, " + cliente.getNome() + "!");
+            abrirMenuCliente(cliente);
+            return;
+        }
+
+        throw new LoginException("Email ou senha inválidos.");
     } catch (Exception e) {
-        // Captura outros erros inesperados
-        JOptionPane.showMessageDialog(this, "Ocorreu um erro inesperado: " + e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
+        JOptionPane.showMessageDialog(this, e.getMessage(), "Erro", JOptionPane.WARNING_MESSAGE);
     }
     }//GEN-LAST:event_btnEntrarActionPerformed
 
@@ -211,7 +191,32 @@ try {
         DlgCadCliente telaCadCliente = new DlgCadCliente(new javax.swing.JFrame(), true);
         telaCadCliente.setVisible(true);       
     }//GEN-LAST:event_btnCadastrarActionPerformed
+    private Cliente autenticarCliente(String email, String senha) throws Exception {
+    return clienteController.login(email, senha);
+}
 
+private Funcionario autenticarFuncionario(String email, String senha) throws Exception {
+    return funcionarioController.loginFuncionario(email, senha);
+}
+
+private void abrirMenuCliente(Cliente cliente) {
+    FrMenu telaMenu = new FrMenu(this, true);
+    // Cliente só pode acessar serviços
+    telaMenu.setFuncionario(false);
+    telaMenu.setVisible(true);
+}
+
+private void abrirMenuFuncionario(Funcionario funcionario) {
+    FrMenu telaMenu = new FrMenu(this, true);
+    // Funcionário comum tem acesso total
+    telaMenu.setFuncionario(true);
+    telaMenu.setVisible(true);
+}
+
+private void abrirMenuFuncionarioRH(Funcionario funcionario) {
+    FrfuncionarioRH telaRH = new FrfuncionarioRH(funcionario.getCpf());
+    telaRH.setVisible(true);
+}
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCadastrar;

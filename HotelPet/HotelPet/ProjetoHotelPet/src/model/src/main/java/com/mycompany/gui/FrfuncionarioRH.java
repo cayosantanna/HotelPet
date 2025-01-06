@@ -31,17 +31,34 @@ private final FuncionarioController funcionarioController;
         setTitle("Gerenciamento de Funcionários - RH");
         setLocationRelativeTo(null);
         recarregarListaFuncionarios();
+        btnEditarFuncionario.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEditarFuncionarioActionPerformed(evt);
+            }
+        });
     }
 
     private void recarregarListaFuncionarios() {
         try {
             List<Funcionario> funcionarios = funcionarioController.getAllFuncionarios();
-            atualizarListaFuncionarios(funcionarios);
+            DefaultListModel<String> listModel = new DefaultListModel<>();
+            for (Funcionario funcionario : funcionarios) {
+                if (funcionario != null && funcionario.isAtivo()) { // Verifica se funcionário não é nulo e está ativo
+                    listModel.addElement(String.format("ID: %d - Nome: %s - CPF: %s - Cargo: %s",
+                        funcionario.getId(), 
+                        funcionario.getNome(), 
+                        funcionario.getCpf(), 
+                        funcionario.getCargo()));
+                }
+            }
+            lstFuncionarios.setModel(listModel);
+            // Força atualização visual
+            lstFuncionarios.updateUI();
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(this,
-                    "Erro ao carregar lista de funcionários: " + e.getMessage(),
-                    "Erro",
-                    JOptionPane.ERROR_MESSAGE);
+            e.printStackTrace(); // Log do erro completo
+            JOptionPane.showMessageDialog(this, 
+                "Erro ao atualizar lista: " + e.getMessage(),
+                "Erro", JOptionPane.ERROR_MESSAGE);
         }
     }
 
@@ -198,9 +215,22 @@ private final FuncionarioController funcionarioController;
             try {
                 funcionarioController.demitirFuncionario(cpf, cpfRhLogado);
                 JOptionPane.showMessageDialog(this, "Funcionário demitido com sucesso!");
+                
+                // Limpar seleção e atualizar lista
+                lstFuncionarios.clearSelection();
+                DefaultListModel<String> model = (DefaultListModel<String>) lstFuncionarios.getModel();
+                model.clear();
                 recarregarListaFuncionarios();
+                
+                // Força atualização visual
+                lstFuncionarios.revalidate();
+                lstFuncionarios.repaint();
+                
             } catch (Exception e) {
-                JOptionPane.showMessageDialog(this, "Erro ao demitir funcionário: " + e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
+                e.printStackTrace();
+                JOptionPane.showMessageDialog(this, 
+                    "Erro ao demitir funcionário: " + e.getMessage(), 
+                    "Erro", JOptionPane.ERROR_MESSAGE);
             }
         }
     }//GEN-LAST:event_btnDemissãoActionPerformed
@@ -226,11 +256,16 @@ private final FuncionarioController funcionarioController;
 
         try {
             Funcionario funcionario = funcionarioController.findByCpf(cpf);
-            DlgCadFuncionario dialog = new DlgCadFuncionario(this, true, funcionario, cpfRhLogado);
-            dialog.setVisible(true);
-            recarregarListaFuncionarios();
+            if (funcionario != null) {
+                DlgCadFuncionario dialog = new DlgCadFuncionario(this, true);
+                dialog.setFuncionarioParaEdicao(funcionario, cpfRhLogado);
+                dialog.setVisible(true);
+                recarregarListaFuncionarios(); // Atualiza a lista após edição
+            }
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(this, "Erro ao buscar funcionário: " + e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, 
+                "Erro ao editar funcionário: " + e.getMessage(),
+                "Erro", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_btnEditarFuncionarioActionPerformed
 

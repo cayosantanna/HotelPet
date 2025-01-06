@@ -1,9 +1,21 @@
 package model;
 
-import javax.persistence.*;
 import java.util.Date;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
+
 @Entity
+@Table(uniqueConstraints = {
+    @UniqueConstraint(columnNames = {"cpf"}),
+    @UniqueConstraint(columnNames = {"email"}),
+    @UniqueConstraint(columnNames = {"telefone"})
+})
 public class Funcionario extends Pessoa {
 
     @Id
@@ -16,10 +28,10 @@ public class Funcionario extends Pessoa {
     @Column(nullable = false, unique = true)
     private String cpf;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String email;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String telefone;
 
     @Column(nullable = false)
@@ -74,6 +86,11 @@ public class Funcionario extends Pessoa {
         this.setCargo(outro.getCargo());
         this.setAtivo(outro.isAtivo());
         this.setDataDesligamento(outro.getDataDesligamento());
+    }
+
+    // Adicionar método para facilitar a verificação do status
+    public boolean podeLogar() {
+        return this.ativo && this.dataDesligamento == null;
     }
 
     @Override
