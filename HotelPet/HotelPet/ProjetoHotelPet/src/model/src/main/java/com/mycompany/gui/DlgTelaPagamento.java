@@ -43,11 +43,6 @@ public class DlgTelaPagamento extends javax.swing.JDialog {
 
     private String obterServicosExtras() {
         StringBuilder servicos = new StringBuilder();
-        if (reserva.isServicoBanho()) servicos.append("Banho ");
-        if (reserva.isServicoTosa()) servicos.append("Tosa ");
-        if (reserva.isServicoPasseio()) servicos.append("Passeio ");
-        if (reserva.isServicoAlimentacaoEspecial()) servicos.append("Alimentação Especial ");
-        
         if (reserva.getDescricaoServicosExtras() != null && !reserva.getDescricaoServicosExtras().isEmpty()) {
             servicos.append("Extras: ").append(reserva.getDescricaoServicosExtras());
         }
