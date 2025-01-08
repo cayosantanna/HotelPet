@@ -18,7 +18,11 @@ public class HistoricoAcoesRH extends javax.swing.JDialog {
 
     private void carregarHistorico() {
         try {
-            List<String> historico = funcionarioController.getHistoricoRH();
+            List<String> historico = funcionarioController.getHistoricoRH(); 
+            // Ajustar para chamar o método que retorna formato (nome, cpf, cargo, ação, data/hora)
+            // Exemplo: se existir um HistoricoRHController adicional, usar algo como:
+            // List<String> historico = historicoRHController.obterTodasAcoesFormatadas();
+
             atualizarLista(historico);
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, 

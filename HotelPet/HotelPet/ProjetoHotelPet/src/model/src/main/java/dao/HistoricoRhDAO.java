@@ -1,11 +1,11 @@
 package dao;
 
+import java.util.List;
+
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.TypedQuery;
 import model.HistoricoRh;
-
-import java.util.List;
 
 public class HistoricoRhDAO implements IDao<HistoricoRh> {
     private EntityManager entityManager;
@@ -84,5 +84,15 @@ public class HistoricoRhDAO implements IDao<HistoricoRh> {
 
     public HistoricoRh findById(Integer id) {
         return entityManager.find(HistoricoRh.class, id);
+    }
+
+    public List<HistoricoRh> findAllAcoes() {
+        EntityManager em = entityManager.getEntityManagerFactory().createEntityManager();
+        try {
+            TypedQuery<HistoricoRh> query = em.createQuery("SELECT h FROM HistoricoRh h ORDER BY h.dataHora DESC", HistoricoRh.class);
+            return query.getResultList();
+        } finally {
+            em.close();
+        }
     }
 }

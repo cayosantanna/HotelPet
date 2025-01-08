@@ -236,18 +236,6 @@ public class DlgHistoricoReservas extends javax.swing.JDialog {
         }                         
     }//GEN-LAST:event_jbtnBuscarActionPerformed
 
-    private void grdHistReserMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_grdHistReserMouseClicked
-         if (evt.getClickCount() == 1) {
-            jbtnVisualizarActionPerformed(null);
-        }else{
-        // Detecta clique na tabela e habilita ações para a linha selecionada
-        if (grdHistReser.getSelectedRow() != 1 && grdHistReser.getSelectedRow()!= -1 ) {
-        btnRelatorioEstadiaPet.setEnabled(true);
-    }
-
-}
-    }//GEN-LAST:event_grdHistReserMouseClicked
-
     private void jbtnVisualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbtnVisualizarActionPerformed
         HistoricoReserva historicoSelecionado = getObjectSelectOnGrid();
         if (historicoSelecionado != null) {
@@ -275,6 +263,18 @@ public class DlgHistoricoReservas extends javax.swing.JDialog {
     }
 
     }//GEN-LAST:event_btnRelatorioEstadiaPetActionPerformed
+
+    private void grdHistReserMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_grdHistReserMouseClicked
+        if (evt.getClickCount() == 1) {
+            jbtnVisualizarActionPerformed(null);
+        }else{
+            // Detecta clique na tabela e habilita ações para a linha selecionada
+            if (grdHistReser.getSelectedRow() != 1 && grdHistReser.getSelectedRow()!= -1 ) {
+                btnRelatorioEstadiaPet.setEnabled(true);
+            }
+
+        }
+    }//GEN-LAST:event_grdHistReserMouseClicked
                                        
 
 private Reserva getReservaSelecionada() {

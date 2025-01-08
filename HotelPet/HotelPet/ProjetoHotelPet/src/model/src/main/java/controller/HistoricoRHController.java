@@ -4,15 +4,16 @@
  */
 package controller;
 
-import dao.HistoricoRhDAO;
-import model.Funcionario;
-
-import javax.persistence.TypedQuery;
-
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
-import javax.persistence.EntityManager;
 
+import javax.persistence.EntityManager;
+import javax.persistence.TypedQuery;
+
+import dao.HistoricoRhDAO;
 import model.Funcionario;
 import model.HistoricoRh;
 import util.JPAUtil;
@@ -93,6 +94,22 @@ public class HistoricoRHController {
         query.setParameter("cpf", cpf != null && !cpf.isEmpty() ? cpf : null);
 
         return query.getResultList();
+    }
+
+    public List<String> obterTodasAcoesFormatadas() {
+        List<HistoricoRh> todasAcoes = historicoRhDAO.findAll();
+        List<String> listaFormatada = new ArrayList<>();
+        for (HistoricoRh acao : todasAcoes) {
+            String registro = String.format("(%s, %s, %s, %s, %s)",
+                acao.getNome(), 
+                acao.getCpf(),
+                acao.getCargo(),
+                acao.getAcao(),
+                acao.getDataHora().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"))
+            );
+            listaFormatada.add(registro);
+        }
+        return listaFormatada;
     }
 }
 

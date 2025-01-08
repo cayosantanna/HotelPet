@@ -477,20 +477,25 @@ public class DlgRelatorioFuncionario extends javax.swing.JDialog {
 }
 
     public void carregarRelatorioExistente(RelatorioFuncionario relatorio) {
-    // Preenche os campos com os dados do relatório
-    txtObservacao.setText(relatorio.getObservacoes());
-    checkBoxBanho.setSelected(relatorio.isServicoBanho());
-    checkBoxTosa.setSelected(relatorio.isServicoTosa());
-    checkBoxPasseio.setSelected(relatorio.isServicoPasseio());
-    checkBoxAlimentacaoEspecial.setSelected(relatorio.isServicoAlimentacaoEspecial());
-    txtServicoEspecial.setText(relatorio.getRotinaEspecial());
-    txtComportamentoPet.setText(relatorio.getServicosExtras());
-    edtValorPago.setText(String.valueOf(relatorio.getValorTotal()));
+    if (relatorio != null) {
+        // Mostra as informações do histórico selecionado na tela
+        edtCliente.setText(relatorio.getCpfResponsavel());
+        edtPet.setText(relatorio.getNomePet());
+        // Preenche os campos com os dados do relatório
+        txtObservacao.setText(relatorio.getObservacoes());
+        checkBoxBanho.setSelected(relatorio.isServicoBanho());
+        checkBoxTosa.setSelected(relatorio.isServicoTosa());
+        checkBoxPasseio.setSelected(relatorio.isServicoPasseio());
+        checkBoxAlimentacaoEspecial.setSelected(relatorio.isServicoAlimentacaoEspecial());
+        txtServicoEspecial.setText(relatorio.getRotinaEspecial());
+        txtComportamentoPet.setText(relatorio.getServicosExtras());
+        edtValorPago.setText(String.valueOf(relatorio.getValorTotal()));
 
-    // Verifica se o relatório está finalizado e desativa os campos se necessário
-    boolean finalizado = relatorio.isFinalizado();
-    toggleCamposEdicao(!finalizado); // Desativa os campos se finalizado
-    checkboxCheckOut.setSelected(finalizado);
+        // Verifica se o relatório está finalizado e desativa os campos se necessário
+        boolean finalizado = relatorio.isFinalizado();
+        toggleCamposEdicao(!finalizado); // Desativa os campos se finalizado
+        checkboxCheckOut.setSelected(finalizado);
+    }
 }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

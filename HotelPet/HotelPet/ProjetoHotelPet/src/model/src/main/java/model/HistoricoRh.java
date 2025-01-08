@@ -29,6 +29,14 @@ public class HistoricoRh {
     @Column(name = "data_hora", nullable = false)
     private Date dataHora;
 
+    @Column(name = "nome_funcionario")
+    private String nome;
+
+    @Column(name = "cpf_funcionario")
+    private String cpf;
+
+    private String cargo;
+
     public HistoricoRh() {
         this.dataHora = new Date();
     }
@@ -64,5 +72,29 @@ public class HistoricoRh {
 
     public void setDataHora(Date dataHora) {
         this.dataHora = dataHora;
+    }
+
+    public String getNome() {
+        return nome;
+    }
+
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+
+    public String getCpf() {
+        return cpf;
+    }
+
+    public void setCpf(String cpf) {
+        this.cpf = cpf;
+    }
+
+    public String getCargo() {
+        return cargo;
+    }
+
+    public void setCargo(String cargo) {
+        this.cargo = cargo;
     }
 }
