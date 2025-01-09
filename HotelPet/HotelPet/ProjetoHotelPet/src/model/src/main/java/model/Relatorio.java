@@ -7,6 +7,7 @@ import javax.persistence.*;
  * @author thais
  */
 @Entity
+@Table(name = "historico")
 public class Relatorio {
 
     @Id

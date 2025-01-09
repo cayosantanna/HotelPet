@@ -16,7 +16,7 @@ public class FuncionarioRhController {
 
     public FuncionarioRhController() {
         // Certifique-se de que o método getEntityManager() existe na classe JPAUtil
-        this.historicoRHDao = new HistoricoRhDAO((jakarta.persistence.EntityManager) em);
+        this.historicoRHDao = new HistoricoRhDAO((javax.persistence.EntityManager) em);
     }
 
     // Retorna o histórico de RH formatado como lista de Strings
@@ -36,8 +36,6 @@ public class FuncionarioRhController {
     }
     return historico;
 }
-
-
 
     // Filtra histórico de RH com base no CPF
     public List<String> filtrarHistorico(String nome, String cpf) {

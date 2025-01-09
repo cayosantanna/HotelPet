@@ -8,6 +8,7 @@ import java.sql.Date;
  * @author thais
  */
 @Entity
+@Table(name = "relatoriofuncionario")
 public class RelatorioFuncionario {
 
     @Id

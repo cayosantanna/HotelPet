@@ -26,7 +26,7 @@ public class HistoricoRHController {
     public HistoricoRHController() {
         // Inicializa o EntityManager e o DAO
         this.em = JPAUtil.getEntityManager();
-        this.historicoRhDAO = new HistoricoRhDAO((jakarta.persistence.EntityManager) em);
+        this.historicoRhDAO = new HistoricoRhDAO((javax.persistence.EntityManager) em);
     }
 
     /**
