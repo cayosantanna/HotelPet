@@ -14,6 +14,8 @@ import model.Reserva;
 
 public class ReservaController {
 
+    
+
     private ReservaDAO reservaDAO;
 
     public ReservaController() {
@@ -94,4 +96,11 @@ public class ReservaController {
         calendar.add(Calendar.DAY_OF_MONTH, 20);
         return calendar.getTime();
     }
+    
+
+
+    public List<Reserva> buscarReservasPorCpfOuNomePet(String cpfCliente, String nomePet) {
+        return reservaDAO.findByCpfOrPetName(cpfCliente, nomePet);
+    }
+    
 }

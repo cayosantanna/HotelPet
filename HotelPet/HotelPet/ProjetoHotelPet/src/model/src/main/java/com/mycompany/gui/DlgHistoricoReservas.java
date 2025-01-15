@@ -7,8 +7,11 @@ package com.mycompany.gui;
 
 import model.HistoricoReserva;
 import controller.ControllerHistoricoReservas;
+import controller.ReservaController;
+import controller.TMHistoricoReservas;
 import javax.swing.JOptionPane;
 import java.util.List;
+import javax.swing.JTable;
 import model.RelatorioFuncionario;
 import model.Reserva;
 
@@ -21,6 +24,7 @@ public class DlgHistoricoReservas extends javax.swing.JDialog {
     private final ControllerHistoricoReservas histoController;
 
     private String cpfHisto;
+    private JTable tabelaReservas;
 
     public DlgHistoricoReservas(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
@@ -36,7 +40,7 @@ public class DlgHistoricoReservas extends javax.swing.JDialog {
         this.limparCampos();
 
         // Atualiza a tabela com os dados iniciais
-        histoController.atualizarTabela(grdHistReser);
+        //histoController.atualizarTabela(grdHistReser);
     }
 
     // Método para habilitar ou desabilitar campos
@@ -218,22 +222,44 @@ public class DlgHistoricoReservas extends javax.swing.JDialog {
     }//GEN-LAST:event_edtNomePetActionPerformed
 
     private void jbtnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbtnBuscarActionPerformed
-        String nomePet = edtNomePet.getText().trim();
-        String cpf = edtCPF.getText().trim();
+         String nomePet = edtNomePet.getText().trim();
+    String cpf = edtCPF.getText().trim();
 
-        // Validar os campos de entrada
-        if (nomePet.isEmpty() && cpf.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Informe ao menos um campo para busca.", "Atenção", JOptionPane.WARNING_MESSAGE);
-            return;
-        }
+    if (nomePet.isEmpty() && cpf.isEmpty()) {
+        JOptionPane.showMessageDialog(this, 
+            "Informe ao menos um campo para busca (CPF ou Nome do Pet).", 
+            "Atenção", 
+            JOptionPane.WARNING_MESSAGE);
+        return;
+    }
 
-        // Buscar os dados
-        List<HistoricoReserva> historicos = histoController.buscarHistoricoReservaCpfAndPetName(cpf, nomePet);
-        if (historicos != null && !historicos.isEmpty()) {
-            histoController.atualizarTabela(grdHistReser);
+    if (!cpf.isEmpty() && !cpf.matches("\\d{11}")) {
+        JOptionPane.showMessageDialog(this, 
+            "CPF inválido. Informe um CPF com exatamente 11 dígitos numéricos.", 
+            "Erro", 
+            JOptionPane.ERROR_MESSAGE);
+        return;
+    }
+
+    try {
+        ReservaController reservaController = new ReservaController();
+        List<Reserva> reservas = reservaController.buscarReservasPorCpfOuNomePet(cpf, nomePet);
+
+        if (reservas != null && !reservas.isEmpty()) {
+            atualizarTabelaReservas(reservas);
         } else {
-            JOptionPane.showMessageDialog(this, "Nenhuma reserva encontrada.", "Resultado", JOptionPane.INFORMATION_MESSAGE);
-        }                         
+            JOptionPane.showMessageDialog(this, 
+                "Nenhuma reserva encontrada para os critérios informados.", 
+                "Resultado", 
+                JOptionPane.INFORMATION_MESSAGE);
+        }
+    } catch (Exception e) {
+        JOptionPane.showMessageDialog(this, 
+            "Erro ao buscar dados: " + e.getMessage(), 
+            "Erro", 
+            JOptionPane.ERROR_MESSAGE);
+        e.printStackTrace();
+    }
     }//GEN-LAST:event_jbtnBuscarActionPerformed
 
     private void jbtnVisualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbtnVisualizarActionPerformed
@@ -283,6 +309,11 @@ private Reserva getReservaSelecionada() {
     return null;
 }
 
+public void atualizarTabelaReservas(List<Reserva> reservas) {
+    TMHistoricoReservas model = new TMHistoricoReservas(reservas);  // Criando o modelo com a lista de Reservas
+    tabelaReservas.setModel(model);  // Definindo o modelo da tabela
+}
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnRelatorioEstadiaPet;
@@ -298,4 +329,6 @@ private Reserva getReservaSelecionada() {
     private javax.swing.JButton jbtnBuscar;
     private javax.swing.JButton jbtnVisualizar;
     // End of variables declaration//GEN-END:variables
+
+    
 }

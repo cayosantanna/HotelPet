@@ -141,4 +141,47 @@ public class ReservaDAO implements IDao<Reserva> {
         return false;
     }
 
+   public List<Reserva> findByCpfOrPetName(String cpfCliente, String nomePet) {
+        EntityManager entityManager = EntityManagerUtil.getEntityManager();
+        try {
+            // Iniciando a consulta base
+            StringBuilder queryStr = new StringBuilder("SELECT r FROM Reserva r ");
+            queryStr.append("JOIN r.cliente c ");
+            queryStr.append("JOIN r.pet p ");
+            queryStr.append("WHERE 1 = 1 ");
+
+            // Condicional para CPF do cliente
+            if (cpfCliente != null && !cpfCliente.trim().isEmpty()) {
+                queryStr.append("AND c.cpf LIKE :cpfCliente ");
+            }
+
+            // Condicional para o nome do pet
+            if (nomePet != null && !nomePet.trim().isEmpty()) {
+                queryStr.append("AND p.nome LIKE :nomePet ");
+            }
+
+            // Criando a consulta
+            TypedQuery<Reserva> query = entityManager.createQuery(queryStr.toString(), Reserva.class);
+
+            // Definindo os parâmetros, caso existam
+            if (cpfCliente != null && !cpfCliente.trim().isEmpty()) {
+                query.setParameter("cpfCliente", "%" + cpfCliente + "%");
+            }
+            if (nomePet != null && !nomePet.trim().isEmpty()) {
+                query.setParameter("nomePet", "%" + nomePet + "%");
+            }
+
+            // Executando a consulta e retornando o resultado
+            return query.getResultList();
+        } catch (Exception e) {
+            System.out.println("Erro ao buscar reserva por CPF ou nome do pet: " + e.getMessage());
+            return null;
+        } finally {
+            if (entityManager != null) {
+                entityManager.close();
+            }
+        }
+}
+
+
 }
