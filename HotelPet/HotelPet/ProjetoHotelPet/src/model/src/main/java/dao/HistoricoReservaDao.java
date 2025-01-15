@@ -3,104 +3,142 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package dao;
+
 import model.HistoricoReserva;
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
+
+import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
+import javax.persistence.TypedQuery;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
  *
  * @author neidi
  */
-public class HistoricoReservaDao extends DAO {
+public class HistoricoReservaDao {
+    
+    private EntityManager em;
 
 
-    public HistoricoReservaDao() {
-        super("historico_reserva.csv");
+    public HistoricoReservaDao(EntityManager em) {
+        this.em = em;
     }
-
-    public HistoricoReservaDao(String pathArquivo) {
-        super(pathArquivo);
-    }
-
-    @Override
-    public boolean delete(Object obj) {
-        if (obj instanceof HistoricoReserva) {
-            HistoricoReserva reserva = (HistoricoReserva) obj;
-            List<HistoricoReserva> reservas = findAll();
-
-            boolean removido = reservas.removeIf(r -> r.getCpf().equals(reserva.getCpf()) 
-                                                   && r.getNomePet().equals(reserva.getNomePet()));
-            if (removido) {
-                saveAll(reservas);
-                return true;
-            }
-        }
-        return false;
-    }
-
-    @Override
-    public HistoricoReserva find(Object obj) {
-        if (obj instanceof HistoricoReserva) {
-            HistoricoReserva reserva = (HistoricoReserva) obj;
-            List<HistoricoReserva> reservas = findAll();
-
-            for (HistoricoReserva r : reservas) {
-                if (r.getCpf().equals(reserva.getCpf()) && r.getNomePet().equals(reserva.getNomePet())) {
-                    return r;
-                }
-            }
-        }
-        return null;
-    }
-
+  
 
     public List<HistoricoReserva> findAll() {
-        List<HistoricoReserva> reservas = new ArrayList<>();
-        try (BufferedReader br = new BufferedReader(new FileReader(this.pathArquivo))) {
-            String linha;
-            while ((linha = br.readLine()) != null) {
-                HistoricoReserva reserva = fromCSV(linha);
-                reservas.add(reserva);
+        try {
+            em.clear();
+            return em.createQuery("SELECT r FROM HistoricoReserva r ORDER BY r.dataReserva DESC", HistoricoReserva.class)
+                    .getResultList();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ArrayList<>();
+        }
+    }
+
+    public HistoricoReserva findById(Long id) {
+        try {
+            return em.find(HistoricoReserva.class, id);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public void update(HistoricoReserva reserva) throws Exception {
+        EntityTransaction tx = em.getTransaction();
+        try {
+            tx.begin();
+            reserva = em.merge(reserva);
+            em.flush();
+            tx.commit();
+            em.clear();
+            System.out.println("Histórico de reserva atualizado com sucesso: Pet " + reserva.getNomePet());
+        } catch (Exception e) {
+            if (tx != null && tx.isActive()) {
+                tx.rollback();
             }
-        } catch (IOException e) {
-            System.out.println("Erro ao carregar os dados: " + e.getMessage());
+            throw e;
         }
-        return reservas;
-    }
-
-    // Converte uma linha de texto (CSV) para um objeto HistoricoReserva
-    private HistoricoReserva fromCSV(String linha) {
-        String[] partes = linha.split(",");
-        HistoricoReserva reserva = new HistoricoReserva();
-        reserva.setNomePet(partes[0]);
-        reserva.setCpf(partes[1]);
-        return reserva;
-    }
-
-    // Converte um objeto HistoricoReserva para uma string no formato CSV
-    private String toCSV(HistoricoReserva reserva) {
-        return reserva.getNomePet() + "," + reserva.getCpf();
-    }
-
-    // Salva todas as reservas no arquivo
-    private void saveAll(List<HistoricoReserva> reservas) {
-        StringBuilder sb = new StringBuilder();
-        for (HistoricoReserva reserva : reservas) {
-            sb.append(toCSV(reserva)).append("\n");
-        }
-        save(sb.toString());
-    }
-
-    public HistoricoReserva findByCpf(String cpf) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
     
-    public List<HistoricoReserva> getByCpfandPetName(String cpf, String petName) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+//nao esta sendo usado no momento
+    public void delete(Long id) throws Exception {
+        EntityTransaction tx = em.getTransaction();
+        try {
+            tx.begin();
+            HistoricoReserva reserva = findById(id);
+            if (reserva != null) {
+                em.remove(reserva);
+            }
+            em.flush();
+            tx.commit();
+            em.clear();
+            System.out.println("Histórico de reserva deletado com sucesso: Pet " + reserva.getNomePet());
+        } catch (Exception e) {
+            if (tx != null && tx.isActive()) {
+                tx.rollback();
+            }
+            throw e;
+        }
     }
+
+    public List<HistoricoReserva> findByCpfOrPetName(String cpf, String petName) {
+        try {
+            String jpql = "SELECT r FROM HistoricoReserva r WHERE r.cpfCliente = :cpf OR r.nomePet LIKE :petName";
+            TypedQuery<HistoricoReserva> query = em.createQuery(jpql, HistoricoReserva.class);
+            query.setParameter("cpf", cpf);
+            query.setParameter("petName", "%" + petName + "%");
+            return query.getResultList();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ArrayList<>();
+        }
+    }
+
+    public List<String> getHistorico() {
+        try {
+            em.clear();
+            String jpql = "SELECT CONCAT('Reserva para o pet ', r.nomePet, ' (CPF: ', r.cpfCliente, ') em ', " +
+                          "function('DATE_FORMAT', r.dataReserva, '%d/%m/%Y %H:%i')) " +
+                          "FROM HistoricoReserva r ORDER BY r.dataReserva DESC";
+            TypedQuery<String> query = em.createQuery(jpql, String.class);
+            return query.getResultList();
+        } catch (Exception e) {
+            System.out.println("Erro ao buscar histórico de reservas: " + e.getMessage());
+            return new ArrayList<>();
+        }
+    }
+
+    public long countReservasPorPet(String nomePet) {
+        try {
+            TypedQuery<Long> query = em.createQuery(
+                    "SELECT COUNT(r) FROM HistoricoReserva r WHERE r.nomePet = :nomePet", Long.class);
+            query.setParameter("nomePet", nomePet);
+            return query.getSingleResult();
+        } catch (Exception e) {
+            System.out.println("Erro ao contar reservas por pet: " + e.getMessage());
+            return 0;
+        }
+    }
+
+    public long countReservasPorCliente(String cpfCliente) {
+        try {
+            TypedQuery<Long> query = em.createQuery(
+                    "SELECT COUNT(r) FROM HistoricoReserva r WHERE r.cpfCliente = :cpfCliente", Long.class);
+            query.setParameter("cpfCliente", cpfCliente);
+            return query.getSingleResult();
+        } catch (Exception e) {
+            System.out.println("Erro ao contar reservas por cliente: " + e.getMessage());
+            return 0;
+        }
+    }
+
+   
+
+
+    
 }
 
