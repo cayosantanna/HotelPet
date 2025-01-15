@@ -17,9 +17,9 @@ public class HistoricoRh {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private int id;
 
-    @Column(name = "cpf_rh", nullable = false)
+    @Column(name = "cpf", nullable = false)
     private String cpfRh;
 
     @Column(name = "acao", nullable = false)
@@ -42,11 +42,11 @@ public class HistoricoRh {
     }
 
     // Getters and setters
-    public Long getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(int id) {
         this.id = id;
     }
 

@@ -4,29 +4,47 @@ import controller.FuncionarioController;
 
 import javax.swing.*;
 import java.util.List;
+import javax.swing.Timer;
 
 public class HistoricoAcoesRH extends javax.swing.JDialog {
 
     private final FuncionarioController funcionarioController;
+    private Timer atualizacaoTimer;
 
     public HistoricoAcoesRH(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
         this.funcionarioController = new FuncionarioController(); // Ajuste seu EntityManager aqui
+        iniciarAtualizacaoAutomatica();
         carregarHistorico();
+        setLocationRelativeTo(null);
+        setTitle("Histórico de Ações");
+    }
+
+    private void iniciarAtualizacaoAutomatica() {
+        atualizacaoTimer = new Timer(5000, e -> carregarHistorico()); // Atualiza a cada 5 segundos
+        atualizacaoTimer.start();
+    }
+
+    @Override
+    public void dispose() {
+        if (atualizacaoTimer != null) {
+            atualizacaoTimer.stop();
+        }
+        super.dispose();
     }
 
     private void carregarHistorico() {
         try {
             List<String> historico = funcionarioController.getHistoricoRH(); 
-            // Ajustar para chamar o método que retorna formato (nome, cpf, cargo, ação, data/hora)
-            // Exemplo: se existir um HistoricoRHController adicional, usar algo como:
-            // List<String> historico = historicoRHController.obterTodasAcoesFormatadas();
-
+            if (historico.isEmpty()) {
+                historico = List.of("Nenhuma ação registrada.");
+            }
             atualizarLista(historico);
         } catch (Exception e) {
+            e.printStackTrace();
             JOptionPane.showMessageDialog(this, 
-                "Erro ao carregar histórico. " + e.getMessage(), 
+                "Erro ao carregar histórico: " + e.getMessage(), 
                 "Erro", 
                 JOptionPane.ERROR_MESSAGE);
         }
@@ -141,12 +159,20 @@ public class HistoricoAcoesRH extends javax.swing.JDialog {
                 historico = funcionarioController.filtrarHistorico(nome, cpf);
             }
 
+            if (historico.isEmpty()) {
+                JOptionPane.showMessageDialog(this,
+                    "Nenhum registro encontrado com os filtros informados.",
+                    "Informação",
+                    JOptionPane.INFORMATION_MESSAGE);
+                historico = List.of("Nenhuma ação registrada para os filtros informados.");
+            }
+
             atualizarLista(historico);
 
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(this, 
-                "Erro ao filtrar histórico: " + e.getMessage(), 
-                "Erro", 
+            JOptionPane.showMessageDialog(this,
+                "Erro ao filtrar histórico: " + e.getMessage(),
+                "Erro",
                 JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_btnFiltrarActionPerformed

@@ -209,31 +209,52 @@ private void btnConfirmarActionPerformed(java.awt.event.ActionEvent evt) {
         String senha = new String(inputSenha.getPassword());
         String cargo = comboboxCargo.getSelectedItem().toString();
 
-        // Valida os campos
+        // Validações básicas
+        if (nome.isEmpty() || cpf.isEmpty() || email.isEmpty() || 
+            telefone.isEmpty() || senha.isEmpty()) {
+            throw new Exception("Todos os campos são obrigatórios!");
+        }
+
         ValidateCliente.validateFuncionario(cpf, email, telefone, senha);
 
         if (funcionarioEdicao != null) {
-            // Não altera o CPF na edição
+            // Modo edição
             funcionarioEdicao.setNome(nome);
             funcionarioEdicao.setEmail(email);
             funcionarioEdicao.setTelefone(telefone);
             funcionarioEdicao.setSenha(senha);
+            
             // Só altera o cargo se não for RH
             if (!funcionarioEdicao.getCargo().equalsIgnoreCase("Gestor de RH")) {
                 funcionarioEdicao.setCargo(cargo);
             }
+            
+            // Mantém status ativo e data de desligamento
             funcionarioController.editFuncionario(funcionarioEdicao, cpfRhLogado);
             JOptionPane.showMessageDialog(this, "Funcionário atualizado com sucesso!");
         } else {
-            // Novo funcionário
-            Funcionario funcionario = new Funcionario(nome, cpf, email, telefone, senha, cargo, true);
-            funcionarioController.createFuncionario(funcionario, cpfRhLogado);
+            // Modo criação
+            Funcionario novoFuncionario = new Funcionario();
+            novoFuncionario.setNome(nome);
+            novoFuncionario.setCpf(cpf);
+            novoFuncionario.setEmail(email);
+            novoFuncionario.setTelefone(telefone);
+            novoFuncionario.setSenha(senha);
+            novoFuncionario.setCargo(cargo);
+            novoFuncionario.setAtivo(true);
+            novoFuncionario.setDataDesligamento(null);
+            
+            funcionarioController.createFuncionario(novoFuncionario, cpfRhLogado);
             JOptionPane.showMessageDialog(this, "Funcionário cadastrado com sucesso!");
         }
 
         this.dispose();
     } catch (Exception e) {
-        JOptionPane.showMessageDialog(this, e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
+        e.printStackTrace();
+        JOptionPane.showMessageDialog(this, 
+            "Erro: " + e.getMessage(), 
+            "Erro", 
+            JOptionPane.ERROR_MESSAGE);
     }
 }
 
