@@ -17,10 +17,10 @@
         
         <properties>
             <!-- Propriedades de conexão com o banco de dados -->
-            <property name="javax.persistence.jdbc.url" value="jdbc:mysql://sql10.freesqldatabase.com/sql10756826?useSSL=false&amp;serverTimezone=UTC&amp;allowPublicKeyRetrieval=true"/>
+            <property name="javax.persistence.jdbc.url" value="jdbc:mysql://hotelpetserver.mysql.database.azure.com:3306/hotelpet?useSSL=true&amp;requireSSL=true&amp;serverTimezone=UTC"/>
             <property name="javax.persistence.jdbc.driver" value="com.mysql.cj.jdbc.Driver"/>
-            <property name="javax.persistence.jdbc.user" value="sql10756826"/>
-            <property name="javax.persistence.jdbc.password" value="123456789"/>
+            <property name="javax.persistence.jdbc.user" value="hotelpet"/>
+            <property name="javax.persistence.jdbc.password" value="Hotel123456789"/>
 
             <!-- Propriedades do Hibernate -->
             <property name="hibernate.hbm2ddl.auto" value="update"/>
