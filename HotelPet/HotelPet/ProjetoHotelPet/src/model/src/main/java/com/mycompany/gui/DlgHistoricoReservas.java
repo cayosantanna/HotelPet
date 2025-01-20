@@ -34,20 +34,18 @@ public class DlgHistoricoReservas extends javax.swing.JDialog {
         this.cpfHisto = "-";
 
         initComponents();
+        tabelaReservas = new JTable();  // Inicializando a JTable
+        jScrollPane1.setViewportView(tabelaReservas);  // Associando ao JScrollPane
 
         // Configurações iniciais
-        this.habilitarCampos(false);
         this.limparCampos();
 
         // Atualiza a tabela com os dados iniciais
         //histoController.atualizarTabela(grdHistReser);
     }
 
-    // Método para habilitar ou desabilitar campos
-    public void habilitarCampos(boolean flag) {
-        edtNomePet.setEnabled(flag);
-        edtCPF.setEnabled(flag);
-    }
+    
+  
 
     // Método para limpar os campos de entrada
     public void limparCampos() {
@@ -120,6 +118,8 @@ public class DlgHistoricoReservas extends javax.swing.JDialog {
         });
 
         grdHistReser.setFont(new java.awt.Font("SansSerif", 0, 18)); // NOI18N
+        grdHistReser.setGridColor(new java.awt.Color(255, 255, 255));
+        grdHistReser.setShowGrid(false);
         grdHistReser.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 grdHistReserMouseClicked(evt);
@@ -223,51 +223,58 @@ public class DlgHistoricoReservas extends javax.swing.JDialog {
 
     private void jbtnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbtnBuscarActionPerformed
          String nomePet = edtNomePet.getText().trim();
-    String cpf = edtCPF.getText().trim();
+        String cpf = edtCPF.getText().trim();
 
-    if (nomePet.isEmpty() && cpf.isEmpty()) {
-        JOptionPane.showMessageDialog(this, 
-            "Informe ao menos um campo para busca (CPF ou Nome do Pet).", 
-            "Atenção", 
-            JOptionPane.WARNING_MESSAGE);
-        return;
-    }
-
-    if (!cpf.isEmpty() && !cpf.matches("\\d{11}")) {
-        JOptionPane.showMessageDialog(this, 
-            "CPF inválido. Informe um CPF com exatamente 11 dígitos numéricos.", 
-            "Erro", 
-            JOptionPane.ERROR_MESSAGE);
-        return;
-    }
-
-    try {
-        ReservaController reservaController = new ReservaController();
-        List<Reserva> reservas = reservaController.buscarReservasPorCpfOuNomePet(cpf, nomePet);
-
-        if (reservas != null && !reservas.isEmpty()) {
-            atualizarTabelaReservas(reservas);
-        } else {
+        if (nomePet.isEmpty() && cpf.isEmpty()) {
             JOptionPane.showMessageDialog(this, 
-                "Nenhuma reserva encontrada para os critérios informados.", 
-                "Resultado", 
-                JOptionPane.INFORMATION_MESSAGE);
+                "Informe ao menos um campo para busca (CPF ou Nome do Pet).", 
+                "Atenção", 
+                JOptionPane.WARNING_MESSAGE);
+            return;
         }
-    } catch (Exception e) {
-        JOptionPane.showMessageDialog(this, 
-            "Erro ao buscar dados: " + e.getMessage(), 
-            "Erro", 
-            JOptionPane.ERROR_MESSAGE);
-        e.printStackTrace();
-    }
+
+        if (!cpf.isEmpty() && !cpf.matches("\\d{11}")) {
+            JOptionPane.showMessageDialog(this, 
+                "CPF inválido. Informe um CPF com exatamente 11 dígitos numéricos.", 
+                "Erro", 
+                JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        try {
+            ReservaController reservaController = new ReservaController();
+            List<Reserva> reservas = reservaController.buscarReservasPorCpfOuNomePet(cpf, nomePet);
+
+            if (reservas != null && !reservas.isEmpty()) {
+                atualizarTabelaReservas(reservas);
+            } else {
+                JOptionPane.showMessageDialog(this, 
+                    "Nenhuma reserva encontrada para os critérios informados.", 
+                    "Resultado", 
+                    JOptionPane.INFORMATION_MESSAGE);
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, 
+                "Erro ao buscar dados: " + e.getMessage(), 
+                "Erro", 
+                JOptionPane.ERROR_MESSAGE);
+            e.printStackTrace();
+        }
     }//GEN-LAST:event_jbtnBuscarActionPerformed
 
     private void jbtnVisualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbtnVisualizarActionPerformed
-        HistoricoReserva historicoSelecionado = getObjectSelectOnGrid();
-        if (historicoSelecionado != null) {
-            objetoParaCampos(historicoSelecionado);
+        // Obter a reserva selecionada na tabela
+        HistoricoReserva reservaSelecionada = getObjectSelectOnGrid();
+        
+
+        // Verificar se uma reserva foi selecionada
+        if (reservaSelecionada != null) {
+            // Abrir a tela de confirmação com os detalhes da reserva
+        ConfirmacaoReserva Confirmacao = new ConfirmacaoReserva((java.awt.Frame) this.getParent(), true, reservaSelecionada);
+            Confirmacao.setVisible(true);
         } else {
-            JOptionPane.showMessageDialog(this, "Nenhum histórico selecionado.", "Atenção", JOptionPane.WARNING_MESSAGE);
+            // Exibir mensagem de aviso se nenhuma reserva foi selecionada
+            JOptionPane.showMessageDialog(this, "Nenhuma reserva selecionada.", "Atenção", JOptionPane.WARNING_MESSAGE);
         }
     }//GEN-LAST:event_jbtnVisualizarActionPerformed
 

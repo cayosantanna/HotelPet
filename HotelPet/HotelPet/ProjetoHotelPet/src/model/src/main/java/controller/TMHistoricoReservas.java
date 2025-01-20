@@ -16,8 +16,13 @@ public class TMHistoricoReservas extends AbstractTableModel {
     
     private List<Reserva> lista;
     
-    private final int COL_NOMEPET = 0;   
-    private final int COL_CPF = 1;          
+    private final int COL_PET_NOME = 0;
+    private final int COL_CHECK_IN = 1;
+    private final int COL_CHECK_OUT = 2;
+    private final int COL_SERVICOS = 3;
+    private final int COL_VALOR_TOTAL = 4; 
+    private final int COL_RESPONSAVEL = 5;
+    private final int COL_CPF = 6;
 
     public TMHistoricoReservas(List<Reserva> listaReserva) {        
         lista = listaReserva;        
@@ -30,31 +35,52 @@ public class TMHistoricoReservas extends AbstractTableModel {
 
     @Override
     public int getColumnCount() {
-        return 2;
+        return 7;
     }
 
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {               
-        Reserva aux = new Reserva();
+        Reserva reserva = new Reserva();
         if (lista.isEmpty()) {
-            return aux;
+            return reserva;
         } else {
-            aux = lista.get(rowIndex);
+            reserva = lista.get(rowIndex);
 
             //verifica qual valor deve ser retornado
             switch (columnIndex) {
-                case -1:
-                    return aux;
-                case COL_NOMEPET:
-                    return aux.getPet();
-                case COL_CPF:
-                    return aux.getCliente();
-
-                default: 
-                    break;
+                case COL_PET_NOME -> {
+                    return reserva.getPet().getNome(); // Nome do pet
+                }
+                case COL_CHECK_IN -> {
+                    return reserva.getCheckIn(); // Data de check-in
+                }
+                case COL_CHECK_OUT -> {
+                    return reserva.getCheckOut(); // Data de check-out
+                }
+                case COL_SERVICOS -> {
+                    // Combine os serviços selecionados em uma única string
+                    StringBuilder servicos = new StringBuilder();
+                    if (reserva.isServicoBanho()) servicos.append("Banho ");
+                    if (reserva.isServicoTosa()) servicos.append("Tosa ");
+                    if (reserva.isServicoPasseio()) servicos.append("Passeio ");
+                    if (reserva.isServicoAlimentacaoEspecial()) servicos.append("Alimentação Especial");
+                    return servicos.toString().trim(); // Serviços concatenados
+                }
+                case COL_VALOR_TOTAL -> {
+                    return reserva.getValorTotal(); // Valor total da reserva
+                }
+                case COL_RESPONSAVEL ->{
+                    return reserva.getCliente().getNome();
+                }
+                case COL_CPF ->{
+                    return reserva.getCliente().getCpf();
+                }
+                default -> {
+                    return null;
+                }
             }
         }
-        return aux;
+
     }
 
     @Override
@@ -66,16 +92,23 @@ public class TMHistoricoReservas extends AbstractTableModel {
     public String getColumnName(int column) {
         
         switch (column) {
-            case COL_NOMEPET:
-                return "NamePet";
+            case COL_PET_NOME:
+                return "Nome do Pet";
+            case COL_CHECK_IN:
+                return "Check-In";
+            case COL_CHECK_OUT:
+                return "Check-Out";
+            case COL_SERVICOS:
+                return "Serviços";
+            case COL_VALOR_TOTAL:
+                return "Valor Total";
+            case COL_RESPONSAVEL:
+                return "Responsavel";
             case COL_CPF:
                 return "CPF";
-            
             default:
-                break;
-        }
-
-        return "";
+                return "";
     }
 
+}
 }

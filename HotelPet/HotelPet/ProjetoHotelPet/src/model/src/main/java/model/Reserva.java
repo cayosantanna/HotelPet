@@ -183,4 +183,8 @@ public class Reserva implements Serializable {
     this.statusServico = finalizado ? "Finalizado" : "Em Andamento";
     }
 
+    public Reserva() {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
 }

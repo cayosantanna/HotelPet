@@ -6,6 +6,8 @@ package com.mycompany.gui;
 
 import controller.RelatorioController;
 import dao.RelatorioDAO;
+import java.awt.Frame;
+import model.HistoricoReserva;
 import model.Reserva;
 
 /*Cayo: Renomeei a tela relatorio para comfirmacaoreserva por ser mais intuitivo, 
@@ -15,9 +17,11 @@ public class ConfirmacaoReserva extends javax.swing.JDialog {
     private String cpfResponsavel;
     private RelatorioController relatorioController;
     private RelatorioDAO relatorioDAO; // Adicionando a instância do RelatorioDAO
+    private Reserva reserva;
 
-    public ConfirmacaoReserva(java.awt.Frame parent, boolean modal) {
+    public ConfirmacaoReserva(java.awt.Frame parent, boolean modal, Reserva reserva) {
         super(parent, modal);
+        this.reserva = reserva;
         this.cpfResponsavel = cpfResponsavel;
         relatorioDAO = new RelatorioDAO(); // Criando a instância do RelatorioDAO
         relatorioController = new RelatorioController(relatorioDAO);  // Passando o RelatorioDAO
@@ -37,22 +41,24 @@ public class ConfirmacaoReserva extends javax.swing.JDialog {
         checkBoxPasseio.setEnabled(false);
         checkBoxAlimentacaoEspecial.setEnabled(false);
     }
-    
-public void preencherCampos(Reserva reserva) {
-    // Preenche os campos com os dados da reserva
-    edtCliente.setText(reserva.getCliente().getCpf());  // Supondo que o método 'getCpf()' exista
-    edtPet.setText(reserva.getPet().getNome());  // Supondo que o método 'getNome()' exista
-    edtDataCheckIn.setText(reserva.getCheckIn().toString());
-    edtDataCheckOut.setText(reserva.getCheckOut().toString());
-    edtDataRealizaçãoReserva.setText(reserva.getDataReserva().toString());
-    edtValorPago.setText(String.valueOf(reserva.getValorTotal()));
 
-    // Preenche os checkboxes dos serviços realizados
-    checkBoxBanho.setSelected(reserva.isServicoBanho());
-    checkBoxTosa.setSelected(reserva.isServicoTosa());
-    checkBoxPasseio.setSelected(reserva.isServicoPasseio());
-    checkBoxAlimentacaoEspecial.setSelected(reserva.isServicoAlimentacaoEspecial());
-}
+    
+    
+    public void preencherCampos(Reserva reserva) {
+        // Preenche os campos com os dados da reserva
+        edtCliente.setText(reserva.getCliente().getCpf());  // Supondo que o método 'getCpf()' exista
+        edtPet.setText(reserva.getPet().getNome());  // Supondo que o método 'getNome()' exista
+        edtDataCheckIn.setText(reserva.getCheckIn().toString());
+        edtDataCheckOut.setText(reserva.getCheckOut().toString());
+        edtDataRealizaçãoReserva.setText(reserva.getDataReserva().toString());
+        edtValorPago.setText(String.valueOf(reserva.getValorTotal()));
+
+        // Preenche os checkboxes dos serviços realizados
+        checkBoxBanho.setSelected(reserva.isServicoBanho());
+        checkBoxTosa.setSelected(reserva.isServicoTosa());
+        checkBoxPasseio.setSelected(reserva.isServicoPasseio());
+        checkBoxAlimentacaoEspecial.setSelected(reserva.isServicoAlimentacaoEspecial());
+    }
 
 
     /**
