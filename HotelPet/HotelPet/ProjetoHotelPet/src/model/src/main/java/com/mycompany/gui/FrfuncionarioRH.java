@@ -312,7 +312,7 @@ private final FuncionarioController funcionarioController;
     }//GEN-LAST:event_btnBuscarActionPerformed
 
     private void btnHistoricoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnHistoricoActionPerformed
-       HistoricoAcoesRH telaHistorico = new HistoricoAcoesRH(this, true);
+       DlgHistoricoAcoesRH telaHistorico = new DlgHistoricoAcoesRH(this, true);
        telaHistorico.setVisible(true);
     }//GEN-LAST:event_btnHistoricoActionPerformed
 

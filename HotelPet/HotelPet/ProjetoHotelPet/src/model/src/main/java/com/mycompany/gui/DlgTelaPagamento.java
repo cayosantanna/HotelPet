@@ -292,7 +292,7 @@ try {
             JOptionPane.showMessageDialog(this, "Pagamento realizado com sucesso!");
             
             // Criar instância da tela de confirmação de reserva
-            ConfirmacaoReserva confirmacaoReserva = new ConfirmacaoReserva((java.awt.Frame) getParent(), true);
+            DlgConfirmacaoReserva confirmacaoReserva = new DlgConfirmacaoReserva((java.awt.Frame) getParent(), true);
             confirmacaoReserva.preencherCampos(reserva);  // Agora preenche corretamente os campos da tela de confirmação
             
             // Exibir a tela de confirmação

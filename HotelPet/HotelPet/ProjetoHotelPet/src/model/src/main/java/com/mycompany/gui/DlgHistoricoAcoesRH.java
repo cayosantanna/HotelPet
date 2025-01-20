@@ -6,12 +6,12 @@ import javax.swing.*;
 import java.util.List;
 import javax.swing.Timer;
 
-public class HistoricoAcoesRH extends javax.swing.JDialog {
+public class DlgHistoricoAcoesRH extends javax.swing.JDialog {
 
     private final FuncionarioController funcionarioController;
     private Timer atualizacaoTimer;
 
-    public HistoricoAcoesRH(java.awt.Frame parent, boolean modal) {
+    public DlgHistoricoAcoesRH(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
         this.funcionarioController = new FuncionarioController(); // Ajuste seu EntityManager aqui
