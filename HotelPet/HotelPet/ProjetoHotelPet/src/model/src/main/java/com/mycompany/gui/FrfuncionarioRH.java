@@ -24,12 +24,17 @@ public class FrfuncionarioRH extends javax.swing.JFrame {
 private final FuncionarioController funcionarioController;
     private final String cpfRhLogado;
 
+    
     public FrfuncionarioRH(String cpfRhLogado) {
         initComponents();
         this.funcionarioController = new FuncionarioController();
         this.cpfRhLogado = cpfRhLogado;
         setTitle("Gerenciamento de Funcionários - RH");
         setLocationRelativeTo(null);
+        
+        
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        
         recarregarListaFuncionarios();
         btnEditarFuncionario.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {

@@ -33,6 +33,17 @@ public class DlgCadFuncionario extends javax.swing.JDialog {
         this.clienteController = new ClienteController();
         this.funcionarioController = new FuncionarioController();
         this.adicionarMascaraNosCampos();
+        
+        // Adicionar listener para o checkbox de exibir senha
+        CheckboxExibirSenha.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                if (CheckboxExibirSenha.isSelected()) {
+                    inputSenha.setEchoChar((char) 0); // Mostra os caracteres
+                } else {
+                    inputSenha.setEchoChar('•'); // Oculta com bullet
+                }
+            }
+        });
     }
 
     public DlgCadFuncionario(java.awt.Frame parent, boolean modal, Funcionario funcionario, String cpfRhLogado) {
@@ -53,6 +64,17 @@ public class DlgCadFuncionario extends javax.swing.JDialog {
             setTitle("Edição de Funcionário");
             inputCpf.setEditable(false); // Impede edição do CPF
         }
+        
+        // Adicionar listener para o checkbox de exibir senha
+        CheckboxExibirSenha.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                if (CheckboxExibirSenha.isSelected()) {
+                    inputSenha.setEchoChar((char) 0);
+                } else {
+                    inputSenha.setEchoChar('•');
+                }
+            }
+        });
     }
 
     public DlgCadFuncionario(java.awt.Frame parent, boolean modal, String cpfRhLogado) {
@@ -65,6 +87,17 @@ public class DlgCadFuncionario extends javax.swing.JDialog {
         // Define edição como nula, pois é novo cadastro
         funcionarioEdicao = null;
         setTitle("Novo Funcionário");
+        
+        // Adicionar listener para o checkbox de exibir senha
+        CheckboxExibirSenha.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                if (CheckboxExibirSenha.isSelected()) {
+                    inputSenha.setEchoChar((char) 0);
+                } else {
+                    inputSenha.setEchoChar('•');
+                }
+            }
+        });
     }
 
     @SuppressWarnings("unchecked")
@@ -129,6 +162,11 @@ public class DlgCadFuncionario extends javax.swing.JDialog {
         lblTitulo.setText("Cadastro Funcionário");
 
         CheckboxExibirSenha.setText("Exibir Senha");
+        CheckboxExibirSenha.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                CheckboxExibirSenhaActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -272,6 +310,10 @@ private void btnConfirmarActionPerformed(java.awt.event.ActionEvent evt) {
     private void comboboxCargoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboboxCargoActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_comboboxCargoActionPerformed
+
+    private void CheckboxExibirSenhaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CheckboxExibirSenhaActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_CheckboxExibirSenhaActionPerformed
 
     public void adicionarMascaraNosCampos() {
         try {

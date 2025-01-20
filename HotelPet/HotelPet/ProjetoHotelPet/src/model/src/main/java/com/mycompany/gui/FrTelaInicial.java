@@ -141,6 +141,10 @@ private void abrirTelaCadastroRH() {
         Funcionario funcionario = funcionarioController.loginFuncionario(email, senha);
         if (funcionario != null) {
             System.out.println("Cargo do funcionário: " + funcionario.getCargo()); // Debug
+            // Limpa os campos antes de abrir a próxima tela
+            inputEmail.setText("");
+            inputSenha.setText("");
+            
             if (funcionario.getCargo().contains("RH") || 
                 funcionario.getCargo().contains("gestor") || 
                 funcionario.getCargo().equalsIgnoreCase("Gestor de RH")) {
@@ -155,6 +159,10 @@ private void abrirTelaCadastroRH() {
         // Se não encontrou funcionário, tenta como cliente
         Cliente cliente = clienteController.login(email, senha);
         if (cliente != null) {
+            // Limpa os campos antes de abrir a próxima tela
+            inputEmail.setText("");
+            inputSenha.setText("");
+            
             JOptionPane.showMessageDialog(this, "Bem-vindo, " + cliente.getNome() + "!");
             abrirMenuCliente(cliente);
             return;
@@ -189,6 +197,7 @@ private void abrirMenuFuncionario(Funcionario funcionario) {
 
 private void abrirMenuFuncionarioRH(Funcionario funcionario) {
     FrfuncionarioRH telaRH = new FrfuncionarioRH(funcionario.getCpf());
+    telaRH.setLocationRelativeTo(this); // Centraliza em relação à tela inicial
     telaRH.setVisible(true);
 }
 

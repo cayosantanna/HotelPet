@@ -69,8 +69,18 @@ public class FuncionarioDao {
                 funcionario.setEmail("inativo." + timestamp + "." + funcionario.getEmail());
                 funcionario.setTelefone("ex." + timestamp + "." + funcionario.getTelefone());
             }
-            funcionario = em.merge(funcionario);
+            
+            // Força atualização dos dados, incluindo a senha
+            em.clear(); // Limpa o cache
+            Funcionario managed = em.merge(funcionario);
             em.flush();
+            
+            // Atualiza explicitamente a senha
+            em.createQuery("UPDATE Funcionario f SET f.senha = :senha WHERE f.id = :id")
+                .setParameter("senha", funcionario.getSenha())
+                .setParameter("id", funcionario.getId())
+                .executeUpdate();
+                
             tx.commit();
             em.clear();
             System.out.println("Funcionário atualizado com sucesso: " + funcionario.getNome());

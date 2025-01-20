@@ -1,13 +1,14 @@
 package controller;
 
-import dao.ReservaDAO;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+
 import javax.swing.JOptionPane;
+
+import dao.ReservaDAO;
 import model.Cliente;
 import model.Pet;
 import model.Reserva;
@@ -33,6 +34,12 @@ public class ReservaController {
         if (reserva.getCheckIn() == null) {
             throw new Exception("A data de Check-In é obrigatória.");
         }
+        
+        // Garantir que a data da reserva seja definida
+        if (reserva.getDataReserva() == null) {
+            reserva.setDataReserva(new Date());
+        }
+        
         if (reserva.getCheckOut() == null) {
             reserva.setCheckOut(calcularCheckOutAutomatico(reserva.getCheckIn()));
         }

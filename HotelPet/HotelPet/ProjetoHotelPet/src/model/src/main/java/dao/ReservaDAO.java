@@ -1,12 +1,12 @@
 package dao;
 
+import java.util.List;
+
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
+
 import model.Reserva;
 import util.EntityManagerUtil;
-import java.util.List;
-import javax.persistence.EntityTransaction;
-import util.JPAUtil;
 
 public class ReservaDAO implements IDao<Reserva> {
     @Override

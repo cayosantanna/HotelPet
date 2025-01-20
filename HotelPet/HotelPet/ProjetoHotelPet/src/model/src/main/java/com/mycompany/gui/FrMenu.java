@@ -18,9 +18,14 @@ public class FrMenu extends javax.swing.JDialog {
 
     ReservaController reservaController = new ReservaController();
 
+    
     public FrMenu(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
+        setLocationRelativeTo(parent);
+        
+       
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
     }
 
     public void setFuncionario(Boolean funcionario) {

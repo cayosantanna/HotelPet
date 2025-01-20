@@ -47,6 +47,13 @@ public class FuncionarioController {
             }
         }
 
+        // Atualiza explicitamente a senha
+        Funcionario atual = funcionarioDao.findByCpf(funcionario.getCpf());
+        if (!atual.getSenha().equals(funcionario.getSenha())) {
+            System.out.println("Atualizando senha do funcionário");
+            atual.setSenha(funcionario.getSenha());
+        }
+        
         funcionarioDao.update(funcionario);
         registrarAcao(cpfRhLogado, "Editou funcionário: " + funcionario.getNome());
     }

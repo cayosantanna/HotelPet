@@ -16,6 +16,10 @@ import javax.swing.JOptionPane;
 import model.Cliente;
 import model.Pet;
 import model.Reserva;
+import javax.swing.text.MaskFormatter;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JFormattedTextField;
 
 /**
  * Tela de reservas para realizar uma nova reserva.
@@ -44,10 +48,12 @@ public class DlgReservas extends javax.swing.JDialog {
         edtNomePet.setEditable(false);
         edtDataReserva.setEditable(false);
         edtDataReserva.setText(obterDataAtual());
+        edtValorTotal.setEditable(false);
 
         // Verificar alertas de estadias prolongadas
         verificarReservasSemCheckout();
         btnSalvar.setEnabled(false); // Inicia com botão salvar desabilitado
+        this.adicionarMascaraNosCampos();
     }
 
     private String obterDataAtual() {
@@ -110,6 +116,24 @@ public class DlgReservas extends javax.swing.JDialog {
     private long calcularDiasSemCheckout(Date checkIn) {
         long diffInMillies = new Date().getTime() - checkIn.getTime();
         return diffInMillies / (1000 * 60 * 60 * 24);
+    }
+
+    private void adicionarMascaraNosCampos() {
+        try {
+            MaskFormatter maskData = new MaskFormatter("##/##/####");
+            maskData.setPlaceholderCharacter('_');
+            
+            // Aplicar máscara ao campo de check-in
+            maskData.install((JFormattedTextField) edtCheckIn1);
+            
+            // Criar nova instância para o check-out
+            MaskFormatter maskDataCheckout = new MaskFormatter("##/##/####");
+            maskDataCheckout.setPlaceholderCharacter('_');
+            maskDataCheckout.install((JFormattedTextField) edtCheckOut);
+            
+        } catch (ParseException ex) {
+            Logger.getLogger(DlgReservas.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -214,6 +238,12 @@ public class DlgReservas extends javax.swing.JDialog {
 
         lblDataReserva.setFont(new java.awt.Font("Liberation Sans", 0, 18)); // NOI18N
         lblDataReserva.setText("Data da Realização da Reserva:");
+
+        edtDataReserva.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                edtDataReservaActionPerformed(evt);
+            }
+        });
 
         lblServicosDisponiveis1.setFont(new java.awt.Font("Liberation Sans", 0, 18)); // NOI18N
         lblServicosDisponiveis1.setText("Serviços extras:");
@@ -367,9 +397,9 @@ public class DlgReservas extends javax.swing.JDialog {
         atualizarValorTotal();
     }//GEN-LAST:event_checkBoxTosaActionPerformed
 
-    private void checkBoxAlimentacaoEspecialActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_checkBoxAlimentacaoEspecialActionPerformed
+    private void checkBoxAlimentacaoEspecialActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event checkBoxAlimentacaoEspecialActionPerformed
        atualizarValorTotal();
-    }//GEN-LAST:event_checkBoxAlimentacaoEspecialActionPerformed
+    }//GEN-LAST:event checkBoxAlimentacaoEspecialActionPerformed
 
     private void btnSalvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalvarActionPerformed
     if (!validarFormatoData(edtCheckIn1.getText())) {
@@ -391,6 +421,9 @@ public class DlgReservas extends javax.swing.JDialog {
         Reserva reserva = new Reserva();
         reserva.setCliente(cliente);
         reserva.setPet(pet);
+
+        // Adicionar a data da reserva
+        reserva.setDataReserva(new Date()); // Adiciona a data atual como data da reserva
 
         // Converter as strings para datas
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
@@ -468,6 +501,10 @@ public class DlgReservas extends javax.swing.JDialog {
             btnSalvar.setEnabled(false);
         }
     }//GEN-LAST:event_btnAtualizarValorActionPerformed
+
+    private void edtDataReservaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_edtDataReservaActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_edtDataReservaActionPerformed
 
     private boolean validarFormatoData(String data) {
         return data.matches("\\d{2}/\\d{2}/\\d{4}");
