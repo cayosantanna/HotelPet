@@ -29,11 +29,12 @@ public class DlgSobreNós extends javax.swing.JDialog {
 
         jLabel1 = new javax.swing.JLabel();
         jButton1 = new javax.swing.JButton();
+        jLabel2 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        jLabel1.setText("<html> <body>     <p><em><b>Sistema de Hotel para pets desenvolvido por Cayo, Neidieli, Thais Rodrigues para a Disciplina de LPS</b></em></p><br>     <p>Somos um time apaixonado por tecnologia e criamos esse projeto com o propósito de oferecer soluções que transformem a experiência no cuidado e gestão de hospedagem para pets. Nosso projeto nasceu da vontade de simplificar processos e criar um ambiente mais eficiente e organizado para empresas do setor pet.  O sistema HotelPet foi desenvolvido com foco na praticidade e acessibilidade, permitindo que usuários administrem reservas, cadastros de clientes e pets, além de gerenciar equipes de forma intuitiva e segura. Nosso compromisso é entregar uma ferramenta robusta que acompanhe as demandas do dia a dia, com possibilidades de expansão e integração para novas funcionalidades no futuro.  O sistema HotelPet é protegido por direitos autorais (Copyright © 2025). Todos os direitos são reservados, sendo proibida a distribuição, reprodução ou modificação não autorizada de qualquer parte do software. Nosso objetivo é garantir que o sistema seja utilizado de forma ética e em conformidade com os termos de uso estabelecidos.  Agradecemos a sua confiança em nosso trabalho e estamos sempre abertos a colaborações e sugestões para aprimorar continuamente o HotelPet. Com o nosso sistema, a gestão do seu hotel para pets nunca foi tão fácil e eficiente!.</p> </body> </html>");
+        jLabel1.setText("<html> <body>     <p><em><b>Sistema de Hotel para pets desenvolvido por Cayo, Neidieli, Thais Rodrigues para a Disciplina de LPS</b></em></p><br>     <p>Somos um time apaixonado por tecnologia e criamos esse projeto com o propósito de oferecer soluções que transformem a experiência no cuidado e gestão de hospedagem para pets. Nosso projeto nasceu da vontade de simplificar processos e criar um ambiente mais eficiente e organizado para empresas do setor pet.  O sistema HotelPet foi desenvolvido com foco na praticidade e acessibilidade, permitindo que usuários administrem reservas, cadastros de clientes e pets, além de gerenciar equipes de forma intuitiva e segura. Nosso compromisso é entregar uma ferramenta robusta que acompanhe as demandas do dia a dia, com possibilidades de expansão e integração para novas funcionalidades no futuro. Nós sabemos que o sistema não está tendo a sua melhor perfomance de execução e sabemos que não está com a melhor UX do mundo mas resolvermos isso em atualizações futuras, o objetivo atual é ser funcional, prático e minimalista.  O sistema HotelPet é protegido por direitos autorais (Copyright © 2025). Todos os direitos são reservados, sendo proibida a distribuição, reprodução ou modificação não autorizada de qualquer parte do software. Nosso objetivo é garantir que o sistema seja utilizado de forma ética e em conformidade com os termos de uso estabelecidos.  Agradecemos a sua confiança em nosso trabalho e estamos sempre abertos a colaborações e sugestões para aprimorar continuamente o HotelPet. Com o nosso sistema, a gestão do seu hotel para pets nunca foi tão fácil e eficiente!.</p> </body> </html>");
 
         jButton1.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         jButton1.setLabel("Voltar");
@@ -43,25 +44,37 @@ public class DlgSobreNós extends javax.swing.JDialog {
             }
         });
 
+        jLabel2.setFont(new java.awt.Font("SansSerif", 0, 20)); // NOI18N
+        jLabel2.setText("Entre em contato conosco: projetohotelpet@vuket.org ");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(15, 15, 15)
-                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                .addContainerGap())
-            .addGroup(layout.createSequentialGroup()
-                .addGap(306, 306, 306)
-                .addComponent(jButton1)
-                .addContainerGap(351, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(306, 306, 306)
+                                .addComponent(jButton1))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(102, 102, 102)
+                                .addComponent(jLabel2)))
+                        .addGap(0, 148, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(10, 10, 10)
+                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)))
+                .addGap(10, 10, 10))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(19, 19, 19)
-                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 519, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 35, Short.MAX_VALUE)
+                .addContainerGap()
+                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 572, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(jLabel2)
+                .addGap(47, 47, 47)
                 .addComponent(jButton1)
                 .addGap(25, 25, 25))
         );
@@ -78,5 +91,6 @@ public class DlgSobreNós extends javax.swing.JDialog {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
     // End of variables declaration//GEN-END:variables
 }
