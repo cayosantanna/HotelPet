@@ -13,13 +13,10 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import javax.swing.JOptionPane;
+import javax.swing.text.MaskFormatter;
 import model.Cliente;
 import model.Pet;
 import model.Reserva;
-import javax.swing.text.MaskFormatter;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.swing.JFormattedTextField;
 
 /**
  * Tela de reservas para realizar uma nova reserva.
@@ -48,18 +45,54 @@ public class DlgReservas extends javax.swing.JDialog {
         edtNomePet.setEditable(false);
         edtDataReserva.setEditable(false);
         edtDataReserva.setText(obterDataAtual());
-        edtValorTotal.setEditable(false);
+
+   
+        adicionarMascaras();
 
         // Verificar alertas de estadias prolongadas
         verificarReservasSemCheckout();
         btnSalvar.setEnabled(false); // Inicia com botão salvar desabilitado
-        this.adicionarMascaraNosCampos();
+        edtValorTotal.setEditable(false); // Impede edição manual
+    
+        try {
+            MaskFormatter mf = new MaskFormatter("##/##/####");
+            mf.setPlaceholderCharacter('_');
+            mf.install(edtCheckIn1);
+            mf.install(edtCheckOut);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        
+        btnSalvar.setEnabled(false);
+    
+        // Desabilitar salvar ao alterar campos
+        checkBoxBanho.addActionListener(e -> btnSalvar.setEnabled(false));
+        checkBoxTosa.addActionListener(e -> btnSalvar.setEnabled(false));
+        checkBoxPasseio.addActionListener(e -> btnSalvar.setEnabled(false));
+        checkBoxAlimentacaoEspecial.addActionListener(e -> btnSalvar.setEnabled(false));
+        edtCheckIn1.addCaretListener(e -> btnSalvar.setEnabled(false));
+        edtCheckOut.addCaretListener(e -> btnSalvar.setEnabled(false));
+        txtServicosExtras.addCaretListener(e -> btnSalvar.setEnabled(false));
     }
+
+    
 
     private String obterDataAtual() {
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
         return sdf.format(new Date());
     }
+    private void adicionarMascaras() {
+    try {
+        MaskFormatter mask = new MaskFormatter("##/##/####");
+        mask.setPlaceholderCharacter('_');
+
+        edtCheckIn1 = new javax.swing.JFormattedTextField(mask);
+        edtCheckOut = new javax.swing.JFormattedTextField(mask);
+
+    } catch (ParseException ex) {
+        JOptionPane.showMessageDialog(this, "Erro ao configurar máscaras: " + ex.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
+    }
+}
 
     private void atualizarValorTotal() {
         double valorTotal = 0;
@@ -118,24 +151,6 @@ public class DlgReservas extends javax.swing.JDialog {
         return diffInMillies / (1000 * 60 * 60 * 24);
     }
 
-    private void adicionarMascaraNosCampos() {
-        try {
-            MaskFormatter maskData = new MaskFormatter("##/##/####");
-            maskData.setPlaceholderCharacter('_');
-            
-            // Aplicar máscara ao campo de check-in
-            maskData.install((JFormattedTextField) edtCheckIn1);
-            
-            // Criar nova instância para o check-out
-            MaskFormatter maskDataCheckout = new MaskFormatter("##/##/####");
-            maskDataCheckout.setPlaceholderCharacter('_');
-            maskDataCheckout.install((JFormattedTextField) edtCheckOut);
-            
-        } catch (ParseException ex) {
-            Logger.getLogger(DlgReservas.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
@@ -152,7 +167,7 @@ public class DlgReservas extends javax.swing.JDialog {
         lblCheckIn = new javax.swing.JLabel();
         edtCPFCliente = new javax.swing.JTextField();
         lblCheckOut = new javax.swing.JLabel();
-        edtCheckOut = new javax.swing.JTextField();
+        edtCheckOut = new javax.swing.JFormattedTextField();
         lblValorTotal = new javax.swing.JLabel();
         edtValorTotal = new javax.swing.JTextField();
         btnSalvar = new javax.swing.JButton();
@@ -160,7 +175,7 @@ public class DlgReservas extends javax.swing.JDialog {
         lblDataReserva = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         edtDataReserva = new javax.swing.JTextField();
-        edtCheckIn1 = new javax.swing.JTextField();
+        edtCheckIn1 = new javax.swing.JFormattedTextField();
         edtNomePet = new javax.swing.JTextField();
         lblServicosDisponiveis1 = new javax.swing.JLabel();
         txtServicosExtras = new javax.swing.JTextField();
@@ -227,6 +242,8 @@ public class DlgReservas extends javax.swing.JDialog {
         lblValorTotal.setFont(new java.awt.Font("Liberation Sans", 0, 18)); // NOI18N
         lblValorTotal.setText("Valor Total a Pagar:");
 
+        edtValorTotal.setEditable(false);
+
         btnSalvar.setText("Salvar");
         btnSalvar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -238,12 +255,6 @@ public class DlgReservas extends javax.swing.JDialog {
 
         lblDataReserva.setFont(new java.awt.Font("Liberation Sans", 0, 18)); // NOI18N
         lblDataReserva.setText("Data da Realização da Reserva:");
-
-        edtDataReserva.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                edtDataReservaActionPerformed(evt);
-            }
-        });
 
         lblServicosDisponiveis1.setFont(new java.awt.Font("Liberation Sans", 0, 18)); // NOI18N
         lblServicosDisponiveis1.setText("Serviços extras:");
@@ -391,82 +402,90 @@ public class DlgReservas extends javax.swing.JDialog {
 
     private void checkBoxBanhoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_checkBoxBanhoActionPerformed
         atualizarValorTotal();
+        btnSalvar.setEnabled(false);
     }//GEN-LAST:event_checkBoxBanhoActionPerformed
 
     private void checkBoxTosaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_checkBoxTosaActionPerformed
         atualizarValorTotal();
+        btnSalvar.setEnabled(false);
     }//GEN-LAST:event_checkBoxTosaActionPerformed
 
-    private void checkBoxAlimentacaoEspecialActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event checkBoxAlimentacaoEspecialActionPerformed
+    private void checkBoxAlimentacaoEspecialActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_checkBoxAlimentacaoEspecialActionPerformed
        atualizarValorTotal();
-    }//GEN-LAST:event checkBoxAlimentacaoEspecialActionPerformed
+       btnSalvar.setEnabled(false);
+    }//GEN-LAST:event_checkBoxAlimentacaoEspecialActionPerformed
 
     private void btnSalvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalvarActionPerformed
-    if (!validarFormatoData(edtCheckIn1.getText())) {
-        JOptionPane.showMessageDialog(this, "Data de check-in inválida. Use dd/MM/yyyy.", "Erro", JOptionPane.ERROR_MESSAGE);
-        return;
-    }
-    if (!edtCheckOut.getText().isEmpty() && !validarFormatoData(edtCheckOut.getText())) {
-        JOptionPane.showMessageDialog(this, "Data de check-out inválida. Use dd/MM/yyyy.", "Erro", JOptionPane.ERROR_MESSAGE);
-        return;
-    }
     try {
-        // Validar os campos
+        // Verificar se o campo Check-In está vazio
         if (edtCheckIn1.getText().isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Por favor, preencha a data de check-in.", "Erro", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Por favor, preencha a data de Check-In.", "Erro", JOptionPane.ERROR_MESSAGE);
             return;
         }
 
-        // Primeiro, obter os dados da reserva
+        // Validar o formato da data de Check-In
+        if (!validarFormatoData(edtCheckIn1.getText())) {
+            JOptionPane.showMessageDialog(this, "Data de Check-In inválida. Use o formato dd/MM/yyyy.", "Erro", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        // Validar o formato da data de Check-Out, se preenchido
+        if (!edtCheckOut.getText().isEmpty() && !validarFormatoData(edtCheckOut.getText())) {
+            JOptionPane.showMessageDialog(this, "Data de Check-Out inválida. Use o formato dd/MM/yyyy.", "Erro", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        // Obter e validar as datas
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+        sdf.setLenient(false); // Força validação estrita de datas
+        Date dataReserva = sdf.parse(edtDataReserva.getText());
+        Date checkIn = sdf.parse(edtCheckIn1.getText());
+        Date checkOut = edtCheckOut.getText().isEmpty() ? null : sdf.parse(edtCheckOut.getText());
+
+        // Verificar se Check-In é anterior à data de reserva
+        if (checkIn.before(dataReserva)) {
+            JOptionPane.showMessageDialog(this, "A data de Check-In não pode ser anterior à data de reserva.", "Erro", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        // Verificar se Check-Out é anterior à data de Check-In
+        if (checkOut != null && checkOut.before(checkIn)) {
+            JOptionPane.showMessageDialog(this, "A data de Check-Out não pode ser anterior à data de Check-In.", "Erro", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        // Calcular o valor total da reserva
+        double valorTotal = Double.parseDouble(edtValorTotal.getText().replace(",", "."));
+
+        // Criar objeto Reserva e preencher os dados
         Reserva reserva = new Reserva();
         reserva.setCliente(cliente);
         reserva.setPet(pet);
-
-        // Adicionar a data da reserva
-        reserva.setDataReserva(new Date()); // Adiciona a data atual como data da reserva
-
-        // Converter as strings para datas
-        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-        Date checkIn = sdf.parse(edtCheckIn1.getText());
-        Date checkOut = !edtCheckOut.getText().isEmpty() ? sdf.parse(edtCheckOut.getText()) : null;
-
-        if (checkOut != null && checkIn.after(checkOut)) {
-            JOptionPane.showMessageDialog(this, "A data de check-out não pode ser anterior ao check-in.", "Erro", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-
         reserva.setCheckIn(checkIn);
         reserva.setCheckOut(checkOut);
-
-        // Validar e calcular o valor total
-        String valorTotalStr = edtValorTotal.getText().replace(",", ".");
-        double valorTotal = Double.parseDouble(valorTotalStr);
         reserva.setValorTotal(valorTotal);
-
         reserva.setServicoBanho(checkBoxBanho.isSelected());
         reserva.setServicoTosa(checkBoxTosa.isSelected());
         reserva.setServicoPasseio(checkBoxPasseio.isSelected());
         reserva.setServicoAlimentacaoEspecial(checkBoxAlimentacaoEspecial.isSelected());
-        
-        // Adicionar descrição dos serviços extras
         reserva.setDescricaoServicosExtras(txtServicosExtras.getText());
 
-        // Salvar no banco de dados
+        // Salvar reserva no banco de dados
         reservaController.salvarReservaComValidacao(reserva);
 
-        // Reserva salva com sucesso
+        // Exibir mensagem de sucesso
         JOptionPane.showMessageDialog(this, "Reserva salva com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
-        
-        // Transferir dados para a tela de pagamento
+
+        // Abrir tela de pagamento
         DlgTelaPagamento telaPagamento = new DlgTelaPagamento(new javax.swing.JFrame(), true, reserva);
         telaPagamento.setVisible(true);
-        
-        dispose(); // Fecha a janela de reserva
 
+        // Fechar a tela atual
+        dispose();
+    } catch (ParseException e) {
+        JOptionPane.showMessageDialog(this, "Formato de data inválido. Use o formato dd/MM/yyyy.", "Erro", JOptionPane.ERROR_MESSAGE);
     } catch (NumberFormatException e) {
         JOptionPane.showMessageDialog(this, "Valor total inválido.", "Erro", JOptionPane.ERROR_MESSAGE);
-    } catch (ParseException e) {
-        JOptionPane.showMessageDialog(this, "Formato de data inválido. Por favor, use o formato dd/MM/yyyy.", "Erro", JOptionPane.ERROR_MESSAGE);
     } catch (Exception e) {
         JOptionPane.showMessageDialog(this, "Ocorreu um erro inesperado: " + e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
     }
@@ -474,10 +493,12 @@ public class DlgReservas extends javax.swing.JDialog {
 
     private void checkBoxPasseioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_checkBoxPasseioActionPerformed
     atualizarValorTotal();
+    btnSalvar.setEnabled(false);
     }//GEN-LAST:event_checkBoxPasseioActionPerformed
 
     private void txtServicosExtrasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtServicosExtrasActionPerformed
      atualizarValorTotal();
+     btnSalvar.setEnabled(false);
     }//GEN-LAST:event_txtServicosExtrasActionPerformed
 
     private void btnAtualizarValorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAtualizarValorActionPerformed
@@ -502,13 +523,19 @@ public class DlgReservas extends javax.swing.JDialog {
         }
     }//GEN-LAST:event_btnAtualizarValorActionPerformed
 
-    private void edtDataReservaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_edtDataReservaActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_edtDataReservaActionPerformed
-
     private boolean validarFormatoData(String data) {
-        return data.matches("\\d{2}/\\d{2}/\\d{4}");
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+        sdf.setLenient(false); // Validação estrita
+        try {
+            sdf.parse(data); // Tenta analisar a data
+            return true;
+        } catch (ParseException e) {
+            return false; // Retorna false se a data for inválida
+        }
     }
+    
+
+    
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAtualizarValor;
@@ -519,8 +546,8 @@ public class DlgReservas extends javax.swing.JDialog {
     private javax.swing.JCheckBox checkBoxPasseio;
     private javax.swing.JCheckBox checkBoxTosa;
     private javax.swing.JTextField edtCPFCliente;
-    private javax.swing.JTextField edtCheckIn1;
-    private javax.swing.JTextField edtCheckOut;
+    private javax.swing.JFormattedTextField edtCheckIn1;
+    private javax.swing.JFormattedTextField edtCheckOut;
     private javax.swing.JTextField edtDataReserva;
     private javax.swing.JTextField edtNomePet;
     private javax.swing.JTextField edtValorTotal;

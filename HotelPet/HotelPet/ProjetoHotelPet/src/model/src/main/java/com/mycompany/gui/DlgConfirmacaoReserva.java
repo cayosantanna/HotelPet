@@ -32,13 +32,14 @@ public class DlgConfirmacaoReserva extends javax.swing.JDialog {
         edtDataCheckOut.setEditable(false);
         edtDataRealizaçãoReserva.setEditable(false);
         edtValorPago.setEditable(false);
+        edtMetodoPagamento.setEditable(false);
         
         checkBoxBanho.setEnabled(false);
         checkBoxPasseio.setEnabled(false);
         checkBoxAlimentacaoEspecial.setEnabled(false);
     }
     
-public void preencherCampos(Reserva reserva) {
+public void preencherCampos(Reserva reserva, String metodoPagamento) {
     // Preenche os campos com os dados da reserva
     edtCliente.setText(reserva.getCliente().getCpf());  // Supondo que o método 'getCpf()' exista
     edtPet.setText(reserva.getPet().getNome());  // Supondo que o método 'getNome()' exista
@@ -46,6 +47,7 @@ public void preencherCampos(Reserva reserva) {
     edtDataCheckOut.setText(reserva.getCheckOut().toString());
     edtDataRealizaçãoReserva.setText(reserva.getDataReserva().toString());
     edtValorPago.setText(String.valueOf(reserva.getValorTotal()));
+    edtMetodoPagamento.setText(metodoPagamento);
 
     // Preenche os checkboxes dos serviços realizados
     checkBoxBanho.setSelected(reserva.isServicoBanho());
@@ -75,6 +77,7 @@ public void preencherCampos(Reserva reserva) {
         jLabel1 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         lblData = new javax.swing.JLabel();
+        lblMetodoPagamento = new javax.swing.JLabel();
         edtCliente = new javax.swing.JTextField();
         edtPet = new javax.swing.JTextField();
         edtDataCheckIn = new javax.swing.JTextField();
@@ -85,6 +88,7 @@ public void preencherCampos(Reserva reserva) {
         edtDataRealizaçãoReserva = new javax.swing.JTextField();
         edtDataCheckOut = new javax.swing.JTextField();
         edtValorPago = new javax.swing.JTextField();
+        edtMetodoPagamento = new javax.swing.JTextField();
         btnFecharTela = new javax.swing.JButton();
         imgFeedBack = new javax.swing.JLabel();
 
@@ -117,6 +121,9 @@ public void preencherCampos(Reserva reserva) {
 
         lblData.setFont(new java.awt.Font("Liberation Sans", 0, 18)); // NOI18N
         lblData.setText("Data Realização Reserva:");
+
+        lblMetodoPagamento.setFont(new java.awt.Font("Liberation Sans", 0, 18)); // NOI18N
+        lblMetodoPagamento.setText("Método de Pagamento:");
 
         edtCliente.setFont(new java.awt.Font("Liberation Sans", 0, 18)); // NOI18N
         edtCliente.addActionListener(new java.awt.event.ActionListener() {
@@ -161,6 +168,8 @@ public void preencherCampos(Reserva reserva) {
         edtDataCheckOut.setFont(new java.awt.Font("Liberation Sans", 0, 18)); // NOI18N
 
         edtValorPago.setFont(new java.awt.Font("Liberation Sans", 0, 18)); // NOI18N
+
+        edtMetodoPagamento.setFont(new java.awt.Font("Liberation Sans", 0, 18)); // NOI18N
 
         btnFecharTela.setText("Fechar");
         btnFecharTela.addActionListener(new java.awt.event.ActionListener() {
@@ -224,7 +233,11 @@ public void preencherCampos(Reserva reserva) {
                                 .addComponent(checkBoxAlimentacaoEspecial))
                             .addGroup(layout.createSequentialGroup()
                                 .addGap(206, 206, 206)
-                                .addComponent(jLabel4))))
+                                .addComponent(jLabel4))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(lblMetodoPagamento)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(edtMetodoPagamento, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE))))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(329, 329, 329)
                         .addComponent(btnFecharTela)))
@@ -275,6 +288,10 @@ public void preencherCampos(Reserva reserva) {
                     .addComponent(lblValorPago)
                     .addComponent(edtValorPago, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblMetodoPagamento)
+                    .addComponent(edtMetodoPagamento, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
                 .addComponent(jLabel1)
                 .addGap(18, 18, 18)
                 .addComponent(jLabel4)
@@ -323,6 +340,7 @@ public void preencherCampos(Reserva reserva) {
     private javax.swing.JTextField edtDataCheckIn;
     private javax.swing.JTextField edtDataCheckOut;
     private javax.swing.JTextField edtDataRealizaçãoReserva;
+    private javax.swing.JTextField edtMetodoPagamento;
     private javax.swing.JTextField edtPet;
     private javax.swing.JTextField edtValorPago;
     private javax.swing.JLabel imgFeedBack;
@@ -333,6 +351,7 @@ public void preencherCampos(Reserva reserva) {
     private javax.swing.JLabel lblCheckOut;
     private javax.swing.JLabel lblCliente;
     private javax.swing.JLabel lblData;
+    private javax.swing.JLabel lblMetodoPagamento;
     private javax.swing.JLabel lblPet;
     private javax.swing.JLabel lblServicos;
     private javax.swing.JLabel lblTitulo;

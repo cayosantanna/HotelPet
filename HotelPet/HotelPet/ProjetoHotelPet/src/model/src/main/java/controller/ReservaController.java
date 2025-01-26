@@ -34,12 +34,6 @@ public class ReservaController {
         if (reserva.getCheckIn() == null) {
             throw new Exception("A data de Check-In é obrigatória.");
         }
-        
-        // Garantir que a data da reserva seja definida
-        if (reserva.getDataReserva() == null) {
-            reserva.setDataReserva(new Date());
-        }
-        
         if (reserva.getCheckOut() == null) {
             reserva.setCheckOut(calcularCheckOutAutomatico(reserva.getCheckIn()));
         }

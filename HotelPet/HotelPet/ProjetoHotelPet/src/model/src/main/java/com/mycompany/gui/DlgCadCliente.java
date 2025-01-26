@@ -66,7 +66,6 @@ public class DlgCadCliente extends javax.swing.JDialog {
         edtCPF = new javax.swing.JFormattedTextField();
         edtTelefone = new javax.swing.JFormattedTextField();
         edtCEP = new javax.swing.JFormattedTextField();
-        CheckboxExibirSenha = new javax.swing.JCheckBox();
 
         jCheckBox1.setText("jCheckBox1");
 
@@ -104,8 +103,6 @@ public class DlgCadCliente extends javax.swing.JDialog {
 
         jLabel1.setText("Senha:");
 
-        CheckboxExibirSenha.setText("Exibir Senha");
-
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -139,9 +136,7 @@ public class DlgCadCliente extends javax.swing.JDialog {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jLabel1)
                 .addGap(30, 30, 30)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(edtSenha, javax.swing.GroupLayout.PREFERRED_SIZE, 205, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(CheckboxExibirSenha, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(edtSenha, javax.swing.GroupLayout.PREFERRED_SIZE, 205, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(220, 220, 220))
         );
         layout.setVerticalGroup(
@@ -176,9 +171,7 @@ public class DlgCadCliente extends javax.swing.JDialog {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(edtSenha, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel1))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(CheckboxExibirSenha)
-                .addGap(54, 54, 54)
+                .addGap(70, 70, 70)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnConfirma)
                     .addComponent(btnCancelar))
@@ -254,7 +247,6 @@ public class DlgCadCliente extends javax.swing.JDialog {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JCheckBox CheckboxExibirSenha;
     private javax.swing.JButton btnCancelar;
     private javax.swing.JButton btnConfirma;
     private javax.swing.JFormattedTextField edtCEP;

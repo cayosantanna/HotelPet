@@ -136,7 +136,7 @@ public class FrMenu extends javax.swing.JDialog {
                     .addComponent(btnServicos, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap(52, Short.MAX_VALUE))
             .addGroup(layout.createSequentialGroup()
-                .addGap(158, 158, 158)
+                .addGap(138, 138, 138)
                 .addComponent(btnLogout, javax.swing.GroupLayout.PREFERRED_SIZE, 154, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -153,9 +153,9 @@ public class FrMenu extends javax.swing.JDialog {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnCadastroCliente)
                     .addComponent(btnServicos))
-                .addGap(41, 41, 41)
+                .addGap(40, 40, 40)
                 .addComponent(btnLogout)
-                .addContainerGap(49, Short.MAX_VALUE))
+                .addContainerGap(50, Short.MAX_VALUE))
         );
 
         pack();

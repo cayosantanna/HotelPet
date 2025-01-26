@@ -5,6 +5,7 @@ com\mycompany\gui\DlgReservas$4.class
 dao\PetDAO.class
 controller\TMHistoricoReservas.class
 com\mycompany\gui\DlgTelaPagamento$2.class
+com\mycompany\gui\DlgCadPet$5.class
 controller\ReservaController.class
 model\Pessoa.class
 com\mycompany\gui\FrMenu$1.class
@@ -15,9 +16,7 @@ com\mycompany\gui\FrTelaInicial.class
 model\HistoricoReserva.class
 controller\FuncionarioController.class
 com\mycompany\gui\DlgRelatorioFuncionario$5.class
-com\mycompany\gui\DlgHistoricoAcoesRH$3.class
 util\EntityManagerUtil.class
-dao\HistoricoRhDAO.class
 com\mycompany\gui\DlgRelatorioFuncionario$8.class
 controller\PetController.class
 model\valid\ValidateReserva.class
@@ -45,7 +44,6 @@ com\mycompany\gui\DlgHistoricoReservas.class
 com\mycompany\gui\DlgBuscaUsuario$6.class
 com\mycompany\gui\DlgHistoricoReservas$5.class
 com\mycompany\gui\DlgCadPet$4.class
-com\mycompany\gui\DlgHistoricoAcoesRH$1.class
 com\mycompany\gui\DlgRelatorioFuncionario$7.class
 com\mycompany\gui\DlgCadFuncionario$6.class
 com\mycompany\gui\DlgRelatorioFuncionario.class
@@ -55,7 +53,6 @@ com\mycompany\gui\DlgBuscaUsuario.class
 com\mycompany\gui\FrfuncionarioRH$2.class
 com\mycompany\gui\DlgBuscaUsuario$5.class
 com\mycompany\gui\DlgConfirmacaoReserva$4.class
-controller\HistoricoRHController.class
 com\mycompany\gui\DlgServicos$1.class
 model\Relatorio.class
 util\DatabaseValidator.class
@@ -63,12 +60,9 @@ com\mycompany\gui\DlgTelaPagamento$3.class
 com\mycompany\gui\DlgRelatorioFuncionario$6.class
 com\mycompany\gui\DlgReservas$2.class
 util\JPAUtil.class
-com\mycompany\gui\DlgReservas$8.class
-com\mycompany\gui\DlgHistoricoAcoesRH$2.class
 com\mycompany\gui\FrMenu$5.class
 com\mycompany\gui\DlgCadFuncionario$5.class
 com\mycompany\gui\DlgCadPet$3.class
-com\mycompany\gui\DlgCadCliente$3.class
 com\mycompany\gui\DlgRelatorioFuncionario$9.class
 com\mycompany\gui\FrTelaInicial$1.class
 controller\ControllerHistoricoReservas.class
@@ -94,12 +88,10 @@ dao\RelatorioFuncionarioDAO.class
 com\mycompany\gui\DlgReservas$3.class
 com\mycompany\gui\FrfuncionarioRH.class
 com\mycompany\gui\FrMenu$3.class
-com\mycompany\gui\FrfuncionarioRH$7.class
 dao\IDao.class
 com\mycompany\gui\DlgBuscaPet$4.class
 model\Pet.class
 com\mycompany\gui\DlgRelatorioFuncionario$1.class
-com\mycompany\gui\DlgHistoricoAcoesRH.class
 com\mycompany\gui\DlgCadFuncionario$2.class
 com\mycompany\gui\DlgBuscaPet$5.class
 com\mycompany\gui\DlgHistoricoReservas$2.class
