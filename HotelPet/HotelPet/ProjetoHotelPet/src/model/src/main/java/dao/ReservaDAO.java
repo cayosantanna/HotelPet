@@ -5,6 +5,7 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 
+import model.Pet;
 import model.Reserva;
 import util.EntityManagerUtil;
 
@@ -181,7 +182,23 @@ public class ReservaDAO implements IDao<Reserva> {
                 entityManager.close();
             }
         }
-}
+    }
 
-
+    public List<Reserva> findReservasPorPet(Pet pet) {
+        EntityManager entityManager = EntityManagerUtil.getEntityManager();
+        try {
+            TypedQuery<Reserva> query = entityManager.createQuery(
+                "SELECT r FROM Reserva r WHERE r.pet = :pet", Reserva.class
+            );
+            query.setParameter("pet", pet);
+            return query.getResultList();
+        } catch (Exception e) {
+            System.out.println("Erro ao buscar reservas por pet: " + e.getMessage());
+            return null;
+        } finally {
+            if (entityManager != null) {
+                entityManager.close();
+            }
+        }
+    }
 }

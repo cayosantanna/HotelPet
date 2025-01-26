@@ -32,12 +32,26 @@ public class ReservaController {
         return (int) (diffMillis / (1000 * 60 * 60 * 24));
     }
 
+    public boolean existeReservaNoPeriodo(Pet pet, Date checkIn, Date checkOut) {
+        List<Reserva> reservas = reservaDAO.findReservasPorPet(pet);
+        for (Reserva reserva : reservas) {
+            if ((checkIn.before(reserva.getCheckOut()) && checkOut.after(reserva.getCheckIn())) ||
+                (checkIn.equals(reserva.getCheckIn()) || checkOut.equals(reserva.getCheckOut()))) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public void salvarReservaComValidacao(Reserva reserva) throws Exception {
         if (reserva.getCheckIn() == null) {
             throw new Exception("A data de Check-In é obrigatória.");
         }
         if (reserva.getCheckOut() == null) {
             reserva.setCheckOut(calcularCheckOutAutomatico(reserva.getCheckIn()));
+        }
+        if (existeReservaNoPeriodo(reserva.getPet(), reserva.getCheckIn(), reserva.getCheckOut())) {
+            throw new Exception("Já existe uma reserva para este pet no período especificado.");
         }
         int diasDeEstadia = calcularDiasEstadia(reserva.getCheckIn(), reserva.getCheckOut());
         if (diasDeEstadia > 20) {

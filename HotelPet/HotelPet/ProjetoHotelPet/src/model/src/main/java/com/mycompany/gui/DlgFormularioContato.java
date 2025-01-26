@@ -12,16 +12,17 @@ public class DlgFormularioContato extends javax.swing.JDialog {
     public DlgFormularioContato(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
-        jPanel2.setLayout(new java.awt.FlowLayout()); // Substitui org.netbeans.lib.awtextra
     }
 
     public DlgFormularioContato(java.awt.Frame parent, boolean modal, model.Contato c) {
         super(parent, modal);
         initComponents();
-        edtFromEmail.setText(c.getEmail());
-        edtEmail.setText(c.getMensagem());
-        edtFromEmail.setEditable(false);
+        java.time.format.DateTimeFormatter formatter = java.time.format.DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
+        String dataFormatada = c.getDataEnvio().format(formatter);
+        edtEmail.setText(c.getEmail());
+        edtMensagem.setText("Enviado em: " + dataFormatada + "\n\n" + c.getMensagem());
         edtEmail.setEditable(false);
+        edtMensagem.setEditable(false);
         btnEnviar.setEnabled(false);
     }
 
@@ -39,12 +40,12 @@ public class DlgFormularioContato extends javax.swing.JDialog {
         jLabel2 = new javax.swing.JLabel();
         jPanel4 = new javax.swing.JPanel();
         jLabel3 = new javax.swing.JLabel();
-        jPanel2 = new javax.swing.JPanel();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        edtEmail = new javax.swing.JTextArea();
-        edtFromEmail = new javax.swing.JTextField();
+        edtEmail = new javax.swing.JTextField();
         jLabel1 = new javax.swing.JLabel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        edtMensagem = new javax.swing.JTextArea();
         btnEnviar = new javax.swing.JButton();
+        btnFecharTela = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Contato");
@@ -87,38 +88,29 @@ public class DlgFormularioContato extends javax.swing.JDialog {
             .addGroup(jPanel4Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 132, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(129, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel4Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, 73, Short.MAX_VALUE)
+                .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, 71, Short.MAX_VALUE)
                 .addGap(21, 21, 21))
         );
 
-        jPanel2.setBackground(new java.awt.Color(255, 255, 255));
-        jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder("Enviar Email"));
-        jPanel2.setToolTipText("");
-        jPanel2.setLayout(new java.awt.FlowLayout());
-
         edtEmail.setBackground(new java.awt.Color(236, 236, 236));
-        edtEmail.setColumns(20);
-        edtEmail.setRows(5);
-        jScrollPane1.setViewportView(edtEmail);
-
-        jPanel2.add(jScrollPane1);
-
-        edtFromEmail.setBackground(new java.awt.Color(236, 236, 236));
-        edtFromEmail.addActionListener(new java.awt.event.ActionListener() {
+        edtEmail.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                edtFromEmailActionPerformed(evt);
+                edtEmailActionPerformed(evt);
             }
         });
-        jPanel2.add(edtFromEmail);
 
         jLabel1.setText("Remetente:");
-        jPanel2.add(jLabel1);
+
+        edtMensagem.setBackground(new java.awt.Color(236, 236, 236));
+        edtMensagem.setColumns(20);
+        edtMensagem.setRows(5);
+        jScrollPane1.setViewportView(edtMensagem);
 
         btnEnviar.setText("Enviar");
         btnEnviar.addActionListener(new java.awt.event.ActionListener() {
@@ -126,7 +118,13 @@ public class DlgFormularioContato extends javax.swing.JDialog {
                 btnEnviarActionPerformed(evt);
             }
         });
-        jPanel2.add(btnEnviar);
+
+        btnFecharTela.setText("Fechar");
+        btnFecharTela.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnFecharTelaActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -138,33 +136,50 @@ public class DlgFormularioContato extends javax.swing.JDialog {
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
-                        .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addContainerGap())
-                    .addComponent(jPanel2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                        .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(btnEnviar)
+                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(edtEmail, javax.swing.GroupLayout.PREFERRED_SIZE, 540, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jLabel1)
+                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 570, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addContainerGap())
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(btnFecharTela)
+                .addGap(268, 268, 268))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(0, 0, 0)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(30, 30, 30)
+                .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, 272, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addComponent(edtEmail, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(45, 45, 45)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 260, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(btnEnviar)
+                .addGap(20, 20, 20)
+                .addComponent(btnFecharTela)
+                .addGap(20, 20, 20))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
 
         pack();
@@ -180,43 +195,74 @@ public class DlgFormularioContato extends javax.swing.JDialog {
     }//GEN-LAST:event_btnEnviarMouseExited
 
     private void btnEnviarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEnviarActionPerformed
-        String email = edtFromEmail.getText().trim();
-        String msg = edtEmail.getText().trim();
+        String email = edtEmail.getText().trim();
+        String msg = edtMensagem.getText().trim();
+        
         if (email.isEmpty() || !email.contains("@")) {
-            javax.swing.JOptionPane.showMessageDialog(this, "Email inválido!");
+            javax.swing.JOptionPane.showMessageDialog(this, "Email inválido!", "Erro", javax.swing.JOptionPane.ERROR_MESSAGE);
             return;
         }
+        
+        if (msg.isEmpty()) {
+            javax.swing.JOptionPane.showMessageDialog(this, "A mensagem não pode estar vazia.", "Erro", javax.swing.JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        
         model.Contato contato = new model.Contato();
         contato.setEmail(email);
         contato.setMensagem(msg);
+        
         controller.ContatoController ctl = new controller.ContatoController();
-        if (!ctl.adicionarContato(contato)) {
-            javax.swing.JOptionPane.showMessageDialog(this, "Falha ao inserir!");
-            return;
+        String resultado = ctl.adicionarContato(contato);
+        
+        // Mostra a mensagem apropriada
+        if (resultado.equals("Mensagem enviada com sucesso!")) {
+            javax.swing.JOptionPane.showMessageDialog(this, resultado, "Sucesso", javax.swing.JOptionPane.INFORMATION_MESSAGE);
+            
+            // Atualiza a lista se DlgContato estiver aberta
+            for (java.awt.Window window : java.awt.Window.getWindows()) {
+                if (window instanceof DlgContato) {
+                    ((DlgContato) window).atualizarLista(ctl.listarContatos());
+                    break;
+                }
+            }
+            
+            // Limpa os campos
+            edtEmail.setText("");
+            edtMensagem.setText("");
+            
+            // Fecha a tela
+            this.dispose();
+            
+        } else if (resultado.equals("Limite de mensagens por hora excedido para este email.")) {
+            javax.swing.JOptionPane.showMessageDialog(this, 
+                "Você atingiu o limite de 3 mensagens por hora.\nTente novamente mais tarde.", 
+                "Limite Excedido", 
+                javax.swing.JOptionPane.WARNING_MESSAGE);
+        } else {
+            javax.swing.JOptionPane.showMessageDialog(this, resultado, "Erro", javax.swing.JOptionPane.ERROR_MESSAGE);
         }
-        // Atualiza lista na tela DlgContato
-        if (getParent() instanceof DlgContato dlgContato) {
-            dlgContato.atualizarLista(ctl.listarContatos());
-        }
-        javax.swing.JOptionPane.showMessageDialog(this, "Contato Inserido!");
-        edtFromEmail.setText("");
-        edtEmail.setText("");
     }//GEN-LAST:event_btnEnviarActionPerformed
 
-    private void edtFromEmailActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_edtFromEmailActionPerformed
+    private void edtEmailActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_edtEmailActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_edtFromEmailActionPerformed
+    }//GEN-LAST:event_edtEmailActionPerformed
+
+    private void btnFecharTelaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFecharTelaActionPerformed
+this.dispose();      
+this.setVisible(false);// TODO add your handling code here:
+    }//GEN-LAST:event_btnFecharTelaActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnEnviar;
-    private javax.swing.JTextArea edtEmail;
-    private javax.swing.JTextField edtFromEmail;
+    private javax.swing.JButton btnFecharTela;
+    private javax.swing.JTextField edtEmail;
+    private javax.swing.JTextArea edtMensagem;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JScrollPane jScrollPane1;

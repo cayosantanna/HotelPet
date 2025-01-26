@@ -7,6 +7,7 @@ package com.mycompany.gui;
 import controller.RelatorioController;
 import dao.RelatorioDAO;
 import model.Reserva;
+import java.text.SimpleDateFormat;
 
 /*Cayo: Renomeei a tela relatorio para comfirmacaoreserva por ser mais intuitivo, 
 ela confirma os dados da resevar após o pagamento */
@@ -32,22 +33,26 @@ public class DlgConfirmacaoReserva extends javax.swing.JDialog {
         edtDataCheckOut.setEditable(false);
         edtDataRealizaçãoReserva.setEditable(false);
         edtValorPago.setEditable(false);
-        edtMetodoPagamento.setEditable(false);
+        comboboxMetodoPagamento.setEnabled(false);
         
         checkBoxBanho.setEnabled(false);
+        checkBoxTosa.setEnabled(false);
         checkBoxPasseio.setEnabled(false);
         checkBoxAlimentacaoEspecial.setEnabled(false);
     }
     
 public void preencherCampos(Reserva reserva, String metodoPagamento) {
     // Preenche os campos com os dados da reserva
-    edtCliente.setText(reserva.getCliente().getCpf());  // Supondo que o método 'getCpf()' exista
-    edtPet.setText(reserva.getPet().getNome());  // Supondo que o método 'getNome()' exista
-    edtDataCheckIn.setText(reserva.getCheckIn().toString());
-    edtDataCheckOut.setText(reserva.getCheckOut().toString());
-    edtDataRealizaçãoReserva.setText(reserva.getDataReserva().toString());
-    edtValorPago.setText(String.valueOf(reserva.getValorTotal()));
-    edtMetodoPagamento.setText(metodoPagamento);
+    edtCliente.setText(reserva.getCliente().getCpf());
+    edtPet.setText(reserva.getPet().getNome());
+    
+    SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+    edtDataCheckIn.setText(sdf.format(reserva.getCheckIn()));
+    edtDataCheckOut.setText(reserva.getCheckOut() != null ? sdf.format(reserva.getCheckOut()) : "");
+    edtDataRealizaçãoReserva.setText(sdf.format(reserva.getDataReserva()));
+    
+    edtValorPago.setText(String.format("%.2f", reserva.getValorTotal()));
+    comboboxMetodoPagamento.setSelectedItem(metodoPagamento);
 
     // Preenche os checkboxes dos serviços realizados
     checkBoxBanho.setSelected(reserva.isServicoBanho());
@@ -77,7 +82,6 @@ public void preencherCampos(Reserva reserva, String metodoPagamento) {
         jLabel1 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         lblData = new javax.swing.JLabel();
-        lblMetodoPagamento = new javax.swing.JLabel();
         edtCliente = new javax.swing.JTextField();
         edtPet = new javax.swing.JTextField();
         edtDataCheckIn = new javax.swing.JTextField();
@@ -88,9 +92,10 @@ public void preencherCampos(Reserva reserva, String metodoPagamento) {
         edtDataRealizaçãoReserva = new javax.swing.JTextField();
         edtDataCheckOut = new javax.swing.JTextField();
         edtValorPago = new javax.swing.JTextField();
-        edtMetodoPagamento = new javax.swing.JTextField();
         btnFecharTela = new javax.swing.JButton();
         imgFeedBack = new javax.swing.JLabel();
+        lblValorTotal1 = new javax.swing.JLabel();
+        comboboxMetodoPagamento = new javax.swing.JComboBox<>();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -121,9 +126,6 @@ public void preencherCampos(Reserva reserva, String metodoPagamento) {
 
         lblData.setFont(new java.awt.Font("Liberation Sans", 0, 18)); // NOI18N
         lblData.setText("Data Realização Reserva:");
-
-        lblMetodoPagamento.setFont(new java.awt.Font("Liberation Sans", 0, 18)); // NOI18N
-        lblMetodoPagamento.setText("Método de Pagamento:");
 
         edtCliente.setFont(new java.awt.Font("Liberation Sans", 0, 18)); // NOI18N
         edtCliente.addActionListener(new java.awt.event.ActionListener() {
@@ -169,8 +171,6 @@ public void preencherCampos(Reserva reserva, String metodoPagamento) {
 
         edtValorPago.setFont(new java.awt.Font("Liberation Sans", 0, 18)); // NOI18N
 
-        edtMetodoPagamento.setFont(new java.awt.Font("Liberation Sans", 0, 18)); // NOI18N
-
         btnFecharTela.setText("Fechar");
         btnFecharTela.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -180,15 +180,32 @@ public void preencherCampos(Reserva reserva, String metodoPagamento) {
 
         imgFeedBack.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imgs/Design sem nome (2).png"))); // NOI18N
 
+        lblValorTotal1.setFont(new java.awt.Font("Liberation Sans", 0, 18)); // NOI18N
+        lblValorTotal1.setText("Forma de Pagamento:");
+
+        comboboxMetodoPagamento.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Debito", "Credito - à vista", "Credito - Parcelado 2x ", "Credito - Parcelado 3x" }));
+        comboboxMetodoPagamento.addActionListener(evt -> {
+            // Add any payment method change handling logic here if needed
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(lblTitulo, javax.swing.GroupLayout.DEFAULT_SIZE, 751, Short.MAX_VALUE)
             .addGroup(layout.createSequentialGroup()
+                .addGap(26, 26, 26)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(26, 26, 26)
+                        .addComponent(lblValorPago)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(edtValorPago, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(lblValorTotal1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(comboboxMetodoPagamento, javax.swing.GroupLayout.PREFERRED_SIZE, 216, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(30, 30, 30))
+                    .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel1)
                             .addGroup(layout.createSequentialGroup()
@@ -204,29 +221,11 @@ public void preencherCampos(Reserva reserva, String metodoPagamento) {
                                 .addGap(73, 73, 73)
                                 .addComponent(jLabel3))
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(lblValorPago)
+                                .addComponent(lblServicos)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(checkBoxBanho)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(edtValorPago, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(lblData)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(edtDataRealizaçãoReserva, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                                        .addComponent(lblCheckIn)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(edtDataCheckIn, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addGap(25, 25, 25)
-                                        .addComponent(lblCheckOut)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(edtDataCheckOut, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                                        .addComponent(lblServicos)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                        .addComponent(checkBoxBanho)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(checkBoxTosa)))
+                                .addComponent(checkBoxTosa)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(checkBoxPasseio)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -235,13 +234,24 @@ public void preencherCampos(Reserva reserva, String metodoPagamento) {
                                 .addGap(206, 206, 206)
                                 .addComponent(jLabel4))
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(lblMetodoPagamento)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                                        .addComponent(lblData)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(edtDataRealizaçãoReserva))
+                                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                                        .addComponent(lblCheckIn)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(edtDataCheckIn, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(50, 50, 50)
+                                        .addComponent(lblCheckOut)))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(edtMetodoPagamento, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(329, 329, 329)
-                        .addComponent(btnFecharTela)))
-                .addContainerGap(99, Short.MAX_VALUE))
+                                .addComponent(edtDataCheckOut, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(0, 0, Short.MAX_VALUE))))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(329, 329, 329)
+                .addComponent(btnFecharTela)
+                .addGap(43, 43, 43))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addGap(0, 0, Short.MAX_VALUE)
                 .addComponent(imgFeedBack)
@@ -261,43 +271,43 @@ public void preencherCampos(Reserva reserva, String metodoPagamento) {
                     .addGroup(layout.createSequentialGroup()
                         .addGap(25, 25, 25)
                         .addComponent(jLabel3)))
-                .addGap(18, 18, 18)
+                .addGap(30, 30, 30)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblPet)
                     .addComponent(edtPet, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
+                .addGap(30, 30, 30)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblServicos)
                     .addComponent(checkBoxBanho)
                     .addComponent(checkBoxTosa)
                     .addComponent(checkBoxPasseio)
                     .addComponent(checkBoxAlimentacaoEspecial))
-                .addGap(18, 18, 18)
+                .addGap(30, 30, 30)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(lblCheckIn)
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(lblCheckOut)
                         .addComponent(edtDataCheckIn, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(edtDataCheckOut, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblData)
-                    .addComponent(edtDataRealizaçãoReserva, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblValorPago)
-                    .addComponent(edtValorPago, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblMetodoPagamento)
-                    .addComponent(edtMetodoPagamento, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(30, 30, 30)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(lblData)
+                            .addComponent(edtDataRealizaçãoReserva, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(30, 30, 30)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(lblValorPago)
+                            .addComponent(edtValorPago, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(comboboxMetodoPagamento, javax.swing.GroupLayout.DEFAULT_SIZE, 28, Short.MAX_VALUE)))
+                    .addComponent(lblValorTotal1))
                 .addGap(18, 18, 18)
                 .addComponent(jLabel1)
                 .addGap(18, 18, 18)
                 .addComponent(jLabel4)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(imgFeedBack)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnFecharTela)
                 .addGap(27, 27, 27))
         );
@@ -336,11 +346,11 @@ public void preencherCampos(Reserva reserva, String metodoPagamento) {
     private javax.swing.JCheckBox checkBoxBanho;
     private javax.swing.JCheckBox checkBoxPasseio;
     private javax.swing.JCheckBox checkBoxTosa;
+    private javax.swing.JComboBox<String> comboboxMetodoPagamento;
     private javax.swing.JTextField edtCliente;
     private javax.swing.JTextField edtDataCheckIn;
     private javax.swing.JTextField edtDataCheckOut;
     private javax.swing.JTextField edtDataRealizaçãoReserva;
-    private javax.swing.JTextField edtMetodoPagamento;
     private javax.swing.JTextField edtPet;
     private javax.swing.JTextField edtValorPago;
     private javax.swing.JLabel imgFeedBack;
@@ -351,10 +361,10 @@ public void preencherCampos(Reserva reserva, String metodoPagamento) {
     private javax.swing.JLabel lblCheckOut;
     private javax.swing.JLabel lblCliente;
     private javax.swing.JLabel lblData;
-    private javax.swing.JLabel lblMetodoPagamento;
     private javax.swing.JLabel lblPet;
     private javax.swing.JLabel lblServicos;
     private javax.swing.JLabel lblTitulo;
     private javax.swing.JLabel lblValorPago;
+    private javax.swing.JLabel lblValorTotal1;
     // End of variables declaration//GEN-END:variables
 }

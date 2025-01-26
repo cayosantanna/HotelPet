@@ -176,7 +176,7 @@ private final FuncionarioController funcionarioController;
                                     .addComponent(btnEditarFuncionario)
                                     .addGap(50, 50, 50)
                                     .addComponent(btnDemissão)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addGap(50, 50, 50)
                                     .addComponent(btnContatos))
                                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 560, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addContainerGap(48, Short.MAX_VALUE))))

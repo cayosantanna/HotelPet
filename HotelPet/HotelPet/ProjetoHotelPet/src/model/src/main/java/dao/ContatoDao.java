@@ -16,7 +16,7 @@ public class ContatoDao {
         java.time.LocalDateTime agora = java.time.LocalDateTime.now();
         long qtd = listaContatos.stream()
             .filter(ct -> ct.getEmail().equalsIgnoreCase(c.getEmail()))
-            .filter(ct -> java.time.Duration.between(ct.getDataEnvio(), agora).toHours() < 1)
+            .filter(ct -> ct.getDataEnvio().isAfter(agora.minusMinutes(60))) // Verifica mensagens nos últimos 60 minutos
             .count();
         return qtd < MENSAGENS_POR_HORA;
     }
@@ -26,6 +26,12 @@ public class ContatoDao {
     }
 
     public java.util.List<model.Contato> listar() {
-        return listaContatos;
+        return new java.util.ArrayList<>(listaContatos); // Retorna uma cópia da lista para evitar modificações externas
+    }
+
+    public java.util.List<model.Contato> buscarPorEmail(String email) {
+        return listaContatos.stream()
+            .filter(c -> c.getEmail().equalsIgnoreCase(email))
+            .collect(java.util.stream.Collectors.toList());
     }
 }

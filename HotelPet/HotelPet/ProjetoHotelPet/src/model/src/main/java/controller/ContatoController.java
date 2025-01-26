@@ -11,23 +11,31 @@ package controller;
 public class ContatoController {
     private dao.ContatoDao dao = new dao.ContatoDao();
 
-    public boolean adicionarContato(model.Contato c) {
+    public String adicionarContato(model.Contato c) {
         if (c == null) {
-            return false;
+            return "Contato inválido.";
         }
         String email = c.getEmail();
         if (email == null || !email.contains("@")) {
-            return false;
+            return "Email inválido.";
         }
         c.setDataEnvio(java.time.LocalDateTime.now());
         if (!dao.podeEnviar(c)) {
-            return false;
+            return "Limite de mensagens por hora excedido para este email.";
         }
-        dao.inserir(c);
-        return true;
+        try {
+            dao.inserir(c);
+            return "Mensagem enviada com sucesso!";
+        } catch (Exception e) {
+            return "Falha ao enviar a mensagem.";
+        }
     }
 
     public java.util.List<model.Contato> listarContatos() {
         return dao.listar();
+    }
+
+    public java.util.List<model.Contato> buscarPorEmail(String email) {
+        return dao.buscarPorEmail(email);
     }
 }

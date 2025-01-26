@@ -4,10 +4,6 @@
  */
 package com.mycompany.gui;
 
-/**
- *
- * @author famil
- */
 public class DlgContato extends javax.swing.JDialog {
 
     private java.util.List<model.Contato> lstContato = new java.util.ArrayList<>();
@@ -18,6 +14,9 @@ public class DlgContato extends javax.swing.JDialog {
     public DlgContato(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
+        // Carrega a lista inicial de contatos
+        controller.ContatoController ctl = new controller.ContatoController();
+        atualizarLista(ctl.listarContatos());
     }
 
     /**
@@ -130,26 +129,36 @@ public class DlgContato extends javax.swing.JDialog {
         dlgBuscaCliente.setVisible(true); // Torna a tela de busca de cliente visível
     }//GEN-LAST:event_btnFecharTelaActionPerformed
 
-    private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {
+    private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {                                         
         String emailBuscado = edtEmail.getText().trim();
-        edtEmail.setText("");
-        java.util.List<model.Contato> filtrada = new java.util.ArrayList<>();
-        for (model.Contato c : lstContato) {
-            if (c.getEmail().equalsIgnoreCase(emailBuscado)) {
-                filtrada.add(c);
+        controller.ContatoController ctl = new controller.ContatoController();
+        
+        // Filtra por email se houver texto, senão mostra todos
+        if (!emailBuscado.isEmpty()) {
+            java.util.List<model.Contato> filtrada = ctl.buscarPorEmail(emailBuscado);
+            if (filtrada.isEmpty()) {
+                javax.swing.JOptionPane.showMessageDialog(this, 
+                    "Nenhuma mensagem encontrada para este email.", 
+                    "Busca", 
+                    javax.swing.JOptionPane.INFORMATION_MESSAGE);
             }
+            atualizarLista(filtrada);
+        } else {
+            atualizarLista(ctl.listarContatos());
         }
-        atualizarLista(filtrada);
-    }
+        
+        // Limpa o campo de busca
+        edtEmail.setText("");
+    }//GEN-LAST:event_btnBuscarActionPerformed
 
-    private void btnAbrirMensagemActionPerformed(java.awt.event.ActionEvent evt) {
+    private void btnAbrirMensagemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAbrirMensagemActionPerformed
         int indice = jList1.getSelectedIndex();
         if (indice >= 0) {
             model.Contato c = lstContato.get(indice);
             DlgFormularioContato dlgForm = new DlgFormularioContato((java.awt.Frame)getParent(), true, c);
             dlgForm.setVisible(true);
         }
-    }
+    }//GEN-LAST:event_btnAbrirMensagemActionPerformed
 
     public void atualizarLista(java.util.List<model.Contato> contatos) {
         lstContato = contatos;
@@ -157,7 +166,12 @@ public class DlgContato extends javax.swing.JDialog {
             public int getSize() { return lstContato.size(); }
             public String getElementAt(int i) {
                 model.Contato c = lstContato.get(i);
-                return c.getEmail() + " - " + c.getMensagem();
+                java.time.format.DateTimeFormatter formatter = java.time.format.DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
+                String dataFormatada = c.getDataEnvio().format(formatter);
+                return String.format("[%s] %s - %s", 
+                    dataFormatada,
+                    c.getEmail(), 
+                    c.getMensagem());
             }
         });
     }
