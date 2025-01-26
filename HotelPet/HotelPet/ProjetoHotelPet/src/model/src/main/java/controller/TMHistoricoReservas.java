@@ -6,7 +6,7 @@ package controller;
 
 import java.util.List;
 import javax.swing.table.AbstractTableModel;
-import model.HistoricoReserva;
+import model.Reserva;
 
 /**
  *
@@ -14,13 +14,13 @@ import model.HistoricoReserva;
  */
 public class TMHistoricoReservas extends AbstractTableModel {
     
-    private List<HistoricoReserva> lista;
+    private List<Reserva> lista;
     
     private final int COL_NOMEPET = 0;   
     private final int COL_CPF = 1;          
 
-    public TMHistoricoReservas(List<HistoricoReserva> lstHReserva) {        
-        lista = lstHReserva;        
+    public TMHistoricoReservas(List<Reserva> listaReserva) {        
+        lista = listaReserva;        
     }
 
     @Override
@@ -35,7 +35,7 @@ public class TMHistoricoReservas extends AbstractTableModel {
 
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {               
-        HistoricoReserva aux = new HistoricoReserva();
+        Reserva aux = new Reserva();
         if (lista.isEmpty()) {
             return aux;
         } else {
@@ -46,9 +46,9 @@ public class TMHistoricoReservas extends AbstractTableModel {
                 case -1:
                     return aux;
                 case COL_NOMEPET:
-                    return aux.getNomePet();
+                    return aux.getPet();
                 case COL_CPF:
-                    return aux.getCpf();
+                    return aux.getCliente();
 
                 default: 
                     break;

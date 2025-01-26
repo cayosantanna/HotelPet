@@ -2,9 +2,13 @@
 package controller;
 import model.HistoricoReserva;
 import dao.HistoricoReservaDao;
+import factory.Persistencia;
 import java.util.List;
+import javax.persistence.EntityManager;
 import javax.swing.JTable;
+import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
+import model.Reserva;
 
 
 /**
@@ -13,39 +17,46 @@ import javax.swing.table.TableModel;
  */
 public class ControllerHistoricoReservas {
 
-    private HistoricoReservaDao repositorio;
+   
+   private HistoricoReservaDao historicoReservaDao;
 
-    // Construtor inicializando o repositório
     public ControllerHistoricoReservas() {
-        this.repositorio = new HistoricoReservaDao();
+        EntityManager em = Persistencia.getEntityManager();
+        this.historicoReservaDao = new HistoricoReservaDao(em);
+    }
+   
+   
+
+    public List<HistoricoReserva> getAllHistoricoReservas() {
+        return historicoReservaDao.findAll();
     }
 
-    // Busca um histórico de reserva pelo CPF
-    public HistoricoReserva buscarHistoricoReserva(String cpf) {
-        if (cpf == null || cpf.trim().isEmpty()) {
-            throw new IllegalArgumentException("CPF não pode ser nulo ou vazio.");
+    public HistoricoReserva findById(Long id) throws Exception {
+        HistoricoReserva reserva = historicoReservaDao.findById(id);
+        if (reserva == null) {
+            throw new Exception("Histórico de reserva não encontrado.");
         }
-        return this.repositorio.findByCpf(cpf);
-    }
-    
-    public List<HistoricoReserva> buscarHistoricoReservaCpfAndPetName(String cpf, String petName) {
-        if (cpf == null || cpf.trim().isEmpty()) {
-            throw new IllegalArgumentException("CPF não pode ser nulo ou vazio.");
-        }
-        if(petName == null || petName.trim().isEmpty()){
-            throw new IllegalArgumentException("CPF não pode ser nulo ou vazio.");
-        }
-        return this.repositorio.getByCpfandPetName(cpf, petName);
+        return reserva;
     }
 
-    // Atualiza a tabela com os dados do histórico de reservas
-    public void atualizarTabela(JTable grd) {
-        if (grd == null) {
-            throw new IllegalArgumentException("A tabela não pode ser nula.");
-        }
-
-        // Supõe-se que TMHistoricoReservas é um TableModel válido
-        TableModel modeloTabela = new TMHistoricoReservas(repositorio.findAll());
-        grd.setModel(modeloTabela);
+    public List<HistoricoReserva> buscarReservasPorCpfOuNomePet(String cpfCliente, String nomePet) {
+        return historicoReservaDao.findByCpfOrPetName(cpfCliente, nomePet);
     }
+
+    public List<String> getHistoricoCompleto() {
+        return historicoReservaDao.getHistorico();
+    }
+
+    public long contarReservasPorPet(String nomePet) {
+        return historicoReservaDao.countReservasPorPet(nomePet);
+    }
+
+    public long contarReservasPorCliente(String cpfCliente) {
+        return historicoReservaDao.countReservasPorCliente(cpfCliente);
+    }
+   
+
+   
+
+   
 }
