@@ -254,7 +254,7 @@ public class DlgHistoricoReservas extends javax.swing.JDialog {
         if (reservaSelecionada != null) {
             
             // Abrir a tela de confirmação com os detalhes da reserva
-            ConfirmacaoReserva Confirmacao = new ConfirmacaoReserva((java.awt.Frame) getParent(), true, reservaSelecionada);
+            DlgConfirmacaoReserva Confirmacao = new DlgConfirmacaoReserva((java.awt.Frame) getParent(), true, reservaSelecionada);
             Confirmacao.setVisible(true);
         } else {
             // Exibir mensagem de aviso se nenhuma reserva foi selecionada

@@ -13,13 +13,13 @@ import model.Reserva;
 /*Cayo: Renomeei a tela relatorio para comfirmacaoreserva por ser mais intuitivo, 
 ela confirma os dados da resevar após o pagamento */
 
-public class ConfirmacaoReserva extends javax.swing.JDialog {
+public class DlgConfirmacaoReserva extends javax.swing.JDialog {
     private String cpfResponsavel;
     private RelatorioController relatorioController;
     private RelatorioDAO relatorioDAO; // Adicionando a instância do RelatorioDAO
     private Reserva reserva;
 
-    public ConfirmacaoReserva(java.awt.Frame parent, boolean modal, Reserva reserva) {
+    public DlgConfirmacaoReserva(java.awt.Frame parent, boolean modal, Reserva reserva) {
         super(parent, modal);
         this.reserva = reserva;
         this.cpfResponsavel = cpfResponsavel;
