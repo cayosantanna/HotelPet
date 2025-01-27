@@ -8,19 +8,25 @@ package com.mycompany.gui;
 
 public class DlgFormularioContato extends javax.swing.JDialog {
 
-   
     public DlgFormularioContato(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
+        checkboxSupport.setEnabled(false);
+        edtEmail.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent e) {
+                boolean gestor = new controller.ContatoController()
+                    .isGestorRH(edtEmail.getText().trim());
+                checkboxSupport.setEnabled(gestor);
+                checkboxSupport.setSelected(gestor);
+            }
+        });
     }
 
     public DlgFormularioContato(java.awt.Frame parent, boolean modal, model.Contato c) {
         super(parent, modal);
         initComponents();
-        java.time.format.DateTimeFormatter formatter = java.time.format.DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
-        String dataFormatada = c.getDataEnvio().format(formatter);
         edtEmail.setText(c.getEmail());
-        edtMensagem.setText("Enviado em: " + dataFormatada + "\n\n" + c.getMensagem());
+        edtMensagem.setText(c.getMensagem());
         edtEmail.setEditable(false);
         edtMensagem.setEditable(false);
         btnEnviar.setEnabled(false);
@@ -46,6 +52,7 @@ public class DlgFormularioContato extends javax.swing.JDialog {
         edtMensagem = new javax.swing.JTextArea();
         btnEnviar = new javax.swing.JButton();
         btnFecharTela = new javax.swing.JButton();
+        checkboxSupport = new javax.swing.JCheckBox();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Contato");
@@ -126,6 +133,8 @@ public class DlgFormularioContato extends javax.swing.JDialog {
             }
         });
 
+        checkboxSupport.setText("Mensagem de Suporte");
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -143,7 +152,8 @@ public class DlgFormularioContato extends javax.swing.JDialog {
                             .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                 .addComponent(edtEmail, javax.swing.GroupLayout.PREFERRED_SIZE, 540, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addComponent(jLabel1)
-                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 570, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 570, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(checkboxSupport)))
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
@@ -162,7 +172,9 @@ public class DlgFormularioContato extends javax.swing.JDialog {
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(edtEmail, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(45, 45, 45)
+                .addGap(18, 18, 18)
+                .addComponent(checkboxSupport)
+                .addGap(27, 27, 27)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 260, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(btnEnviar)
@@ -197,48 +209,29 @@ public class DlgFormularioContato extends javax.swing.JDialog {
     private void btnEnviarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEnviarActionPerformed
         String email = edtEmail.getText().trim();
         String msg = edtMensagem.getText().trim();
-        
         if (email.isEmpty() || !email.contains("@")) {
             javax.swing.JOptionPane.showMessageDialog(this, "Email inválido!", "Erro", javax.swing.JOptionPane.ERROR_MESSAGE);
             return;
         }
-        
         if (msg.isEmpty()) {
             javax.swing.JOptionPane.showMessageDialog(this, "A mensagem não pode estar vazia.", "Erro", javax.swing.JOptionPane.ERROR_MESSAGE);
             return;
         }
-        
         model.Contato contato = new model.Contato();
         contato.setEmail(email);
         contato.setMensagem(msg);
-        
+        contato.setSupportMessage(checkboxSupport.isSelected());
         controller.ContatoController ctl = new controller.ContatoController();
         String resultado = ctl.adicionarContato(contato);
-        
-        // Mostra a mensagem apropriada
         if (resultado.equals("Mensagem enviada com sucesso!")) {
-            javax.swing.JOptionPane.showMessageDialog(this, resultado, "Sucesso", javax.swing.JOptionPane.INFORMATION_MESSAGE);
-            
-            // Atualiza a lista se DlgContato estiver aberta
-            for (java.awt.Window window : java.awt.Window.getWindows()) {
-                if (window instanceof DlgContato) {
-                    ((DlgContato) window).atualizarLista(ctl.listarContatos());
-                    break;
-                }
+            // Atualiza lista na tela DlgContato
+            if (getParent() instanceof DlgContato dlgContato) {
+                dlgContato.atualizarLista(ctl.listarContatos());
             }
-            
-            // Limpa os campos
-            edtEmail.setText("");
-            edtMensagem.setText("");
-            
-            // Fecha a tela
+            javax.swing.JOptionPane.showMessageDialog(this, resultado, "Sucesso", javax.swing.JOptionPane.INFORMATION_MESSAGE);
             this.dispose();
-            
-        } else if (resultado.equals("Limite de mensagens por hora excedido para este email.")) {
-            javax.swing.JOptionPane.showMessageDialog(this, 
-                "Você atingiu o limite de 3 mensagens por hora.\nTente novamente mais tarde.", 
-                "Limite Excedido", 
-                javax.swing.JOptionPane.WARNING_MESSAGE);
+            // Redireciona para FrTelaInicial
+            new FrTelaInicial().setVisible(true);
         } else {
             javax.swing.JOptionPane.showMessageDialog(this, resultado, "Erro", javax.swing.JOptionPane.ERROR_MESSAGE);
         }
@@ -257,6 +250,7 @@ this.setVisible(false);// TODO add your handling code here:
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnEnviar;
     private javax.swing.JButton btnFecharTela;
+    private javax.swing.JCheckBox checkboxSupport;
     private javax.swing.JTextField edtEmail;
     private javax.swing.JTextArea edtMensagem;
     private javax.swing.JLabel jLabel1;

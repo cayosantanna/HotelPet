@@ -4,9 +4,16 @@
  */
 package com.mycompany.gui;
 
+import javax.swing.JCheckBox;
+import javax.swing.JTextField;
+import controller.ContatoController;
+
 public class DlgContato extends javax.swing.JDialog {
 
     private java.util.List<model.Contato> lstContato = new java.util.ArrayList<>();
+    private JCheckBox checkboxSupport; // Exemplo de checkbox
+    private JTextField txtEmail;       // Campo de email
+    private ContatoController contatoController = new ContatoController();
 
     /**
      * Creates new form DlgContato
@@ -17,6 +24,14 @@ public class DlgContato extends javax.swing.JDialog {
         // Carrega a lista inicial de contatos
         controller.ContatoController ctl = new controller.ContatoController();
         atualizarLista(ctl.listarContatos());
+        txtEmail.addFocusListener(new java.awt.event.FocusAdapter() {
+            @Override
+            public void focusLost(java.awt.event.FocusEvent e) {
+                boolean gestor = contatoController.isGestorRH(txtEmail.getText().trim());
+                checkboxSupport.setEnabled(gestor);
+                checkboxSupport.setSelected(gestor);
+            }
+        });
     }
 
     /**
@@ -161,6 +176,12 @@ public class DlgContato extends javax.swing.JDialog {
     }//GEN-LAST:event_btnAbrirMensagemActionPerformed
 
     public void atualizarLista(java.util.List<model.Contato> contatos) {
+        String usuarioLogado = "projetohotelpet@vuket.org"; // Exemplo
+        if (usuarioLogado.equalsIgnoreCase("projetohotelpet@vuket.org")) {
+            contatos = contatos.stream()
+                .filter(model.Contato::isSupportMessage)
+                .collect(java.util.stream.Collectors.toList());
+        }
         lstContato = contatos;
         jList1.setModel(new javax.swing.AbstractListModel<String>() {
             public int getSize() { return lstContato.size(); }

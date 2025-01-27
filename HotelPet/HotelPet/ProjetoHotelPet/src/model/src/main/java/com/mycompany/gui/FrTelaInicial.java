@@ -176,6 +176,13 @@ private void abrirTelaCadastroRH() {
             inputEmail.setText("");
             inputSenha.setText("");
             
+            if(funcionario.getEmail().contains("projetohotelpet@vuket.org")){ //Conta da equipe do suporte da aplicação
+            FrfuncionarioRH telaRH = new FrfuncionarioRH(funcionario.getCpf());
+            telaRH.setLocationRelativeTo(this); // Centraliza em relação à tela inicial
+            telaRH.setFuncionario(false);
+            telaRH.setVisible(true);
+        }
+            
             if (funcionario.getCargo().contains("RH") || 
                 funcionario.getCargo().contains("gestor") || 
                 funcionario.getCargo().equalsIgnoreCase("Gestor de RH")) {
@@ -186,6 +193,7 @@ private void abrirTelaCadastroRH() {
             }
             return;
         }
+        
 
         // Se não encontrou funcionário, tenta como cliente
         Cliente cliente = clienteController.login(email, senha);

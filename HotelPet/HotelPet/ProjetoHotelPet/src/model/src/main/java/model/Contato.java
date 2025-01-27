@@ -12,6 +12,7 @@ public class Contato {
     private String email;
     private String mensagem;
     private java.time.LocalDateTime dataEnvio;
+    private boolean supportMessage;
 
     public String getEmail() {
         return email;
@@ -35,5 +36,13 @@ public class Contato {
 
     public void setDataEnvio(java.time.LocalDateTime dataEnvio) {
         this.dataEnvio = dataEnvio;
+    }
+
+    public boolean isSupportMessage() {
+        return supportMessage;
+    }
+
+    public void setSupportMessage(boolean supportMessage) {
+        this.supportMessage = supportMessage;
     }
 }
