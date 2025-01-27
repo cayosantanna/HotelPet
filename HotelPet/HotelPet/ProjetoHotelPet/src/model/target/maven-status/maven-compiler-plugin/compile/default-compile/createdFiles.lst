@@ -5,7 +5,6 @@ com\mycompany\gui\DlgRelatorioFuncionario$2.class
 com\mycompany\gui\DlgReservas$4.class
 dao\PetDAO.class
 controller\TMHistoricoReservas.class
-com\mycompany\gui\DlgTelaPagamento$2.class
 com\mycompany\gui\DlgCadPet$5.class
 controller\ReservaController.class
 model\Pessoa.class
@@ -30,7 +29,6 @@ com\mycompany\gui\DlgCadFuncionario$3.class
 com\mycompany\gui\DlgReservas$7.class
 com\mycompany\gui\DlgSobreNós$1.class
 com\mycompany\gui\DlgBuscaUsuario$1.class
-com\mycompany\gui\DlgTelaPagamento$8.class
 com\mycompany\gui\FrTelaInicial$3.class
 model\ProjetoHotelPet.class
 com\mycompany\gui\DlgCadCliente$1.class
@@ -38,8 +36,6 @@ model\exceptions\ReservaException.class
 util\TransactionManager.class
 com\mycompany\gui\DlgBuscaUsuario$4.class
 com\mycompany\gui\DlgConfirmacaoReserva$2.class
-com\mycompany\gui\DlgTelaPagamento$5.class
-com\mycompany\gui\DlgTelaPagamento.class
 model\Pagamento.class
 com\mycompany\gui\FrfuncionarioRH$3.class
 model\Funcionario.class
@@ -59,7 +55,6 @@ com\mycompany\gui\DlgRelatorioFuncionario.class
 dao\FuncionarioDao.class
 com\mycompany\gui\DlgReservas$9.class
 com\mycompany\gui\DlgContato$3.class
-com\mycompany\gui\DlgTelaPagamento$4.class
 com\mycompany\gui\DlgBuscaUsuario.class
 com\mycompany\gui\DlgContato$2.class
 com\mycompany\gui\FrfuncionarioRH$2.class
@@ -69,7 +64,6 @@ com\mycompany\gui\DlgFormularioContato.class
 com\mycompany\gui\DlgServicos$1.class
 model\Relatorio.class
 util\DatabaseValidator.class
-com\mycompany\gui\DlgTelaPagamento$3.class
 com\mycompany\gui\DlgRelatorioFuncionario$6.class
 dao\ContatoDao.class
 com\mycompany\gui\DlgReservas$2.class
@@ -88,7 +82,6 @@ com\mycompany\gui\FrMenu.class
 com\mycompany\gui\DlgCadFuncionario$4.class
 com\mycompany\gui\DlgHistoricoReservas$4.class
 model\Cliente.class
-com\mycompany\gui\DlgTelaPagamento$1.class
 dao\ClienteDAO.class
 dao\PagamentoDAO.class
 com\mycompany\gui\DlgCadFuncionario$1.class
@@ -117,7 +110,6 @@ com\mycompany\gui\DlgRelatorioFuncionario$4.class
 model\exceptions\PetException.class
 com\mycompany\gui\DlgReservas$10.class
 com\mycompany\gui\FrMenu$2.class
-com\mycompany\gui\DlgTelaPagamento$7.class
 controller\ClienteController.class
 model\valid\ValidatePet.class
 com\mycompany\gui\FrfuncionarioRH$6.class
@@ -129,7 +121,6 @@ controller\PagamentoController.class
 com\mycompany\gui\DlgCadCliente$2.class
 factory\Persistencia.class
 com\mycompany\gui\DlgRelatorioFuncionario$3.class
-com\mycompany\gui\DlgTelaPagamento$6.class
 dao\HistoricoReservaDao.class
 model\Contato.class
 com\mycompany\gui\DlgConfirmacaoReserva$1.class
@@ -142,7 +133,6 @@ com\mycompany\gui\DlgBuscaPet.class
 com\mycompany\gui\DlgBuscaUsuario$2.class
 com\mycompany\gui\DlgCadCliente.class
 model\exceptions\ClienteException.class
-model\HistoricoRh.class
 com\mycompany\gui\DlgHistoricoReservas$3.class
 com\mycompany\gui\DlgRelatorioFuncionario$10.class
 com\mycompany\gui\FrfuncionarioRH$5.class
