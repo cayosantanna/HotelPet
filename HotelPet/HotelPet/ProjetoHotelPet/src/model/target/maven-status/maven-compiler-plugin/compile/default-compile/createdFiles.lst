@@ -61,6 +61,7 @@ com\mycompany\gui\DlgReservas$9.class
 com\mycompany\gui\DlgContato$3.class
 com\mycompany\gui\DlgTelaPagamento$4.class
 com\mycompany\gui\DlgBuscaUsuario.class
+com\mycompany\gui\DlgFormularioContato$4.class
 com\mycompany\gui\DlgContato$2.class
 com\mycompany\gui\FrfuncionarioRH$2.class
 com\mycompany\gui\DlgBuscaUsuario$5.class
@@ -117,6 +118,7 @@ com\mycompany\gui\DlgRelatorioFuncionario$4.class
 model\exceptions\PetException.class
 com\mycompany\gui\DlgReservas$10.class
 com\mycompany\gui\FrMenu$2.class
+com\mycompany\gui\DlgContato$6.class
 com\mycompany\gui\DlgTelaPagamento$7.class
 controller\ClienteController.class
 model\valid\ValidatePet.class
@@ -142,7 +144,6 @@ com\mycompany\gui\DlgBuscaPet.class
 com\mycompany\gui\DlgBuscaUsuario$2.class
 com\mycompany\gui\DlgCadCliente.class
 model\exceptions\ClienteException.class
-model\HistoricoRh.class
 com\mycompany\gui\DlgHistoricoReservas$3.class
 com\mycompany\gui\DlgRelatorioFuncionario$10.class
 com\mycompany\gui\FrfuncionarioRH$5.class

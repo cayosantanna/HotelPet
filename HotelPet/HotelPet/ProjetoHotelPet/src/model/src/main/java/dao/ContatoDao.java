@@ -4,13 +4,24 @@
  */
 package dao;
 
+import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
+import javax.persistence.TypedQuery;
+
+import model.Funcionario;
+
 /**
  *
  * @author famil
  */
 public class ContatoDao {
+    private EntityManager em;
     private static final java.util.List<model.Contato> listaContatos = new java.util.ArrayList<>();
     private static final int MENSAGENS_POR_HORA = 3;
+
+    public ContatoDao(EntityManager em) {
+        this.em = em;
+    }
 
     public boolean podeEnviar(model.Contato c) {
         java.time.LocalDateTime agora = java.time.LocalDateTime.now();
@@ -33,5 +44,17 @@ public class ContatoDao {
         return listaContatos.stream()
             .filter(c -> c.getEmail().equalsIgnoreCase(email))
             .collect(java.util.stream.Collectors.toList());
+    }
+
+    public Funcionario findFuncionarioByEmail(String email) {
+        try {
+            TypedQuery<Funcionario> query = em.createQuery(
+                "SELECT f FROM Funcionario f WHERE f.email = :email", Funcionario.class
+            );
+            query.setParameter("email", email);
+            return query.getSingleResult();
+        } catch (NoResultException e) {
+            return null;
+        }
     }
 }

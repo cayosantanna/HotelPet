@@ -66,6 +66,12 @@ private final FuncionarioController funcionarioController;
                 "Erro", JOptionPane.ERROR_MESSAGE);
         }
     }
+    
+    public void setFuncionario(Boolean funcionario) {
+        this.btnDemissão.setEnabled(funcionario);
+        this.btnEditarFuncionario.setEnabled(funcionario);
+        this.btnNovoFuncionario.setEnabled(funcionario);
+    }
 
     private void atualizarListaFuncionarios(List<Funcionario> funcionarios) {
         DefaultListModel<String> listModel = new DefaultListModel<>();

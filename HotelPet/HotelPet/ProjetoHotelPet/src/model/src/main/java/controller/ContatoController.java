@@ -4,12 +4,20 @@
  */
 package controller;
 
+import model.Funcionario;
+
 /**
  *
  * @author famil
  */
 public class ContatoController {
-    private dao.ContatoDao dao = new dao.ContatoDao();
+    private final dao.ContatoDao dao;
+    
+    public ContatoController() {
+        javax.persistence.EntityManagerFactory emf = javax.persistence.Persistence.createEntityManagerFactory("default");
+        javax.persistence.EntityManager em = emf.createEntityManager();
+        this.dao = new dao.ContatoDao(em);
+    }
 
     public String adicionarContato(model.Contato c) {
         if (c == null) {
@@ -37,5 +45,13 @@ public class ContatoController {
 
     public java.util.List<model.Contato> buscarPorEmail(String email) {
         return dao.buscarPorEmail(email);
+    }
+
+    public boolean isGestorRH(String email) {
+        Funcionario func = dao.findFuncionarioByEmail(email);
+        if (func != null && "Gestor de RH".equalsIgnoreCase(func.getCargo())) {
+            return true;
+        }
+        return false;
     }
 }
