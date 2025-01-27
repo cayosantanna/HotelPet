@@ -5,10 +5,7 @@ import dao.HistoricoReservaDao;
 import factory.Persistencia;
 import java.util.List;
 import javax.persistence.EntityManager;
-import javax.swing.JTable;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableModel;
-import model.Reserva;
+
 
 
 /**
