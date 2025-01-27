@@ -11,7 +11,6 @@ import javax.persistence.NoResultException;
 import javax.persistence.TypedQuery;
 
 import model.Funcionario;
-import model.HistoricoRh;
 
 public class FuncionarioDao {
 
@@ -92,34 +91,7 @@ public class FuncionarioDao {
         }
     }
 
-    public void registrarAcao(String cpfRh, String acao) {
-        EntityTransaction tx = em.getTransaction();
-        try {
-            tx.begin();
-            
-            // Busca o funcionário para verificar o cargo
-            Funcionario funcionario = findByCpf(cpfRh);
-            String cargoPrefix = funcionario.getCargo().equalsIgnoreCase("Gestor de RH") ? 
-                               "RH" : "Recepcionista";
-            
-            HistoricoRh historico = new HistoricoRh();
-            historico.setCpfRh(cpfRh);
-            historico.setAcao(cargoPrefix + " - " + acao);
-            historico.setDataHora(new Date());
-            
-            em.persist(historico);
-            em.flush();
-            tx.commit();
-            em.clear();
-            
-            System.out.println("Ação registrada por " + cargoPrefix + ": " + acao);
-        } catch (Exception e) {
-            if (tx != null && tx.isActive()) {
-                tx.rollback();
-            }
-            e.printStackTrace();
-        }
-    }
+    
 
     public Funcionario findByCpf(String cpf) {
         TypedQuery<Funcionario> query = em.createQuery("SELECT f FROM Funcionario f WHERE f.cpf = :cpf", Funcionario.class);
