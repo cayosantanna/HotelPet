@@ -5,8 +5,6 @@
 package com.mycompany.gui;
 
 
-import model.HistoricoReserva;
-import controller.ControllerHistoricoReservas;
 import controller.ReservaController;
 import controller.TMHistoricoReservas;
 import javax.swing.JOptionPane;
@@ -21,17 +19,14 @@ import model.Reserva;
  */
 public class DlgHistoricoReservas extends javax.swing.JDialog {
 
-    private final ControllerHistoricoReservas histoController;
 
-    private String cpfHisto;
-    private JTable tabelaReservas;
+
+    private final JTable tabelaReservas;
 
     public DlgHistoricoReservas(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
 
-        // Inicialização do controlador e variáveis
-        this.histoController = new ControllerHistoricoReservas();
-        this.cpfHisto = "-";
+   
 
         initComponents();
         tabelaReservas = new JTable();  // Inicializando a JTable
@@ -40,8 +35,6 @@ public class DlgHistoricoReservas extends javax.swing.JDialog {
         // Configurações iniciais
         this.limparCampos();
 
-        // Atualiza a tabela com os dados iniciais
-        //histoController.atualizarTabela(grdHistReser);
     }
 
     
@@ -53,22 +46,8 @@ public class DlgHistoricoReservas extends javax.swing.JDialog {
         edtCPF.setText("");
     }
 
-    // Preenche os campos com os dados de um objeto HistoricoReserva
-    public void objetoParaCampos(HistoricoReserva historico) {
-        if (historico != null) {
-            edtNomePet.setText(historico.getNomePet());
-            edtCPF.setText(historico.getCpf());
-        }
-    }
+    
 
-    // Recupera o objeto selecionado na tabela
-    private HistoricoReserva getObjectSelectOnGrid() {
-        int rowClicked = grdHistReser.getSelectedRow();
-        if (rowClicked >= 0) {
-            return (HistoricoReserva) grdHistReser.getModel().getValueAt(rowClicked, -1); // Certifique-se que o modelo suporta isso
-        }
-        return null;
-    }
     
     /**
      * This method is called from within the constructor to initialize the form.
@@ -264,13 +243,18 @@ public class DlgHistoricoReservas extends javax.swing.JDialog {
 
     private void jbtnVisualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbtnVisualizarActionPerformed
         // Obter a reserva selecionada na tabela
-        HistoricoReserva reservaSelecionada = getObjectSelectOnGrid();
+        System.out.println("entrei no botao visualizar");
         
+        Reserva reservaSelecionada = ReservaSelecionada();
+        
+        System.out.println("v"+ ReservaSelecionada());
+         
 
         // Verificar se uma reserva foi selecionada
         if (reservaSelecionada != null) {
+            
             // Abrir a tela de confirmação com os detalhes da reserva
-        ConfirmacaoReserva Confirmacao = new ConfirmacaoReserva((java.awt.Frame) this.getParent(), true, reservaSelecionada);
+            ConfirmacaoReserva Confirmacao = new ConfirmacaoReserva((java.awt.Frame) getParent(), true, reservaSelecionada);
             Confirmacao.setVisible(true);
         } else {
             // Exibir mensagem de aviso se nenhuma reserva foi selecionada
@@ -278,19 +262,46 @@ public class DlgHistoricoReservas extends javax.swing.JDialog {
         }
     }//GEN-LAST:event_jbtnVisualizarActionPerformed
 
+    private Reserva ReservaSelecionada() {
+      
+        // Obter o índice da linha selecionada
+        System.out.println("Entrei na getReservaSelecionada");
+
+        int linhaSelecionada = grdHistReser.getSelectedRow();
+
+        System.out.println("Índice da linha selecionada: " + linhaSelecionada);
+
+
+        // Verificar se alguma linha foi selecionada
+        if (linhaSelecionada != -1) {  // Verificar se há uma linha selecionada (não -1)
+            // Obter o modelo da tabela e recuperar a reserva associada
+            TMHistoricoReservas modelo = (TMHistoricoReservas) grdHistReser.getModel();
+            System.out.println("Modelo da tabela: " + modelo);
+
+            // Acessar a lista de reservas e retornar a reserva da linha selecionada
+            return modelo.getLista().get(linhaSelecionada); 
+        } else {
+            // Se nenhuma linha foi selecionada, retornar null
+            System.out.println("Nenhuma linha selecionada");
+            return null;
+        }
+
+
+}
+    
     private void btnRelatorioEstadiaPetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRelatorioEstadiaPetActionPerformed
                                                      
-       HistoricoReserva historicoSelecionado = getObjectSelectOnGrid();
-    if (historicoSelecionado != null) {
-        RelatorioFuncionario relatorioFuncionario = new RelatorioFuncionario();
+       Reserva historicoSelecionado = ReservaSelecionada();
+        if (historicoSelecionado != null) {
+            RelatorioFuncionario relatorioFuncionario = new RelatorioFuncionario();
 
-        relatorioFuncionario.setCpfResponsavel(historicoSelecionado.getCpf());
-        relatorioFuncionario.setNomePet(historicoSelecionado.getNomePet());
+            relatorioFuncionario.setCpfResponsavel(historicoSelecionado.getCliente().getCpf());
+            relatorioFuncionario.setNomePet(historicoSelecionado.getPet().getNome());
 
-        DlgRelatorioFuncionario dlgRelatorioFuncionario = new DlgRelatorioFuncionario(new javax.swing.JFrame(), true);
-        dlgRelatorioFuncionario.setRelatorioFuncionario(relatorioFuncionario);
-        dlgRelatorioFuncionario.carregarRelatorioExistente(relatorioFuncionario);
-        dlgRelatorioFuncionario.setVisible(true);
+            DlgRelatorioFuncionario dlgRelatorioFuncionario = new DlgRelatorioFuncionario(new javax.swing.JFrame(), true);
+            dlgRelatorioFuncionario.setRelatorioFuncionario(relatorioFuncionario);
+            dlgRelatorioFuncionario.carregarRelatorioExistente(relatorioFuncionario);
+            dlgRelatorioFuncionario.setVisible(true);
     } else {
         JOptionPane.showMessageDialog(this, "Nenhum histórico selecionado.", "Atenção", JOptionPane.WARNING_MESSAGE);
     }
@@ -298,28 +309,48 @@ public class DlgHistoricoReservas extends javax.swing.JDialog {
     }//GEN-LAST:event_btnRelatorioEstadiaPetActionPerformed
 
     private void grdHistReserMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_grdHistReserMouseClicked
-        if (evt.getClickCount() == 1) {
-            jbtnVisualizarActionPerformed(null);
-        }else{
-            // Detecta clique na tabela e habilita ações para a linha selecionada
-            if (grdHistReser.getSelectedRow() != 1 && grdHistReser.getSelectedRow()!= -1 ) {
-                btnRelatorioEstadiaPet.setEnabled(true);
-            }
+        
+                                              
+        System.out.println("entrei na grd");
 
+        // Verifica se é um clique duplo ou simples
+        if (evt.getClickCount() == 1) {
+            // Identifica a coluna e linha clicadas
+            int row = grdHistReser.rowAtPoint(evt.getPoint());
+            int column = grdHistReser.columnAtPoint(evt.getPoint());
+
+            // Verifica se a coluna clicada é a do Nome do Pet (coluna 0)
+            if (column == 0 && row != -1) {
+                jbtnVisualizarActionPerformed(null); // Chama o método de visualização
+            }
         }
+
+        // Habilita ambos os botões quando qualquer parte da tabela for clicada
+        if (grdHistReser.getSelectedRow() != -1) {
+            btnRelatorioEstadiaPet.setEnabled(true);  // Habilita o botão para gerar o relatório
+            jbtnVisualizar.setEnabled(true);  // Habilita o botão de visualização
+        }
+
+        // Verifica se o modelo da tabela é do tipo TMHistoricoReservas
+        if (grdHistReser.getModel() instanceof TMHistoricoReservas) {
+            TMHistoricoReservas model = (TMHistoricoReservas) grdHistReser.getModel();
+            // Agora você pode manipular o modelo TMHistoricoReservas sem risco de ClassCastException
+            // Se precisar de algo mais do modelo, pode acessar aqui
+        } else {
+            System.out.println("Modelo incorreto da tabela.");
+        }
+
+
     }//GEN-LAST:event_grdHistReserMouseClicked
                                        
 
-private Reserva getReservaSelecionada() {
-    // Retorna a reserva selecionada na tabela
-    int linhaSelecionada = grdHistReser.getSelectedRow();
-    return null;
-}
+    
 
-public void atualizarTabelaReservas(List<Reserva> reservas) {
-    TMHistoricoReservas model = new TMHistoricoReservas(reservas);  // Criando o modelo com a lista de Reservas
-    tabelaReservas.setModel(model);  // Definindo o modelo da tabela
-}
+
+    public void atualizarTabelaReservas(List<Reserva> reservas) {
+        TMHistoricoReservas model = new TMHistoricoReservas(reservas);  // Criando o modelo com a lista de Reservas
+        tabelaReservas.setModel(model);  // Definindo o modelo da tabela
+    }
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

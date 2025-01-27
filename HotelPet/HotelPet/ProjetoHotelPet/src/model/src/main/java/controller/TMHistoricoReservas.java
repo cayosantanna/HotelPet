@@ -111,4 +111,8 @@ public class TMHistoricoReservas extends AbstractTableModel {
     }
 
 }
+
+    public List<Reserva> getLista() {
+        return lista;
+    }
 }
