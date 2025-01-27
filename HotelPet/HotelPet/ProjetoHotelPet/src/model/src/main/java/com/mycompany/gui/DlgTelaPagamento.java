@@ -163,7 +163,7 @@ public class DlgTelaPagamento extends javax.swing.JDialog {
         lblValorTotal1.setFont(new java.awt.Font("Liberation Sans", 0, 18)); // NOI18N
         lblValorTotal1.setText("Forma de Pagemento:");
 
-        comboboxMetodoPagamento.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Debito", "Credito - à vista", "Credito - Parcelado 1x ", "Credito - Parcelado 2x", "Credito - Parcelado 3x"}));
+        comboboxMetodoPagamento.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Dinheiro","Debito", "Credito - à vista", "Credito - Parcelado 2x ", "Credito - Parcelado 3x" }));
         comboboxMetodoPagamento.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 comboboxMetodoPagamentoActionPerformed(evt);
@@ -292,8 +292,8 @@ try {
             JOptionPane.showMessageDialog(this, "Pagamento realizado com sucesso!");
             
             // Criar instância da tela de confirmação de reserva
-            ConfirmacaoReserva confirmacaoReserva = new ConfirmacaoReserva((java.awt.Frame) getParent(), true, reserva);
-            confirmacaoReserva.preencherCampos(reserva);  // Agora preenche corretamente os campos da tela de confirmação
+            DlgConfirmacaoReserva confirmacaoReserva = new DlgConfirmacaoReserva((java.awt.Frame) getParent(), true);
+            confirmacaoReserva.preencherCampos(reserva, metodo);  // Agora preenche corretamente os campos da tela de confirmação
             
             // Exibir a tela de confirmação
             confirmacaoReserva.setVisible(true);

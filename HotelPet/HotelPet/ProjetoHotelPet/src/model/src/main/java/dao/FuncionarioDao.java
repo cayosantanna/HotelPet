@@ -11,7 +11,6 @@ import javax.persistence.NoResultException;
 import javax.persistence.TypedQuery;
 
 import model.Funcionario;
-import model.HistoricoRh;
 
 public class FuncionarioDao {
 
@@ -69,8 +68,18 @@ public class FuncionarioDao {
                 funcionario.setEmail("inativo." + timestamp + "." + funcionario.getEmail());
                 funcionario.setTelefone("ex." + timestamp + "." + funcionario.getTelefone());
             }
-            funcionario = em.merge(funcionario);
+            
+            // Força atualização dos dados, incluindo a senha
+            em.clear(); // Limpa o cache
+            Funcionario managed = em.merge(funcionario);
             em.flush();
+            
+            // Atualiza explicitamente a senha
+            em.createQuery("UPDATE Funcionario f SET f.senha = :senha WHERE f.id = :id")
+                .setParameter("senha", funcionario.getSenha())
+                .setParameter("id", funcionario.getId())
+                .executeUpdate();
+                
             tx.commit();
             em.clear();
             System.out.println("Funcionário atualizado com sucesso: " + funcionario.getNome());
@@ -82,34 +91,7 @@ public class FuncionarioDao {
         }
     }
 
-    public void registrarAcao(String cpfRh, String acao) {
-        EntityTransaction tx = em.getTransaction();
-        try {
-            tx.begin();
-            
-            // Busca o funcionário para verificar o cargo
-            Funcionario funcionario = findByCpf(cpfRh);
-            String cargoPrefix = funcionario.getCargo().equalsIgnoreCase("Gestor de RH") ? 
-                               "RH" : "Recepcionista";
-            
-            HistoricoRh historico = new HistoricoRh();
-            historico.setCpfRh(cpfRh);
-            historico.setAcao(cargoPrefix + " - " + acao);
-            historico.setDataHora(new Date());
-            
-            em.persist(historico);
-            em.flush();
-            tx.commit();
-            em.clear();
-            
-            System.out.println("Ação registrada por " + cargoPrefix + ": " + acao);
-        } catch (Exception e) {
-            if (tx != null && tx.isActive()) {
-                tx.rollback();
-            }
-            e.printStackTrace();
-        }
-    }
+    
 
     public Funcionario findByCpf(String cpf) {
         TypedQuery<Funcionario> query = em.createQuery("SELECT f FROM Funcionario f WHERE f.cpf = :cpf", Funcionario.class);

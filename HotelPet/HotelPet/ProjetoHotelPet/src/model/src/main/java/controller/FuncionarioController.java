@@ -21,7 +21,6 @@ public class FuncionarioController {
     public void createFuncionario(Funcionario funcionario, String cpfRhLogado) throws Exception {
         try {
             funcionarioDao.create(funcionario);
-            funcionarioDao.registrarAcao(cpfRhLogado, "Cadastrou funcionário: " + funcionario.getNome());
         } catch (Exception e) {
             e.printStackTrace();
             Funcionario check = funcionarioDao.findByCpf(funcionario.getCpf());
@@ -47,12 +46,14 @@ public class FuncionarioController {
             }
         }
 
+        // Atualiza explicitamente a senha
+        Funcionario atual = funcionarioDao.findByCpf(funcionario.getCpf());
+        if (!atual.getSenha().equals(funcionario.getSenha())) {
+            System.out.println("Atualizando senha do funcionário");
+            atual.setSenha(funcionario.getSenha());
+        }
+        
         funcionarioDao.update(funcionario);
-        registrarAcao(cpfRhLogado, "Editou funcionário: " + funcionario.getNome());
-    }
-
-    private void registrarAcao(String cpfRh, String acao) {
-        funcionarioDao.registrarAcao(cpfRh, acao);
     }
 
     public Funcionario loginFuncionario(String email, String senha) throws Exception {
@@ -79,7 +80,6 @@ public class FuncionarioController {
             funcionario.setAtivo(false);
             funcionario.setDataDesligamento(new Date());
             funcionarioDao.update(funcionario);
-            funcionarioDao.registrarAcao(cpfRhLogado, "Demitiu funcionário: " + funcionario.getNome());
         } catch (Exception e) {
             e.printStackTrace();
             throw new Exception("Erro ao demitir funcionário: " + e.getMessage());

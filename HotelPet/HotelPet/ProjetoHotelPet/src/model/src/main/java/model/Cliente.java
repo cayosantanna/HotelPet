@@ -13,6 +13,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
+import javax.persistence.Transient;
 import lombok.Data;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
@@ -38,7 +39,11 @@ public class Cliente {
     private String telefone;
     private String endereco;
     private String cep;
+    @Column(nullable = false)
     private String senha;
+    @Transient // Não será persistido no banco
+    private String senhaOriginal;
+
     private Boolean funcionario = false;
 
     @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL)
@@ -56,8 +61,9 @@ public class Cliente {
         this.endereco = endereco;
         this.cep = (cep != null) ? cep.replaceAll("[^\\d]", "") : null;
         if (!(senha.isBlank() || senha.isEmpty())) {
+            this.senhaOriginal = senha; // Guarda a senha original
             BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-            this.senha = encoder.encode(senha);
+            this.senha = encoder.encode(senha); // Guarda a senha criptografada
         }
 
     }
@@ -151,19 +157,23 @@ public class Cliente {
      * @return the senha
      */
     public String getSenha() {
-        return senha;
+        return this.senhaOriginal != null ? this.senhaOriginal : this.senha;
     }
 
     /**
      * @param senha the senha to set
      */
     public void setSenha(String senha) {
-        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-        this.senha = encoder.encode(senha);
+        this.senhaOriginal = senha;
+        if (!senha.isEmpty()) {
+            BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+            this.senha = encoder.encode(senha);
+        }
     }
     
     public void setHashedSenha(String hashedSenha){
         this.senha = hashedSenha;
+        this.senhaOriginal = hashedSenha; // Guarda também como senha original
     }
     
     @Override

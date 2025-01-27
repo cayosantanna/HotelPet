@@ -175,7 +175,12 @@ public class DlgCadPet extends javax.swing.JDialog {
         lblSexo.setFont(new java.awt.Font("Liberation Sans", 0, 18)); // NOI18N
         lblSexo.setText("Sexo:");
 
-        comboBoxSexo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Feminino", "Masculino" }));
+        comboBoxSexo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Fêmea", "Macho" }));
+        comboBoxSexo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                comboBoxSexoActionPerformed(evt);
+            }
+        });
 
         lblPorte.setFont(new java.awt.Font("Liberation Sans", 0, 18)); // NOI18N
         lblPorte.setText("Porte:");
@@ -339,6 +344,10 @@ public class DlgCadPet extends javax.swing.JDialog {
     private void formInputMethodTextChanged(java.awt.event.InputMethodEvent evt) {//GEN-FIRST:event_formInputMethodTextChanged
 
     }//GEN-LAST:event_formInputMethodTextChanged
+
+    private void comboBoxSexoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboBoxSexoActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_comboBoxSexoActionPerformed
 
     public void adicionarMascaraNosCampos() {
         try {

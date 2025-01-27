@@ -297,7 +297,7 @@
     <Component class="javax.swing.JComboBox" name="comboboxMetodoPagamento">
       <Properties>
         <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-          <Connection code="new javax.swing.DefaultComboBoxModel&lt;&gt;(new String[] { &quot;Debito&quot;, &quot;Credito - &#xe0; vista&quot;, &quot;Credito - Parcelado 1x &quot;, &quot;Credito - Parcelado 2x&quot;, &quot;Credito - Parcelado 3x&quot;})" type="code"/>
+          <Connection code="new javax.swing.DefaultComboBoxModel&lt;&gt;(new String[] { &quot;Debito&quot;, &quot;Credito - &#xe0; vista&quot;, &quot;Credito - Parcelado 2x &quot;, &quot;Credito - Parcelado 3x&quot; })" type="code"/>
         </Property>
       </Properties>
       <Events>

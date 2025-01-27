@@ -7,6 +7,7 @@ package com.mycompany.gui;
 import controller.ClienteController;
 import controller.PetController;
 import controller.ReservaController;
+import java.awt.Container;
 import java.awt.Frame;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -16,6 +17,10 @@ import javax.swing.JOptionPane;
 import model.Cliente;
 import model.Pet;
 import model.Reserva;
+import javax.swing.text.MaskFormatter;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JFormattedTextField;
 
 /**
  * Tela de reservas para realizar uma nova reserva.
@@ -32,22 +37,179 @@ public class DlgReservas extends javax.swing.JDialog {
 
     public DlgReservas(Frame parent, boolean modal, int clienteId, int petId) {
         super(parent, modal);
-        this.clienteController = new ClienteController();
-        this.petController = new PetController();
-        this.reservaController = new ReservaController();
-        this.cliente = this.clienteController.findById(clienteId);
-        this.pet = this.petController.findById(petId);
-        initComponents();
+        try {
+            this.clienteController = new ClienteController();
+            this.petController = new PetController();
+            this.reservaController = new ReservaController();
+
+            // Validar cliente e pet
+            this.cliente = this.clienteController.findById(clienteId);
+            this.pet = this.petController.findById(petId);
+            
+            if (cliente == null || pet == null) {
+                throw new Exception("Cliente ou Pet não encontrado");
+            }
+            
+            initComponents();
+            
+            // Configurar campos
+            configurarCampos();
+            
+            // Adicionar máscaras apenas para check-in e check-out
+            adicionarMascarasDatas();
+            
+            // Adicionar validadores
+            configurarValidadoresDatas();
+            
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Erro ao inicializar tela: " + e.getMessage());
+            this.dispose();
+        }
+    }
+
+    private void configurarCampos() {
+        // Configurar campos não editáveis
         edtCPFCliente.setText(cliente.getCpf());
         edtNomePet.setText(pet.getNome());
+        
+        // Configurar data atual como não editável
+        edtDataReserva.setText(new SimpleDateFormat("dd/MM/yyyy").format(new Date()));
+        edtDataReserva.setEditable(false);
+        edtDataReserva.setFocusable(false);
+        edtDataReserva.setBackground(new java.awt.Color(240, 240, 240));
+        
+        // Outros campos não editáveis
         edtCPFCliente.setEditable(false);
         edtNomePet.setEditable(false);
-        edtDataReserva.setEditable(false);
-        edtDataReserva.setText(obterDataAtual());
+        edtValorTotal.setEditable(false);
+        
+        btnSalvar.setEnabled(false);
+    }
 
-        // Verificar alertas de estadias prolongadas
-        verificarReservasSemCheckout();
-        btnSalvar.setEnabled(false); // Inicia com botão salvar desabilitado
+    private void adicionarMascarasDatas() {
+        try {
+            MaskFormatter maskData = new MaskFormatter("##/##/####");
+            maskData.setPlaceholderCharacter('_');
+            
+            // Configurar campos formatados apenas para check-in e check-out
+            JFormattedTextField txtCheckIn = new JFormattedTextField(maskData);
+            JFormattedTextField txtCheckOut = new JFormattedTextField(maskData);
+            
+            // Configurar validação ao perder o foco
+            txtCheckIn.setFocusLostBehavior(JFormattedTextField.COMMIT);
+            txtCheckOut.setFocusLostBehavior(JFormattedTextField.COMMIT);
+            
+            // Manter propriedades visuais
+            txtCheckIn.setBounds(edtCheckIn1.getBounds());
+            txtCheckIn.setFont(edtCheckIn1.getFont());
+            txtCheckOut.setBounds(edtCheckOut.getBounds());
+            txtCheckOut.setFont(edtCheckOut.getFont());
+            
+            // Substituir campos antigos
+            Container parent = edtCheckIn1.getParent();
+            parent.remove(edtCheckIn1);
+            parent.remove(edtCheckOut);
+            parent.add(txtCheckIn);
+            parent.add(txtCheckOut);
+            
+            edtCheckIn1 = txtCheckIn;
+            edtCheckOut = txtCheckOut;
+            
+            // Garantir que a máscara esteja aplicada corretamente
+            ((JFormattedTextField)edtCheckOut).setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(maskData));
+            
+        } catch (ParseException ex) {
+            JOptionPane.showMessageDialog(this, "Erro ao configurar máscaras: " + ex.getMessage());
+        }
+    }
+
+    private void configurarValidadoresDatas() {
+        edtCheckIn1.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                validarDataCheckIn();
+            }
+        });
+        
+        edtCheckOut.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                validarDataCheckOut();
+            }
+        });
+    }
+
+    private Date removeTime(Date date) {
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+        try {
+            return sdf.parse(sdf.format(date));
+        } catch (ParseException e) {
+            return date;
+        }
+    }
+
+    private void validarDataCheckIn() {
+        try {
+            String dataStr = edtCheckIn1.getText().trim();
+            if (dataStr.isEmpty() || !dataStr.matches("\\d{2}/\\d{2}/\\d{4}")) {
+                JOptionPane.showMessageDialog(this, "Data de check-in é obrigatória e deve estar no formato dd/mm/aaaa");
+                edtCheckIn1.setText("");
+                return;
+            }
+            
+            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+            sdf.setLenient(false);
+            
+            // Pega a data atual da reserva
+            Date dataReserva = sdf.parse(edtDataReserva.getText());
+            Date checkIn = sdf.parse(dataStr);
+            
+            if (checkIn.before(dataReserva)) {
+                JOptionPane.showMessageDialog(this, "Data de check-in não pode ser anterior à data atual");
+                edtCheckIn1.setText("");
+                btnSalvar.setEnabled(false);
+                return;
+            }
+            
+            // Limpa check-out se já estiver preenchido
+            edtCheckOut.setText("");
+            
+        } catch (ParseException e) {
+            JOptionPane.showMessageDialog(this, "Data inválida");
+            edtCheckIn1.setText("");
+            btnSalvar.setEnabled(false);
+        }
+    }
+
+    private void validarDataCheckOut() {
+        try {
+            String checkInStr = edtCheckIn1.getText().trim();
+            String checkOutStr = edtCheckOut.getText().trim();
+            
+            if (checkOutStr.isEmpty()) {
+                return; // Check-out é opcional
+            }
+            
+            if (checkInStr.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Preencha primeiro a data de check-in");
+                edtCheckOut.setText("");
+                return;
+            }
+            
+            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+            sdf.setLenient(false);
+            
+            Date checkIn = sdf.parse(checkInStr);
+            Date checkOut = sdf.parse(checkOutStr);
+            
+            if (checkOut.before(checkIn) || checkOut.equals(checkIn)) {
+                JOptionPane.showMessageDialog(this, "Data de check-out deve ser posterior ao check-in");
+                edtCheckOut.setText("");
+                btnSalvar.setEnabled(false);
+            }
+        } catch (ParseException e) {
+            JOptionPane.showMessageDialog(this, "Data inválida");
+            edtCheckOut.setText("");
+            btnSalvar.setEnabled(false);
+        }
     }
 
     private String obterDataAtual() {
@@ -110,6 +272,24 @@ public class DlgReservas extends javax.swing.JDialog {
     private long calcularDiasSemCheckout(Date checkIn) {
         long diffInMillies = new Date().getTime() - checkIn.getTime();
         return diffInMillies / (1000 * 60 * 60 * 24);
+    }
+
+    private void adicionarMascaraNosCampos() {
+        try {
+            MaskFormatter maskData = new MaskFormatter("##/##/####");
+            maskData.setPlaceholderCharacter('_');
+            
+            // Aplicar máscara ao campo de check-in
+            maskData.install((JFormattedTextField) edtCheckIn1);
+            
+            // Criar nova instância para o check-out
+            MaskFormatter maskDataCheckout = new MaskFormatter("##/##/####");
+            maskDataCheckout.setPlaceholderCharacter('_');
+            maskDataCheckout.install((JFormattedTextField) edtCheckOut);
+            
+        } catch (ParseException ex) {
+            Logger.getLogger(DlgReservas.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -203,6 +383,12 @@ public class DlgReservas extends javax.swing.JDialog {
         lblValorTotal.setFont(new java.awt.Font("Liberation Sans", 0, 18)); // NOI18N
         lblValorTotal.setText("Valor Total a Pagar:");
 
+        edtValorTotal.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                edtValorTotalActionPerformed(evt);
+            }
+        });
+
         btnSalvar.setText("Salvar");
         btnSalvar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -211,9 +397,20 @@ public class DlgReservas extends javax.swing.JDialog {
         });
 
         btnCancelar.setText("Cancelar");
+        btnCancelar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCancelarActionPerformed(evt);
+            }
+        });
 
         lblDataReserva.setFont(new java.awt.Font("Liberation Sans", 0, 18)); // NOI18N
         lblDataReserva.setText("Data da Realização da Reserva:");
+
+        edtDataReserva.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                edtDataReservaActionPerformed(evt);
+            }
+        });
 
         lblServicosDisponiveis1.setFont(new java.awt.Font("Liberation Sans", 0, 18)); // NOI18N
         lblServicosDisponiveis1.setText("Serviços extras:");
@@ -235,89 +432,69 @@ public class DlgReservas extends javax.swing.JDialog {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(lblTituloRealizarReserva, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(layout.createSequentialGroup()
                 .addGap(67, 67, 67)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(lblCliente)
-                    .addComponent(jLabel1))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addGroup(layout.createSequentialGroup()
-                            .addGap(67, 67, 67)
-                            .addComponent(checkBoxBanho)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(checkBoxTosa)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(checkBoxPasseio)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(checkBoxAlimentacaoEspecial))
-                        .addGroup(layout.createSequentialGroup()
-                            .addGap(67, 67, 67)
-                            .addComponent(lblServicosDisponiveis))
-                        .addGroup(layout.createSequentialGroup()
-                            .addGap(67, 67, 67)
-                            .addComponent(lblCheckIn))
-                        .addGroup(layout.createSequentialGroup()
-                            .addGap(67, 67, 67)
-                            .addComponent(edtCPFCliente))
-                        .addGroup(layout.createSequentialGroup()
-                            .addGap(67, 67, 67)
-                            .addComponent(lblCheckOut))
-                        .addGroup(layout.createSequentialGroup()
-                            .addGap(67, 67, 67)
-                            .addComponent(lblValorTotal))
-                        .addGroup(layout.createSequentialGroup()
-                            .addGap(133, 133, 133)
-                            .addComponent(btnSalvar, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGap(74, 74, 74)
-                            .addComponent(btnCancelar))
-                        .addGroup(layout.createSequentialGroup()
-                            .addContainerGap()
-                            .addComponent(jLabel3))
-                        .addGroup(layout.createSequentialGroup()
-                            .addGap(67, 67, 67)
-                            .addComponent(edtCheckIn1))
-                        .addGroup(layout.createSequentialGroup()
-                            .addGap(67, 67, 67)
-                            .addComponent(edtNomePet))
-                        .addGroup(layout.createSequentialGroup()
-                            .addGap(67, 67, 67)
-                            .addComponent(edtCheckOut))
-                        .addGroup(layout.createSequentialGroup()
-                            .addGap(67, 67, 67)
-                            .addComponent(lblServicosDisponiveis1))
-                        .addGroup(layout.createSequentialGroup()
-                            .addGap(67, 67, 67)
-                            .addComponent(txtServicosExtras))
-                        .addGroup(layout.createSequentialGroup()
-                            .addGap(67, 67, 67)
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(btnAtualizarValor)
-                                .addComponent(edtValorTotal))))
+                    .addComponent(edtValorTotal)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(67, 67, 67)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(txtServicosExtras, javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(edtDataReserva, javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(edtCPFCliente)
+                            .addComponent(edtNomePet, javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                                .addGap(61, 61, 61)
+                                .addComponent(btnSalvar, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(btnCancelar)
+                                .addGap(92, 92, 92))
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(lblDataReserva, javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(lblCliente, javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                                        .addComponent(checkBoxBanho)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(checkBoxTosa)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(checkBoxPasseio)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(checkBoxAlimentacaoEspecial))
+                                    .addComponent(lblServicosDisponiveis, javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(lblServicosDisponiveis1, javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(lblCheckIn)
+                                            .addComponent(edtCheckIn1, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addGap(120, 120, 120)
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(edtCheckOut, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(lblCheckOut)))
+                                    .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.LEADING))
+                                .addGap(0, 6, Short.MAX_VALUE)))
+                        .addGap(61, 61, 61))
+                    .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(lblDataReserva)
-                            .addComponent(edtDataReserva, javax.swing.GroupLayout.PREFERRED_SIZE, 443, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addGap(0, 67, Short.MAX_VALUE))
-            .addComponent(lblTituloRealizarReserva, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(btnAtualizarValor)
+                            .addComponent(lblValorTotal))
+                        .addGap(0, 0, Short.MAX_VALUE))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(18, 18, 18)
                 .addComponent(lblTituloRealizarReserva, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(26, 26, 26)
+                .addGap(40, 40, 40)
                 .addComponent(lblCliente)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(edtCPFCliente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addGap(25, 25, 25)
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(edtNomePet, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(12, 12, 12)
+                .addGap(25, 25, 25)
                 .addComponent(lblServicosDisponiveis)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -325,31 +502,31 @@ public class DlgReservas extends javax.swing.JDialog {
                     .addComponent(checkBoxTosa)
                     .addComponent(checkBoxPasseio)
                     .addComponent(checkBoxAlimentacaoEspecial))
-                .addGap(18, 18, 18)
+                .addGap(25, 25, 25)
                 .addComponent(lblServicosDisponiveis1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(txtServicosExtras, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(lblCheckIn)
+                .addGap(25, 25, 25)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblCheckIn)
+                    .addComponent(lblCheckOut))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(edtCheckIn1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(lblCheckOut)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(edtCheckOut, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(edtCheckIn1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(edtCheckOut, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(25, 25, 25)
                 .addComponent(lblDataReserva)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(edtDataReserva, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel3)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 41, Short.MAX_VALUE)
+                .addGap(40, 40, 40)
                 .addComponent(lblValorTotal)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(edtValorTotal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel3)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(btnAtualizarValor)
-                .addGap(50, 50, 50)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 54, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnSalvar, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnCancelar, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -367,9 +544,9 @@ public class DlgReservas extends javax.swing.JDialog {
         atualizarValorTotal();
     }//GEN-LAST:event_checkBoxTosaActionPerformed
 
-    private void checkBoxAlimentacaoEspecialActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_checkBoxAlimentacaoEspecialActionPerformed
+    private void checkBoxAlimentacaoEspecialActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event checkBoxAlimentacaoEspecialActionPerformed
        atualizarValorTotal();
-    }//GEN-LAST:event_checkBoxAlimentacaoEspecialActionPerformed
+    }//GEN-LAST:event checkBoxAlimentacaoEspecialActionPerformed
 
     private void btnSalvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalvarActionPerformed
     if (!validarFormatoData(edtCheckIn1.getText())) {
@@ -391,6 +568,9 @@ public class DlgReservas extends javax.swing.JDialog {
         Reserva reserva = new Reserva();
         reserva.setCliente(cliente);
         reserva.setPet(pet);
+
+        // Adicionar a data da reserva
+        reserva.setDataReserva(new Date()); // Adiciona a data atual como data da reserva
 
         // Converter as strings para datas
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
@@ -417,6 +597,12 @@ public class DlgReservas extends javax.swing.JDialog {
         
         // Adicionar descrição dos serviços extras
         reserva.setDescricaoServicosExtras(txtServicosExtras.getText());
+
+        // Verificar se já existe uma reserva para o mesmo pet no período especificado
+        if (reservaController.existeReservaNoPeriodo(pet, checkIn, checkOut)) {
+            JOptionPane.showMessageDialog(this, "Já existe uma reserva para este pet no período especificado.", "Erro", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
 
         // Salvar no banco de dados
         reservaController.salvarReservaComValidacao(reserva);
@@ -468,6 +654,19 @@ public class DlgReservas extends javax.swing.JDialog {
             btnSalvar.setEnabled(false);
         }
     }//GEN-LAST:event_btnAtualizarValorActionPerformed
+
+    private void edtDataReservaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_edtDataReservaActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_edtDataReservaActionPerformed
+
+    private void edtValorTotalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_edtValorTotalActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_edtValorTotalActionPerformed
+
+    private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
+    this.dispose();
+    this.setVisible(false);         // TODO add your handling code here:
+    }//GEN-LAST:event_btnCancelarActionPerformed
 
     private boolean validarFormatoData(String data) {
         return data.matches("\\d{2}/\\d{2}/\\d{4}");
