@@ -234,8 +234,6 @@ public class DlgFormularioContato extends javax.swing.JDialog {
             }
             javax.swing.JOptionPane.showMessageDialog(this, resultado, "Sucesso", javax.swing.JOptionPane.INFORMATION_MESSAGE);
             this.dispose();
-            // Redireciona para FrTelaInicial
-            new FrTelaInicial().setVisible(true);
         } else {
             javax.swing.JOptionPane.showMessageDialog(this, resultado, "Erro", javax.swing.JOptionPane.ERROR_MESSAGE);
         }

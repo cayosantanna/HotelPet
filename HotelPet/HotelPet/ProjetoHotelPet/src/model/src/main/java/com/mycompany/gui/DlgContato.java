@@ -20,9 +20,23 @@ public class DlgContato extends javax.swing.JDialog {
     public DlgContato(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
+        
+        // Inicializar checkboxSupport
+        checkboxSupport = new JCheckBox("Enviar para suporte");
+        checkboxSupport.setEnabled(false);
+        
+        // Adicionar listener para o botão buscar
+        btnBuscar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnBuscarActionPerformed(evt);
+            }
+        });
+        
         // Carrega a lista inicial de contatos
         controller.ContatoController ctl = new controller.ContatoController();
         atualizarLista(ctl.listarContatos());
+        
+        // Adicionar FocusListener ao edtEmail
         edtEmail.addFocusListener(new java.awt.event.FocusAdapter() {
             @Override
             public void focusLost(java.awt.event.FocusEvent e) {
@@ -142,21 +156,26 @@ public class DlgContato extends javax.swing.JDialog {
         String emailBuscado = edtEmail.getText().trim();
         controller.ContatoController ctl = new controller.ContatoController();
         
-        // Filtra por email se houver texto, senão mostra todos
-        if (!emailBuscado.isEmpty()) {
-            java.util.List<model.Contato> filtrada = ctl.buscarPorEmail(emailBuscado);
-            if (filtrada.isEmpty()) {
-                javax.swing.JOptionPane.showMessageDialog(this, 
-                    "Nenhuma mensagem encontrada para este email.", 
-                    "Busca", 
-                    javax.swing.JOptionPane.INFORMATION_MESSAGE);
+        try {
+            if (!emailBuscado.isEmpty()) {
+                java.util.List<model.Contato> filtrada = ctl.buscarPorEmail(emailBuscado);
+                if (filtrada.isEmpty()) {
+                    javax.swing.JOptionPane.showMessageDialog(this, 
+                        "Nenhuma mensagem encontrada para este email.", 
+                        "Busca", 
+                        javax.swing.JOptionPane.INFORMATION_MESSAGE);
+                }
+                atualizarLista(filtrada);
+            } else {
+                atualizarLista(ctl.listarContatos());
             }
-            atualizarLista(filtrada);
-        } else {
-            atualizarLista(ctl.listarContatos());
+        } catch (Exception e) {
+            javax.swing.JOptionPane.showMessageDialog(this,
+                "Erro ao buscar mensagens: " + e.getMessage(),
+                "Erro",
+                javax.swing.JOptionPane.ERROR_MESSAGE);
         }
         
-        // Limpa o campo de busca
         edtEmail.setText("");
     }                                         
 
