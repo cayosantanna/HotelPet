@@ -201,4 +201,38 @@ public class ReservaDAO implements IDao<Reserva> {
             }
         }
     }
+
+    public List<Reserva> findReservasPorPetId(int petId) {
+        EntityManager em = EntityManagerUtil.getEntityManager();
+        try {
+            TypedQuery<Reserva> query = em.createQuery(
+                "SELECT r FROM Reserva r WHERE r.pet.id = :petId", 
+                Reserva.class
+            );
+            query.setParameter("petId", petId);
+            return query.getResultList();
+        } finally {
+            em.close();
+        }
+    }
+
+    public void saveOrUpdate(Reserva reserva) {
+        EntityManager em = EntityManagerUtil.getEntityManager();
+        try {
+            em.getTransaction().begin();
+            
+            if (reserva.getId() == null) {
+                em.persist(reserva);
+            } else {
+                reserva = em.merge(reserva);
+            }
+            
+            em.getTransaction().commit();
+        } catch (Exception e) {
+            em.getTransaction().rollback();
+            throw e;
+        } finally {
+            em.close();
+        }
+    }
 }

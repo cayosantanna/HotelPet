@@ -33,10 +33,12 @@ public class ReservaController {
     }
 
     public boolean existeReservaNoPeriodo(Pet pet, Date checkIn, Date checkOut) {
-        List<Reserva> reservas = reservaDAO.findReservasPorPet(pet);
-        for (Reserva reserva : reservas) {
-            if ((checkIn.before(reserva.getCheckOut()) && checkOut.after(reserva.getCheckIn())) ||
-                (checkIn.equals(reserva.getCheckIn()) || checkOut.equals(reserva.getCheckOut()))) {
+        List<Reserva> reservasDoPet = reservaDAO.findReservasPorPetId(pet.getId());
+        
+        for (Reserva reserva : reservasDoPet) {
+            // Verifica sobreposição de períodos
+            if (checkIn.before(reserva.getCheckOut()) && 
+                (checkOut == null || checkOut.after(reserva.getCheckIn()))) {
                 return true;
             }
         }

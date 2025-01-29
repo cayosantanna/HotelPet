@@ -8,18 +8,10 @@ package com.mycompany.gui;
 
 public class DlgFormularioContato extends javax.swing.JDialog {
 
+   
     public DlgFormularioContato(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
-        checkboxSupport.setEnabled(false);
-        edtEmail.addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusLost(java.awt.event.FocusEvent e) {
-                boolean gestor = new controller.ContatoController()
-                    .isGestorRH(edtEmail.getText().trim());
-                checkboxSupport.setEnabled(gestor);
-                checkboxSupport.setSelected(gestor);
-            }
-        });
     }
 
     public DlgFormularioContato(java.awt.Frame parent, boolean modal, model.Contato c) {
@@ -111,6 +103,11 @@ public class DlgFormularioContato extends javax.swing.JDialog {
                 edtEmailActionPerformed(evt);
             }
         });
+        edtEmail.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                verificarCargoFuncionario();
+            }
+        });
 
         jLabel1.setText("Remetente:");
 
@@ -133,12 +130,21 @@ public class DlgFormularioContato extends javax.swing.JDialog {
             }
         });
 
-        checkboxSupport.setText("Mensagem de Suporte");
+        checkboxSupport.setText("Enviar mensagem somente para equipe de support");
+        checkboxSupport.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                checkboxSupportActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(btnFecharTela)
+                .addGap(268, 268, 268))
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -147,19 +153,16 @@ public class DlgFormularioContato extends javax.swing.JDialog {
                         .addGap(18, 18, 18)
                         .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(btnEnviar)
-                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(edtEmail, javax.swing.GroupLayout.PREFERRED_SIZE, 540, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(jLabel1)
-                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 570, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(checkboxSupport)))
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                .addComponent(btnEnviar)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(edtEmail, javax.swing.GroupLayout.PREFERRED_SIZE, 540, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel1)
+                                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 570, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(checkboxSupport))
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addGap(0, 0, Short.MAX_VALUE)
-                .addComponent(btnFecharTela)
-                .addGap(268, 268, 268))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -172,9 +175,9 @@ public class DlgFormularioContato extends javax.swing.JDialog {
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(edtEmail, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(checkboxSupport)
-                .addGap(27, 27, 27)
+                .addGap(30, 30, 30)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 260, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(btnEnviar)
@@ -220,7 +223,8 @@ public class DlgFormularioContato extends javax.swing.JDialog {
         model.Contato contato = new model.Contato();
         contato.setEmail(email);
         contato.setMensagem(msg);
-        contato.setSupportMessage(checkboxSupport.isSelected());
+        contato.setDataEnvio(java.time.LocalDateTime.now()); // Guarda data/hora
+        contato.setSupportMessage(checkboxSupport.isSelected()); // Define se é mensagem de suporte
         controller.ContatoController ctl = new controller.ContatoController();
         String resultado = ctl.adicionarContato(contato);
         if (resultado.equals("Mensagem enviada com sucesso!")) {
@@ -245,6 +249,22 @@ public class DlgFormularioContato extends javax.swing.JDialog {
 this.dispose();      
 this.setVisible(false);// TODO add your handling code here:
     }//GEN-LAST:event_btnFecharTelaActionPerformed
+
+    private void checkboxSupportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_checkboxSupportActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_checkboxSupportActionPerformed
+
+    private void verificarCargoFuncionario() {
+        String email = edtEmail.getText().trim();
+        if (!email.isEmpty()) {
+            controller.ContatoController ctl = new controller.ContatoController();
+            boolean isGestor = ctl.isGestorRH(email);
+            checkboxSupport.setEnabled(isGestor);
+            checkboxSupport.setSelected(false); // resetar estado
+        } else {
+            checkboxSupport.setEnabled(false);
+        }
+    }
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

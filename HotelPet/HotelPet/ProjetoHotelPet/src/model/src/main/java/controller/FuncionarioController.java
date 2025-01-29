@@ -73,6 +73,12 @@ public class FuncionarioController {
             if (funcionario == null) {
                 throw new Exception("Funcionário não encontrado.");
             }
+            
+            // Verificar se é o funcionário protegido
+            if ("projetohotelpet@vuket.org".equals(funcionario.getEmail())) {
+                throw new Exception("Este funcionário não pode ser demitido.");
+            }
+            
             if (!funcionario.isAtivo()) {
                 throw new Exception("Este funcionário já está inativo.");
             }
@@ -80,6 +86,7 @@ public class FuncionarioController {
             funcionario.setAtivo(false);
             funcionario.setDataDesligamento(new Date());
             funcionarioDao.update(funcionario);
+            
         } catch (Exception e) {
             e.printStackTrace();
             throw new Exception("Erro ao demitir funcionário: " + e.getMessage());
@@ -121,5 +128,7 @@ public class FuncionarioController {
             System.out.println("Erro ao testar conexão: " + e.getMessage());
         }
     }
+    
+
     
 }

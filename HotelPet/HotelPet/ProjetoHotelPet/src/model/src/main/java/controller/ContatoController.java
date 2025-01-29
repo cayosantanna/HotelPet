@@ -14,7 +14,7 @@ public class ContatoController {
     private final dao.ContatoDao dao;
     
     public ContatoController() {
-        javax.persistence.EntityManagerFactory emf = javax.persistence.Persistence.createEntityManagerFactory("default");
+        javax.persistence.EntityManagerFactory emf = javax.persistence.Persistence.createEntityManagerFactory("exemplo-jpa");
         javax.persistence.EntityManager em = emf.createEntityManager();
         this.dao = new dao.ContatoDao(em);
     }
@@ -49,8 +49,11 @@ public class ContatoController {
 
     public boolean isGestorRH(String email) {
         Funcionario func = dao.findFuncionarioByEmail(email);
-        if (func != null && "Gestor de RH".equalsIgnoreCase(func.getCargo())) {
-            return true;
+        if (func != null) {
+            String cargo = func.getCargo().toLowerCase();
+            return cargo.contains("RH") || 
+                   cargo.contains("gestor") || 
+                   cargo.equalsIgnoreCase("Gestor de RH");
         }
         return false;
     }
