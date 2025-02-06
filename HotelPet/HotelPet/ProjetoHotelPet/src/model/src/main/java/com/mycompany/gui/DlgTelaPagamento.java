@@ -293,7 +293,7 @@ try {
             
             // Criar instância da tela de confirmação de reserva
             DlgConfirmacaoReserva confirmacaoReserva = new DlgConfirmacaoReserva((java.awt.Frame) getParent(), true, reserva);
-            confirmacaoReserva.preencherCampos(reserva, metodo);  // Agora preenche corretamente os campos da tela de confirmação
+            confirmacaoReserva.preencherCampos(reserva);  // Agora preenche corretamente os campos da tela de confirmação
             
             // Exibir a tela de confirmação
             confirmacaoReserva.setVisible(true);
