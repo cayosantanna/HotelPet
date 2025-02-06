@@ -12,7 +12,6 @@ public class DlgContato extends javax.swing.JDialog {
 
     private java.util.List<model.Contato> lstContato = new java.util.ArrayList<>();
     private JCheckBox checkboxSupport; // Exemplo de checkbox
-    private JTextField txtEmail;       // Campo de email
     private ContatoController contatoController = new ContatoController();
 
     /**
@@ -21,13 +20,27 @@ public class DlgContato extends javax.swing.JDialog {
     public DlgContato(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
+        
+        // Inicializar checkboxSupport
+        checkboxSupport = new JCheckBox("Enviar para suporte");
+        checkboxSupport.setEnabled(false);
+        
+        // Adicionar listener para o botão buscar
+        btnBuscar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnBuscarActionPerformed(evt);
+            }
+        });
+        
         // Carrega a lista inicial de contatos
         controller.ContatoController ctl = new controller.ContatoController();
         atualizarLista(ctl.listarContatos());
-        txtEmail.addFocusListener(new java.awt.event.FocusAdapter() {
+        
+        // Adicionar FocusListener ao edtEmail
+        edtEmail.addFocusListener(new java.awt.event.FocusAdapter() {
             @Override
             public void focusLost(java.awt.event.FocusEvent e) {
-                boolean gestor = contatoController.isGestorRH(txtEmail.getText().trim());
+                boolean gestor = contatoController.isGestorRH(edtEmail.getText().trim());
                 checkboxSupport.setEnabled(gestor);
                 checkboxSupport.setSelected(gestor);
             }
@@ -68,11 +81,6 @@ public class DlgContato extends javax.swing.JDialog {
         jLabel1.setText("Email:");
 
         btnBuscar.setText("Buscar");
-        btnBuscar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnBuscarActionPerformed(evt);
-            }
-        });
 
         btnAbrirMensagem.setText("Abrir Mensagem");
         btnAbrirMensagem.addActionListener(new java.awt.event.ActionListener() {
@@ -123,11 +131,11 @@ public class DlgContato extends javax.swing.JDialog {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
                     .addComponent(edtEmail, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(35, 35, 35)
+                .addGap(30, 30, 30)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnBuscar)
                     .addComponent(btnAbrirMensagem))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 20, Short.MAX_VALUE)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 351, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(26, 26, 26)
                 .addComponent(btnFecharTela)
@@ -148,23 +156,28 @@ public class DlgContato extends javax.swing.JDialog {
         String emailBuscado = edtEmail.getText().trim();
         controller.ContatoController ctl = new controller.ContatoController();
         
-        // Filtra por email se houver texto, senão mostra todos
-        if (!emailBuscado.isEmpty()) {
-            java.util.List<model.Contato> filtrada = ctl.buscarPorEmail(emailBuscado);
-            if (filtrada.isEmpty()) {
-                javax.swing.JOptionPane.showMessageDialog(this, 
-                    "Nenhuma mensagem encontrada para este email.", 
-                    "Busca", 
-                    javax.swing.JOptionPane.INFORMATION_MESSAGE);
+        try {
+            if (!emailBuscado.isEmpty()) {
+                java.util.List<model.Contato> filtrada = ctl.buscarPorEmail(emailBuscado);
+                if (filtrada.isEmpty()) {
+                    javax.swing.JOptionPane.showMessageDialog(this, 
+                        "Nenhuma mensagem encontrada para este email.", 
+                        "Busca", 
+                        javax.swing.JOptionPane.INFORMATION_MESSAGE);
+                }
+                atualizarLista(filtrada);
+            } else {
+                atualizarLista(ctl.listarContatos());
             }
-            atualizarLista(filtrada);
-        } else {
-            atualizarLista(ctl.listarContatos());
+        } catch (Exception e) {
+            javax.swing.JOptionPane.showMessageDialog(this,
+                "Erro ao buscar mensagens: " + e.getMessage(),
+                "Erro",
+                javax.swing.JOptionPane.ERROR_MESSAGE);
         }
         
-        // Limpa o campo de busca
         edtEmail.setText("");
-    }//GEN-LAST:event_btnBuscarActionPerformed
+    }                                         
 
     private void btnAbrirMensagemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAbrirMensagemActionPerformed
         int indice = jList1.getSelectedIndex();
@@ -177,22 +190,28 @@ public class DlgContato extends javax.swing.JDialog {
 
     public void atualizarLista(java.util.List<model.Contato> contatos) {
         String usuarioLogado = "projetohotelpet@vuket.org"; // Exemplo
+        // Se for o email protegido, filtra apenas mensagens de suporte
         if (usuarioLogado.equalsIgnoreCase("projetohotelpet@vuket.org")) {
             contatos = contatos.stream()
-                .filter(model.Contato::isSupportMessage)
+                .filter(c -> c.isSupportMessage())
+                .sorted((c1, c2) -> c2.getDataEnvio().compareTo(c1.getDataEnvio()))
                 .collect(java.util.stream.Collectors.toList());
         }
+        // Ordena por data de envio (decrescente)
+        contatos.sort((c1, c2) -> c2.getDataEnvio().compareTo(c1.getDataEnvio()));
         lstContato = contatos;
         jList1.setModel(new javax.swing.AbstractListModel<String>() {
             public int getSize() { return lstContato.size(); }
             public String getElementAt(int i) {
                 model.Contato c = lstContato.get(i);
-                java.time.format.DateTimeFormatter formatter = java.time.format.DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
+                java.time.format.DateTimeFormatter formatter = 
+                    java.time.format.DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
                 String dataFormatada = c.getDataEnvio().format(formatter);
-                return String.format("[%s] %s - %s", 
+                return String.format("[%s] %s - %s%s", 
                     dataFormatada,
                     c.getEmail(), 
-                    c.getMensagem());
+                    c.getMensagem(),
+                    c.isSupportMessage() ? " [Suporte]" : "");
             }
         });
     }

@@ -13,25 +13,19 @@ import javax.swing.JTable;
 import model.RelatorioFuncionario;
 import model.Reserva;
 
-/**
- *
- * @author cayo
- */
+
 public class DlgHistoricoReservas extends javax.swing.JDialog {
 
-
+    private Reserva reserva;
 
     private final JTable tabelaReservas;
 
     public DlgHistoricoReservas(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
-
-   
-
         initComponents();
         tabelaReservas = new JTable();  // Inicializando a JTable
         jScrollPane1.setViewportView(tabelaReservas);  // Associando ao JScrollPane
-
+        this.reserva = reserva;
         // Configurações iniciais
         this.limparCampos();
 
@@ -254,8 +248,8 @@ public class DlgHistoricoReservas extends javax.swing.JDialog {
         if (reservaSelecionada != null) {
             
             // Abrir a tela de confirmação com os detalhes da reserva
-            DlgConfirmacaoReserva Confirmacao = new DlgConfirmacaoReserva((java.awt.Frame) getParent(), true, reservaSelecionada);
-            Confirmacao.setVisible(true);
+         DlgConfirmacaoReserva confirmacaoReserva = new DlgConfirmacaoReserva((java.awt.Frame) getParent(), true);
+           confirmacaoReserva.setVisible(true);
         } else {
             // Exibir mensagem de aviso se nenhuma reserva foi selecionada
             JOptionPane.showMessageDialog(this, "Nenhuma reserva selecionada.", "Atenção", JOptionPane.WARNING_MESSAGE);

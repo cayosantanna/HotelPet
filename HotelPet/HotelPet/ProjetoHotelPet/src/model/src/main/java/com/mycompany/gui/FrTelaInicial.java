@@ -64,7 +64,7 @@ private void abrirTelaCadastroRH() {
         inputEmail = new javax.swing.JTextField();
         inputSenha = new javax.swing.JPasswordField();
         btnSobre = new javax.swing.JButton();
-        jButton1 = new javax.swing.JButton();
+        btnFormularioCtt = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -90,10 +90,10 @@ private void abrirTelaCadastroRH() {
             }
         });
 
-        jButton1.setText("Entre em contato conosco.");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        btnFormularioCtt.setText("Entre em contato conosco.");
+        btnFormularioCtt.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                btnFormularioCttActionPerformed(evt);
             }
         });
 
@@ -130,7 +130,7 @@ private void abrirTelaCadastroRH() {
                             .addComponent(inputSenha, javax.swing.GroupLayout.PREFERRED_SIZE, 166, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(183, 183, 183)
-                        .addComponent(jButton1)))
+                        .addComponent(btnFormularioCtt)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -151,7 +151,7 @@ private void abrirTelaCadastroRH() {
                 .addGap(39, 39, 39)
                 .addComponent(btnEntrar)
                 .addGap(40, 40, 40)
-                .addComponent(jButton1)
+                .addComponent(btnFormularioCtt)
                 .addGap(24, 24, 24))
         );
 
@@ -176,18 +176,13 @@ private void abrirTelaCadastroRH() {
             inputEmail.setText("");
             inputSenha.setText("");
             
-            if(funcionario.getEmail().contains("projetohotelpet@vuket.org")){ //Conta da equipe do suporte da aplicação
-            FrfuncionarioRH telaRH = new FrfuncionarioRH(funcionario.getCpf());
-            telaRH.setLocationRelativeTo(this); // Centraliza em relação à tela inicial
-            telaRH.setFuncionario(false);
-            telaRH.setVisible(true);
-        }
-            
-            if (funcionario.getCargo().contains("RH") || 
+            if(funcionario.getCargo().contains("RH") || 
                 funcionario.getCargo().contains("gestor") || 
-                funcionario.getCargo().equalsIgnoreCase("Gestor de RH")) {
-                abrirMenuFuncionarioRH(funcionario);
-            } else {
+                funcionario.getCargo().equalsIgnoreCase("Gestor de RH")){ //Conta da equipe do suporte da aplicação
+            if(funcionario.getEmail().contains("projetohotelpet@vuket.org")){
+            abrirMenuSupport(funcionario);
+        }else{abrirMenuFuncionarioRH(funcionario);
+            }}else {
                 JOptionPane.showMessageDialog(this, "Bem-vindo, " + funcionario.getNome() + "!");
                 abrirMenuFuncionario(funcionario);
             }
@@ -218,10 +213,10 @@ private void abrirTelaCadastroRH() {
       telaSobre.setVisible(true);   
     }//GEN-LAST:event_btnSobreActionPerformed
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-      DlgFormularioContato telaCtt = new DlgFormularioContato(new javax.swing.JFrame(), true);
-      telaCtt.setVisible(true);   
-    }//GEN-LAST:event_jButton1ActionPerformed
+    private void btnFormularioCttActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFormularioCttActionPerformed
+    DlgFormularioContato dlg = new DlgFormularioContato(this, true);
+    dlg.setVisible(true);
+    }//GEN-LAST:event_btnFormularioCttActionPerformed
     private Cliente autenticarCliente(String email, String senha) throws Exception {
     return clienteController.login(email, senha);
 }
@@ -247,15 +242,22 @@ private void abrirMenuFuncionario(Funcionario funcionario) {
 private void abrirMenuFuncionarioRH(Funcionario funcionario) {
     FrfuncionarioRH telaRH = new FrfuncionarioRH(funcionario.getCpf());
     telaRH.setLocationRelativeTo(this); // Centraliza em relação à tela inicial
+    telaRH.setFuncionario(true);
+    telaRH.setVisible(true);
+}
+private void abrirMenuSupport(Funcionario funcionario) {
+    FrfuncionarioRH telaRH = new FrfuncionarioRH(funcionario.getCpf());
+    telaRH.setLocationRelativeTo(this); // Centraliza em relação à tela inicial
+    telaRH.setFuncionario(false);
     telaRH.setVisible(true);
 }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnEntrar;
+    private javax.swing.JButton btnFormularioCtt;
     private javax.swing.JButton btnSobre;
     private javax.swing.JTextField inputEmail;
     private javax.swing.JPasswordField inputSenha;
-    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel5;

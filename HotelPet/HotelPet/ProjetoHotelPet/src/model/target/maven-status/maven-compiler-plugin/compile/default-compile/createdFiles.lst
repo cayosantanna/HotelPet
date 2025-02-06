@@ -94,7 +94,6 @@ dao\ClienteDAO.class
 dao\PagamentoDAO.class
 com\mycompany\gui\DlgCadFuncionario$1.class
 com\mycompany\gui\FrfuncionarioRH$1.class
-controller\FuncionarioRhController.class
 com\mycompany\gui\DlgCadPet$1.class
 controller\RelatorioController.class
 com\mycompany\gui\DlgHistoricoReservas$1.class
@@ -108,6 +107,7 @@ com\mycompany\gui\FrfuncionarioRH$7.class
 dao\IDao.class
 com\mycompany\gui\DlgFormularioContato$2.class
 com\mycompany\gui\DlgBuscaPet$4.class
+com\mycompany\gui\DlgFormularioContato$5.class
 com\mycompany\gui\DlgContato$4.class
 model\Pet.class
 com\mycompany\gui\DlgRelatorioFuncionario$1.class

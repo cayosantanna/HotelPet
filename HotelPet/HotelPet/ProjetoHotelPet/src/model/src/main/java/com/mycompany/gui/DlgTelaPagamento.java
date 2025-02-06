@@ -4,6 +4,7 @@ import java.text.SimpleDateFormat;
 import javax.swing.JOptionPane;
 import model.Reserva;
 import controller.PagamentoController;
+import dao.ReservaDAO;
 
 public class DlgTelaPagamento extends javax.swing.JDialog {
     private Reserva reserva;
@@ -292,8 +293,8 @@ try {
             JOptionPane.showMessageDialog(this, "Pagamento realizado com sucesso!");
             
             // Criar instância da tela de confirmação de reserva
-            DlgConfirmacaoReserva confirmacaoReserva = new DlgConfirmacaoReserva((java.awt.Frame) getParent(), true, reserva);
-            confirmacaoReserva.preencherCampos(reserva);  // Agora preenche corretamente os campos da tela de confirmação
+            DlgConfirmacaoReserva confirmacaoReserva = new DlgConfirmacaoReserva((java.awt.Frame) getParent(), true);
+            confirmacaoReserva.preencherCampos(reserva, metodo);  // Agora preenche corretamente os campos da tela de confirmação
             
             // Exibir a tela de confirmação
             confirmacaoReserva.setVisible(true);
@@ -326,7 +327,26 @@ try {
     }//GEN-LAST:event_checkBoxPasseioActionPerformed
 
     private void comboboxMetodoPagamentoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboboxMetodoPagamentoActionPerformed
-        // Permitir seleção da forma de pagamento
+        String metodoPagamento = comboboxMetodoPagamento.getSelectedItem().toString();
+    
+        if ("Debito".equals(metodoPagamento)) {
+            // Aplica 10% de desconto
+            double valorOriginal = reserva.getValorTotal();
+            double valorComDesconto = valorOriginal * 0.9; // 10% de desconto
+            reserva.setValorTotal(valorComDesconto);
+            edtValorTotal.setText(String.format("%.2f", valorComDesconto));
+            
+            // Atualiza no banco de dados
+            try {
+                ReservaDAO reservaDAO = new ReservaDAO();
+                reservaDAO.saveOrUpdate(reserva);
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(this, 
+                    "Erro ao atualizar valor com desconto: " + e.getMessage(),
+                    "Erro",
+                    JOptionPane.ERROR_MESSAGE);
+            }
+        }
     }//GEN-LAST:event_comboboxMetodoPagamentoActionPerformed
 
     
