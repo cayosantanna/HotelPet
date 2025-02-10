@@ -11,6 +11,7 @@ import model.RelatorioFuncionario;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import model.Reserva;
+import controller.RelatorioFuncionarioController;
 
 
 
@@ -19,9 +20,13 @@ que ainda não foi dado checkou ele pode criar observações sobre acontecimento
 se algum serviço extra foi necessario e etc. Esta tela serve para garantir que o dono do pet buscou na data correta 
 e evita abandono de pets no hotel */
 
+import java.util.Date;
+
 public class DlgRelatorioFuncionario extends javax.swing.JDialog {
     private Connection connection;
     private RelatorioFuncionario relatorioFuncionario;
+    private RelatorioFuncionarioController controller;
+    private Reserva reserva;
 
     public DlgRelatorioFuncionario(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
@@ -29,6 +34,7 @@ public class DlgRelatorioFuncionario extends javax.swing.JDialog {
         try {
             // Estabelece a conexão com o banco de dados
             this.connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/seu_banco", "usuario", "senha");
+            this.controller = new RelatorioFuncionarioController(connection);
         } catch (SQLException e) {
             e.printStackTrace();
             JOptionPane.showMessageDialog(this, "Erro ao conectar ao banco de dados: " + e.getMessage());
@@ -399,48 +405,24 @@ public class DlgRelatorioFuncionario extends javax.swing.JDialog {
     }//GEN-LAST:event_checkBoxTosaActionPerformed
 
     private void btnSalvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalvarActionPerformed
-    if (relatorioFuncionario.isFinalizado()) {
-        JOptionPane.showMessageDialog(this, "Este relatório já foi finalizado e não pode ser editado.", "Aviso", JOptionPane.WARNING_MESSAGE);
-        return;
-    }
-
-    // Cria um novo objeto com os dados atualizados
-    RelatorioFuncionario novoRelatorio = new RelatorioFuncionario();
-    novoRelatorio.setId(relatorioFuncionario.getId());
-    novoRelatorio.setCpfResponsavel(relatorioFuncionario.getCpfResponsavel());
-    novoRelatorio.setNomePet(relatorioFuncionario.getNomePet());
-    novoRelatorio.setObservacoes(txtObservacao.getText());
-    novoRelatorio.setServicoBanho(checkBoxBanho.isSelected());
-    novoRelatorio.setServicoTosa(checkBoxTosa.isSelected());
-    novoRelatorio.setServicoPasseio(checkBoxPasseio.isSelected());
-    novoRelatorio.setServicoAlimentacaoEspecial(checkBoxAlimentacaoEspecial.isSelected());
-    novoRelatorio.setRotinaEspecial(txtServicoEspecial.getText());
-    novoRelatorio.setServicosExtras(txtComportamentoPet.getText());
-    novoRelatorio.setDataEntrada(relatorioFuncionario.getDataEntrada());
-    novoRelatorio.setDataSaida(relatorioFuncionario.getDataSaida());
-    novoRelatorio.setValorTotal(Double.parseDouble(edtValorPago.getText()));
-    novoRelatorio.setStatusServico(checkboxCheckOut.isSelected() ? "Finalizado" : "Em Andamento");
-
     try {
-        RelatorioFuncionarioDAO dao = new RelatorioFuncionarioDAO(connection);
-        dao.update(relatorioFuncionario, novoRelatorio); // Passa o original e o novo
-        JOptionPane.showMessageDialog(this, "Relatório salvo com sucesso!");
-        dispose(); // Fecha a tela
-    } catch (RuntimeException e) {
-        JOptionPane.showMessageDialog(this, "Erro ao salvar o relatório: " + e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
+        if (checkboxCheckOut.isSelected()) {
+            controller.finalizarRelatorio(relatorioFuncionario, reserva);
+            toggleCamposEdicao(false);
+            dispose();
+        } else {
+            controller.salvarRelatorio(relatorioFuncionario);
+            JOptionPane.showMessageDialog(this, "Relatório salvo com sucesso!");
+        }
+    } catch (Exception e) {
+        JOptionPane.showMessageDialog(this, "Erro ao salvar: " + e.getMessage());
     }
-
     }//GEN-LAST:event_btnSalvarActionPerformed
 
     private void checkboxCheckOutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_checkboxCheckOutActionPerformed
-                                                
-    // Desativa os campos de edição caso o CheckOut esteja marcado
     if (checkboxCheckOut.isSelected()) {
         toggleCamposEdicao(false);
-    } else {
-        toggleCamposEdicao(true);
     }
-
     }//GEN-LAST:event_checkboxCheckOutActionPerformed
 
     private void bntCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bntCancelarActionPerformed
@@ -492,6 +474,70 @@ public class DlgRelatorioFuncionario extends javax.swing.JDialog {
     }
 }
 
+public void configurarCamposComReserva(Reserva reserva) {
+    // Configurar campos básicos
+    edtCliente.setText(reserva.getCliente().getCpf());
+    edtPet.setText(reserva.getPet().getNome());
+    
+    // Configurar datas
+    SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+    edtDataRealizacaoReserva.setText(sdf.format(reserva.getDataReserva()));
+    checkboxCheckin.setText(sdf.format(reserva.getCheckIn()));
+    checkboxCheckOut.setText(reserva.getCheckOut() != null ? sdf.format(reserva.getCheckOut()) : "Não definido");
+    
+    // Configurar serviços
+    checkBoxBanho.setSelected(reserva.isServicoBanho());
+    checkBoxTosa.setSelected(reserva.isServicoTosa());
+    checkBoxPasseio.setSelected(reserva.isServicoPasseio());
+    checkBoxAlimentacaoEspecial.setSelected(reserva.isServicoAlimentacaoEspecial());
+    
+    // Configurar valores
+    edtValorPago.setText(String.format("%.2f", reserva.getValorTotal()));
+    
+    // Calcular e configurar valor adicional
+    double valorAdicional = controller.calcularValorAdicional(reserva);
+    edtValorAdicional.setText(String.format("%.2f", valorAdicional));
+    
+    // Configurar estado dos campos
+    boolean checkoutAtrasado = reserva.getCheckOut() != null && new Date().after(reserva.getCheckOut());
+    edtValorAdicional.setEnabled(!checkoutAtrasado); // Bloqueia edição se checkout estiver atrasado
+    
+    // Guardar referência da reserva
+    this.reserva = reserva;
+    
+    // Configurar estados dos campos
+    edtCliente.setEnabled(false);
+    edtPet.setEnabled(false);
+    edtDataRealizacaoReserva.setEnabled(false);
+    checkboxCheckin.setEnabled(false);
+    edtValorPago.setEnabled(false);
+    checkBoxBanho.setEnabled(false);
+    checkBoxTosa.setEnabled(false);
+    checkBoxPasseio.setEnabled(false);
+    checkBoxAlimentacaoEspecial.setEnabled(false);
+    
+    // Habilitar campos editáveis
+    txtObservacao.setEnabled(true);
+    txtServicoEspecial.setEnabled(true);
+    txtComportamentoPet.setEnabled(true);
+    
+    // Configurar estado do checkbox de checkout
+    checkboxCheckOut.setEnabled(!relatorioFuncionario.isFinalizado());
+    
+    // Criar novo relatório vinculado à reserva se não existir
+    if (relatorioFuncionario == null) {
+        relatorioFuncionario = new RelatorioFuncionario();
+        relatorioFuncionario.setCpfResponsavel(reserva.getCliente().getCpf());
+        relatorioFuncionario.setNomePet(reserva.getPet().getNome());
+        relatorioFuncionario.setDataEntrada(new java.sql.Date(reserva.getCheckIn().getTime()));
+        relatorioFuncionario.setValorTotal(reserva.getValorTotal());
+        relatorioFuncionario.setServicoBanho(reserva.isServicoBanho());
+        relatorioFuncionario.setServicoTosa(reserva.isServicoTosa());
+        relatorioFuncionario.setServicoPasseio(reserva.isServicoPasseio());
+        relatorioFuncionario.setServicoAlimentacaoEspecial(reserva.isServicoAlimentacaoEspecial());
+    }
+}
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton bntCancelar;
     private javax.swing.JButton btnSalvar;
@@ -520,6 +566,7 @@ public class DlgRelatorioFuncionario extends javax.swing.JDialog {
     private javax.swing.JLabel lblServiçoEspecial;
     private javax.swing.JLabel lblTitulo;
     private javax.swing.JLabel lblValorPago;
+    private javax.swing.JTextField edtValorAdicional;
     private javax.swing.JLabel lbtObservacao;
     private javax.swing.JTextArea txtComportamentoPet;
     private javax.swing.JTextArea txtObservacao;

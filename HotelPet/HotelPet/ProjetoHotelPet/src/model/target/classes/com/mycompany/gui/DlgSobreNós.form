@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<Form version="1.3" maxVersion="1.9" type="org.netbeans.modules.form.forminfo.JDialogFormInfo">
+  <Properties>
+    <Property name="defaultCloseOperation" type="int" value="2"/>
+  </Properties>
+  <SyntheticProperties>
+    <SyntheticProperty name="formSizePolicy" type="int" value="1"/>
+    <SyntheticProperty name="generateCenter" type="boolean" value="false"/>
+  </SyntheticProperties>
+  <AuxValues>
+    <AuxValue name="FormSettings_autoResourcing" type="java.lang.Integer" value="0"/>
+    <AuxValue name="FormSettings_autoSetComponentName" type="java.lang.Boolean" value="false"/>
+    <AuxValue name="FormSettings_generateFQN" type="java.lang.Boolean" value="true"/>
+    <AuxValue name="FormSettings_generateMnemonicsCode" type="java.lang.Boolean" value="false"/>
+    <AuxValue name="FormSettings_i18nAutoMode" type="java.lang.Boolean" value="false"/>
+    <AuxValue name="FormSettings_layoutCodeTarget" type="java.lang.Integer" value="1"/>
+    <AuxValue name="FormSettings_listenerGenerationStyle" type="java.lang.Integer" value="0"/>
+    <AuxValue name="FormSettings_variablesLocal" type="java.lang.Boolean" value="false"/>
+    <AuxValue name="FormSettings_variablesModifier" type="java.lang.Integer" value="2"/>
+  </AuxValues>
+
+  <Layout>
+    <DimensionLayout dim="0">
+      <Group type="103" groupAlignment="0" attributes="0">
+          <Group type="102" attributes="0">
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Group type="102" attributes="0">
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Group type="102" attributes="0">
+                              <EmptySpace min="-2" pref="306" max="-2" attributes="0"/>
+                              <Component id="jButton1" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <Group type="102" alignment="0" attributes="0">
+                              <EmptySpace min="-2" pref="102" max="-2" attributes="0"/>
+                              <Component id="jLabel2" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                      </Group>
+                      <EmptySpace min="0" pref="148" max="32767" attributes="0"/>
+                  </Group>
+                  <Group type="102" attributes="0">
+                      <EmptySpace min="-2" pref="10" max="-2" attributes="0"/>
+                      <Component id="jLabel1" pref="0" max="32767" attributes="0"/>
+                  </Group>
+              </Group>
+              <EmptySpace min="-2" pref="10" max="-2" attributes="0"/>
+          </Group>
+      </Group>
+    </DimensionLayout>
+    <DimensionLayout dim="1">
+      <Group type="103" groupAlignment="0" attributes="0">
+          <Group type="102" alignment="0" attributes="0">
+              <EmptySpace max="-2" attributes="0"/>
+              <Component id="jLabel1" min="-2" pref="572" max="-2" attributes="0"/>
+              <EmptySpace type="separate" max="-2" attributes="0"/>
+              <Component id="jLabel2" min="-2" max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="47" max="-2" attributes="0"/>
+              <Component id="jButton1" min="-2" max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="25" max="-2" attributes="0"/>
+          </Group>
+      </Group>
+    </DimensionLayout>
+  </Layout>
+  <SubComponents>
+    <Component class="javax.swing.JLabel" name="jLabel1">
+      <Properties>
+        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+          <Font name="Segoe UI" size="18" style="0"/>
+        </Property>
+        <Property name="text" type="java.lang.String" value="&lt;html&gt; &lt;body&gt;     &lt;p&gt;&lt;em&gt;&lt;b&gt;Sistema de Hotel para pets desenvolvido por Cayo, Neidieli, Thais Rodrigues para a Disciplina de LPS&lt;/b&gt;&lt;/em&gt;&lt;/p&gt;&lt;br&gt;     &lt;p&gt;Somos um time apaixonado por tecnologia e criamos esse projeto com o prop&#xf3;sito de oferecer solu&#xe7;&#xf5;es que transformem a experi&#xea;ncia no cuidado e gest&#xe3;o de hospedagem para pets. Nosso projeto nasceu da vontade de simplificar processos e criar um ambiente mais eficiente e organizado para empresas do setor pet.  O sistema HotelPet foi desenvolvido com foco na praticidade e acessibilidade, permitindo que usu&#xe1;rios administrem reservas, cadastros de clientes e pets, al&#xe9;m de gerenciar equipes de forma intuitiva e segura. Nosso compromisso &#xe9; entregar uma ferramenta robusta que acompanhe as demandas do dia a dia, com possibilidades de expans&#xe3;o e integra&#xe7;&#xe3;o para novas funcionalidades no futuro. N&#xf3;s sabemos que o sistema n&#xe3;o est&#xe1; tendo a sua melhor perfomance de execu&#xe7;&#xe3;o e sabemos que n&#xe3;o est&#xe1; com a melhor UX do mundo mas resolvermos isso em atualiza&#xe7;&#xf5;es futuras, o objetivo atual &#xe9; ser funcional, pr&#xe1;tico e minimalista.  O sistema HotelPet &#xe9; protegido por direitos autorais (Copyright &#xa9; 2025). Todos os direitos s&#xe3;o reservados, sendo proibida a distribui&#xe7;&#xe3;o, reprodu&#xe7;&#xe3;o ou modifica&#xe7;&#xe3;o n&#xe3;o autorizada de qualquer parte do software. Nosso objetivo &#xe9; garantir que o sistema seja utilizado de forma &#xe9;tica e em conformidade com os termos de uso estabelecidos.  Agradecemos a sua confian&#xe7;a em nosso trabalho e estamos sempre abertos a colabora&#xe7;&#xf5;es e sugest&#xf5;es para aprimorar continuamente o HotelPet. Com o nosso sistema, a gest&#xe3;o do seu hotel para pets nunca foi t&#xe3;o f&#xe1;cil e eficiente!.&lt;/p&gt; &lt;/body&gt; &lt;/html&gt;"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JButton" name="jButton1">
+      <Properties>
+        <Property name="horizontalTextPosition" type="int" value="0"/>
+        <Property name="label" type="java.lang.String" value="Voltar"/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButton1ActionPerformed"/>
+      </Events>
+    </Component>
+    <Component class="javax.swing.JLabel" name="jLabel2">
+      <Properties>
+        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+          <Font name="SansSerif" size="20" style="0"/>
+        </Property>
+        <Property name="text" type="java.lang.String" value="Entre em contato conosco: projetohotelpet@vuket.org "/>
+      </Properties>
+    </Component>
+  </SubComponents>
+</Form>

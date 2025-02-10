@@ -4,7 +4,6 @@ com\mycompany\gui\DlgCadPet$2.class
 com\mycompany\gui\DlgRelatorioFuncionario$2.class
 com\mycompany\gui\DlgReservas$4.class
 dao\PetDAO.class
-controller\TMHistoricoReservas.class
 com\mycompany\gui\DlgTelaPagamento$2.class
 com\mycompany\gui\DlgCadPet$5.class
 controller\ReservaController.class
@@ -15,13 +14,13 @@ com\mycompany\gui\DlgCadPet.class
 com\mycompany\gui\DlgReservas$1.class
 com\mycompany\gui\DlgBuscaPet$3.class
 com\mycompany\gui\FrTelaInicial.class
-model\HistoricoReserva.class
 controller\FuncionarioController.class
 com\mycompany\gui\DlgRelatorioFuncionario$5.class
 com\mycompany\gui\DlgFormularioContato$1.class
 util\EntityManagerUtil.class
 com\mycompany\gui\DlgContato.class
 com\mycompany\gui\DlgSobreNós.class
+model\ConfirmaçãoReserva.class
 controller\ContatoController.class
 com\mycompany\gui\DlgRelatorioFuncionario$8.class
 controller\PetController.class
@@ -34,6 +33,7 @@ com\mycompany\gui\DlgTelaPagamento$8.class
 com\mycompany\gui\FrTelaInicial$3.class
 model\ProjetoHotelPet.class
 com\mycompany\gui\DlgCadCliente$1.class
+controller\HistoricoResevaController.class
 model\exceptions\ReservaException.class
 util\TransactionManager.class
 com\mycompany\gui\DlgBuscaUsuario$4.class
@@ -44,6 +44,7 @@ model\Pagamento.class
 com\mycompany\gui\FrfuncionarioRH$3.class
 model\Funcionario.class
 com\mycompany\gui\DlgConfirmacaoReserva.class
+dao\ConfirmaçãoReservaDAO.class
 com\mycompany\gui\DlgCadFuncionario.class
 com\mycompany\gui\DlgBuscaPet$2.class
 com\mycompany\gui\DlgFormularioContato$3.class
@@ -68,7 +69,6 @@ com\mycompany\gui\DlgBuscaUsuario$5.class
 com\mycompany\gui\DlgConfirmacaoReserva$4.class
 com\mycompany\gui\DlgFormularioContato.class
 com\mycompany\gui\DlgServicos$1.class
-model\Relatorio.class
 util\DatabaseValidator.class
 com\mycompany\gui\DlgTelaPagamento$3.class
 com\mycompany\gui\DlgRelatorioFuncionario$6.class
@@ -77,11 +77,11 @@ com\mycompany\gui\DlgReservas$2.class
 util\JPAUtil.class
 com\mycompany\gui\DlgReservas$8.class
 com\mycompany\gui\FrMenu$5.class
+controller\ConfirmaçãoReservaController.class
 com\mycompany\gui\DlgCadFuncionario$5.class
 com\mycompany\gui\DlgCadPet$3.class
 com\mycompany\gui\DlgRelatorioFuncionario$9.class
 com\mycompany\gui\FrTelaInicial$1.class
-controller\ControllerHistoricoReservas.class
 com\mycompany\gui\DlgContato$1.class
 com\mycompany\gui\DlgCadFuncionario$7.class
 com\mycompany\gui\DlgConfirmacaoReserva$3.class
@@ -95,7 +95,6 @@ dao\PagamentoDAO.class
 com\mycompany\gui\DlgCadFuncionario$1.class
 com\mycompany\gui\FrfuncionarioRH$1.class
 com\mycompany\gui\DlgCadPet$1.class
-controller\RelatorioController.class
 com\mycompany\gui\DlgHistoricoReservas$1.class
 com\mycompany\gui\FrfuncionarioRH$4.class
 com\mycompany\gui\DlgBuscaPet$1.class
@@ -112,6 +111,7 @@ com\mycompany\gui\DlgContato$4.class
 model\Pet.class
 com\mycompany\gui\DlgRelatorioFuncionario$1.class
 com\mycompany\gui\DlgCadFuncionario$2.class
+controller\RelatorioFuncionarioController.class
 com\mycompany\gui\DlgBuscaPet$5.class
 com\mycompany\gui\DlgHistoricoReservas$2.class
 com\mycompany\gui\DlgRelatorioFuncionario$4.class
@@ -132,14 +132,12 @@ com\mycompany\gui\DlgCadCliente$2.class
 factory\Persistencia.class
 com\mycompany\gui\DlgRelatorioFuncionario$3.class
 com\mycompany\gui\DlgTelaPagamento$6.class
-dao\HistoricoReservaDao.class
 model\Contato.class
 com\mycompany\gui\DlgConfirmacaoReserva$1.class
 com\mycompany\gui\DlgReservas$11.class
 factory\Database.class
 model\valid\ValidateCliente.class
 com\mycompany\gui\FrTelaInicial$2.class
-dao\RelatorioDAO.class
 com\mycompany\gui\DlgBuscaPet.class
 com\mycompany\gui\DlgBuscaUsuario$2.class
 com\mycompany\gui\DlgCadCliente.class

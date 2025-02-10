@@ -1,21 +1,21 @@
 package controller;
 
-import dao.RelatorioDAO;
-import model.Relatorio;
+import dao.ConfirmaçãoReservaDAO;
+import model.ConfirmaçãoReserva;
 import model.exceptions.ReservaException;
 import java.util.List;
 
 /**
  * Controlador para manipulação dos relatórios.
  */
-public class RelatorioController {
-    private RelatorioDAO relatorioDAO;
+public class ConfirmaçãoReservaController {
+    private ConfirmaçãoReservaDAO relatorioDAO;
 
-    public RelatorioController(RelatorioDAO relatorioDAO) {
+    public ConfirmaçãoReservaController(ConfirmaçãoReservaDAO relatorioDAO) {
         this.relatorioDAO = relatorioDAO;
     }
 
-    public void cadastrarRelatorio(Relatorio relatorio) throws ReservaException {
+    public void cadastrarRelatorio(ConfirmaçãoReserva relatorio) throws ReservaException {
         try {
             relatorioDAO.save(relatorio);
         } catch (Exception e) {
@@ -24,7 +24,7 @@ public class RelatorioController {
     }
 
 
-    public List<Relatorio> listarTodosRelatorios() {
+    public List<ConfirmaçãoReserva> listarTodosRelatorios() {
         return relatorioDAO.findAll();
     }
 
@@ -34,7 +34,7 @@ public class RelatorioController {
      * @param novo Relatório com os novos dados.
      * @throws ReservaException Exceção lançada em caso de erro durante a atualização.
      */
-    public void atualizarRelatorio(Relatorio relatorio, Relatorio novo) throws ReservaException {
+    public void atualizarRelatorio(ConfirmaçãoReserva relatorio, ConfirmaçãoReserva novo) throws ReservaException {
         try {
             relatorioDAO.update(relatorio, novo);
         } catch (Exception e) {
@@ -43,7 +43,7 @@ public class RelatorioController {
     }
 
 
-    public void excluirRelatorio(Relatorio relatorio) throws ReservaException {
+    public void excluirRelatorio(ConfirmaçãoReserva relatorio) throws ReservaException {
         boolean sucesso = relatorioDAO.delete(relatorio);
         if (!sucesso) {
             throw new ReservaException("Erro ao excluir relatório: Relatório não encontrado.");
@@ -51,7 +51,7 @@ public class RelatorioController {
     }
 
 
-    public Relatorio findById(int id) {
+    public ConfirmaçãoReserva findById(int id) {
         return relatorioDAO.findById(id);
     }
 }

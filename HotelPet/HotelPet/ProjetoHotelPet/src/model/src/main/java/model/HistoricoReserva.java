@@ -1,22 +1,12 @@
 package model;
 
-import javax.persistence.*;
 
-@Entity
-@Table(name = "historicoreserva")
 public class HistoricoReserva {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;  // Chave primária para a entidade
 
-    @Column(nullable = false)
+    private Long id;  
     private String nomePet;
-
-    @Column(nullable = false)
     private String cpf;
-
-    // Construtor
     public HistoricoReserva() {
         this.nomePet = "";
         this.cpf = "000.000.000-00";
@@ -28,7 +18,6 @@ public class HistoricoReserva {
         this.cpf = outro.getCpf();
     }
 
-    // Getters e Setters
     public String getCpf() {
         return cpf;
     }

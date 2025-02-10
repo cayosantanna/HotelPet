@@ -1,24 +1,24 @@
 package dao;
 
-import model.Relatorio;
+import model.ConfirmaçãoReserva;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import java.util.List;
 
-public class RelatorioDAO implements IDao<Relatorio> {
+public class ConfirmaçãoReservaDAO implements IDao<ConfirmaçãoReserva> {
     private EntityManager entityManager;
 
-    public RelatorioDAO() {
+    public ConfirmaçãoReservaDAO() {
         this.entityManager = entityManager;
     }
 
     @Override
-    public List<Relatorio> findAll() {
-        return entityManager.createQuery("SELECT r FROM Relatorio r", Relatorio.class).getResultList();
+    public List<ConfirmaçãoReserva> findAll() {
+        return entityManager.createQuery("SELECT r FROM Relatorio r", ConfirmaçãoReserva.class).getResultList();
     }
 
     @Override
-    public void save(Relatorio relatorio) {
+    public void save(ConfirmaçãoReserva relatorio) {
         EntityTransaction transaction = entityManager.getTransaction();
         try {
             transaction.begin();
@@ -34,11 +34,11 @@ public class RelatorioDAO implements IDao<Relatorio> {
     }
 
     @Override
-    public boolean delete(Relatorio relatorio) {
+    public boolean delete(ConfirmaçãoReserva relatorio) {
         EntityTransaction transaction = entityManager.getTransaction();
         try {
             transaction.begin();
-            Relatorio found = entityManager.find(Relatorio.class, relatorio.getId());
+            ConfirmaçãoReserva found = entityManager.find(ConfirmaçãoReserva.class, relatorio.getId());
             if (found != null) {
                 entityManager.remove(found);
                 transaction.commit();
@@ -55,19 +55,19 @@ public class RelatorioDAO implements IDao<Relatorio> {
     }
 
     @Override
-    public Relatorio find(Relatorio relatorio) {
-        return entityManager.find(Relatorio.class, relatorio.getId());
+    public ConfirmaçãoReserva find(ConfirmaçãoReserva relatorio) {
+        return entityManager.find(ConfirmaçãoReserva.class, relatorio.getId());
     }
 
-    public Relatorio findById(int id) {
-        return entityManager.find(Relatorio.class, id);
+    public ConfirmaçãoReserva findById(int id) {
+        return entityManager.find(ConfirmaçãoReserva.class, id);
     }
 
-    public void update(Relatorio relatorio, Relatorio novo) {
+    public void update(ConfirmaçãoReserva relatorio, ConfirmaçãoReserva novo) {
         EntityTransaction transaction = entityManager.getTransaction();
         try {
             transaction.begin();
-            Relatorio existing = entityManager.find(Relatorio.class, relatorio.getId());
+            ConfirmaçãoReserva existing = entityManager.find(ConfirmaçãoReserva.class, relatorio.getId());
             if (existing != null) {
                 existing.setCpfUsuario(novo.getCpfUsuario());
                 existing.setDataCheckIn(novo.getDataCheckIn());
