@@ -15,7 +15,6 @@ com\mycompany\gui\DlgCadPet.class
 com\mycompany\gui\DlgReservas$1.class
 com\mycompany\gui\DlgBuscaPet$3.class
 com\mycompany\gui\FrTelaInicial.class
-model\HistoricoReserva.class
 controller\FuncionarioController.class
 com\mycompany\gui\DlgRelatorioFuncionario$5.class
 com\mycompany\gui\DlgFormularioContato$1.class
@@ -81,7 +80,6 @@ com\mycompany\gui\DlgCadFuncionario$5.class
 com\mycompany\gui\DlgCadPet$3.class
 com\mycompany\gui\DlgRelatorioFuncionario$9.class
 com\mycompany\gui\FrTelaInicial$1.class
-controller\ControllerHistoricoReservas.class
 com\mycompany\gui\DlgContato$1.class
 com\mycompany\gui\DlgCadFuncionario$7.class
 com\mycompany\gui\DlgConfirmacaoReserva$3.class
@@ -132,7 +130,6 @@ com\mycompany\gui\DlgCadCliente$2.class
 factory\Persistencia.class
 com\mycompany\gui\DlgRelatorioFuncionario$3.class
 com\mycompany\gui\DlgTelaPagamento$6.class
-dao\HistoricoReservaDao.class
 model\Contato.class
 com\mycompany\gui\DlgConfirmacaoReserva$1.class
 com\mycompany\gui\DlgReservas$11.class
