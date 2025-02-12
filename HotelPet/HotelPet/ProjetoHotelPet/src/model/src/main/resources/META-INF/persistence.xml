@@ -5,12 +5,12 @@
     <class>model.Cliente</class>
     <class>model.Funcionario</class>
     <class>model.HistoricoRh</class>
-    <class>model.HistoricoReserva</class>
     <class>model.Pagamento</class>
     <class>model.Pet</class>
+    <class>model.Relatorio</class>
     <class>model.RelatorioFuncionario</class>
     <class>model.Reserva</class>
-    <class>model.ConfirmaçãoReserva</class>
+
     <properties>
       <!-- Propriedades de conexão com o banco de dados -->
       <property name="javax.persistence.jdbc.url" value="jdbc:mysql://hotelpetserver.mysql.database.azure.com:3306/hotelpet?useSSL=true&amp;requireSSL=true&amp;serverTimezone=UTC"/>
