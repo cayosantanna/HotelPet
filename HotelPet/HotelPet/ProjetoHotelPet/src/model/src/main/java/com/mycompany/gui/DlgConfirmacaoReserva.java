@@ -4,25 +4,35 @@
  */
 package com.mycompany.gui;
 
-import controller.RelatorioController;
-import dao.RelatorioDAO;
+import controller.RelatorioFuncionarioController;
+import dao.RelatorioFuncionarioDAO;
 import model.Reserva;
 import java.text.SimpleDateFormat;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import javax.swing.JOptionPane;
 
 /*Cayo: Renomeei a tela relatorio para comfirmacaoreserva por ser mais intuitivo, 
 ela confirma os dados da resevar após o pagamento */
 
 public class DlgConfirmacaoReserva extends javax.swing.JDialog {
     private String cpfResponsavel;
-    private RelatorioController relatorioController;
-    private RelatorioDAO relatorioDAO; // Adicionando a instância do RelatorioDAO
+    private RelatorioFuncionarioController relatorioFuncionarioController;
+    private RelatorioFuncionarioDAO relatorioFuncionarioDAO;
+    private Connection connection;
 
     public DlgConfirmacaoReserva(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         this.cpfResponsavel = cpfResponsavel;
-        relatorioDAO = new RelatorioDAO(); // Criando a instância do RelatorioDAO
-        relatorioController = new RelatorioController(relatorioDAO);  // Passando o RelatorioDAO
-        initComponents();
+        try {
+            connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/your_database", "username", "password");
+            relatorioFuncionarioDAO = new RelatorioFuncionarioDAO(connection);
+            relatorioFuncionarioController = new RelatorioFuncionarioController(connection);
+            initComponents();
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(this, "Error connecting to database: " + e.getMessage());
+        }
         
         edtCliente.setText(cpfResponsavel);
         
@@ -332,11 +342,13 @@ public void preencherCampos(Reserva reserva, String metodoPagamento) {
     }//GEN-LAST:event_checkBoxBanhoActionPerformed
 
     private void btnFecharTelaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFecharTelaActionPerformed
-
-    this.dispose(); 
-    DlgBuscaUsuario dlgBuscaCliente = new DlgBuscaUsuario(new javax.swing.JFrame(), true);
-    dlgBuscaCliente.setVisible(true); // Torna a tela de busca de cliente visível
-
+    // Fecha todas as janelas abertas, exceto a tela de menu
+    for (java.awt.Window window : java.awt.Window.getWindows()) {
+        if (!(window instanceof com.mycompany.gui.FrMenu)) {
+            window.dispose();
+        }
+    }
+   
     }//GEN-LAST:event_btnFecharTelaActionPerformed
 
 

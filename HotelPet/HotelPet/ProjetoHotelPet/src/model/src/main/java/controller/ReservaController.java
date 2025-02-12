@@ -120,4 +120,8 @@ public class ReservaController {
         return reservaDAO.findByCpfOrPetName(cpfCliente, nomePet);
     }
     
+    public List<Reserva> findAll() {
+        return reservaDAO.findAll();
+    }
+    
 }

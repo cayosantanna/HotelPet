@@ -1,26 +1,23 @@
 package dao;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+
 import model.RelatorioFuncionario;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
 
 
 public class RelatorioFuncionarioDAO implements IDao<RelatorioFuncionario> {
     
 
-    private Connection connection;
+    private final Connection connection;
 
     // Construtor para conectar ao banco de dados
     public RelatorioFuncionarioDAO(Connection connection) {
-        try {
-            this.connection = DriverManager.getConnection(
-                "jdbc:mysql://localhost/hotel_pet_db?useSSL=false&amp;serverTimezone=UTC&amp;allowPublicKeyRetrieval=true", "Cayo", "123456789");
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        this.connection = connection;
     }
     public void testConnection() {
     String sql = "SELECT 1";
@@ -59,34 +56,29 @@ public class RelatorioFuncionarioDAO implements IDao<RelatorioFuncionario> {
         }
     }
 
-    public void update(RelatorioFuncionario obj, RelatorioFuncionario novo) {
-        String sql = "UPDATE relatorio_funcionario SET cpf_responsavel = ?, nome_pet = ?, observacoes = ?, servico_banho = ?, servico_tosa = ?, " +
-                     "servico_passeio = ?, servico_alimentacao_especial = ?, rotina_especial = ?, servicos_extras = ?, data_entrada = ?, " +
-                     "data_saida = ?, valor_total = ?, status_servico = ? WHERE id = ?";
-
+    public void update(RelatorioFuncionario antigo, RelatorioFuncionario novo) {
+        String sql = "UPDATE relatorio_funcionario SET " +
+                    "observacoes = ?, servicos_extras = ?, rotina_especial = ?, " +
+                    "valor_total = ?, status_servico = ?, data_saida = ?, " +
+                    "finalizado = ? " +
+                    "WHERE id = ?";
+                    
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-            stmt.setString(1, novo.getCpfResponsavel());
-            stmt.setString(2, novo.getNomePet());
-            stmt.setString(3, novo.getObservacoes());
-            stmt.setBoolean(4, novo.isServicoBanho());
-            stmt.setBoolean(5, novo.isServicoTosa());
-            stmt.setBoolean(6, novo.isServicoPasseio());
-            stmt.setBoolean(7, novo.isServicoAlimentacaoEspecial());
-            stmt.setString(8, novo.getRotinaEspecial());
-            stmt.setString(9, novo.getServicosExtras());
-            stmt.setDate(10, novo.getDataEntrada());
-            stmt.setDate(11, novo.getDataSaida());
-            stmt.setDouble(12, novo.getValorTotal());
-            stmt.setString(13, novo.getStatusServico());
-            stmt.setInt(14, obj.getId());
+            stmt.setString(1, novo.getObservacoes());
+            stmt.setString(2, novo.getServicosExtras());
+            stmt.setString(3, novo.getRotinaEspecial());
+            stmt.setDouble(4, novo.getValorTotal());
+            stmt.setString(5, novo.getStatusServico());
+            stmt.setDate(6, novo.getDataSaida());
+            stmt.setBoolean(7, novo.isFinalizado());
+            stmt.setInt(8, antigo.getId());
             
-        // Executa a atualização no banco de dados
-        int rowsUpdated = stmt.executeUpdate();
-        if (rowsUpdated == 0) {
-            throw new SQLException("Nenhuma linha foi atualizada.");
-        }
+            int rowsUpdated = stmt.executeUpdate();
+            if (rowsUpdated == 0) {
+                throw new SQLException("Nenhuma linha foi atualizada.");
+            }
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new RuntimeException("Erro ao atualizar relatório: " + e.getMessage());
         }
     }
 

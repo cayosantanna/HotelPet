@@ -7,8 +7,8 @@ import javax.persistence.*;
  * @author thais
  */
 @Entity
-@Table(name = "historico")
-public class Relatorio {
+@Table(name = "historico") 
+public class ConfirmaçãoReserva {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -38,7 +38,7 @@ public class Relatorio {
     private boolean checkBoxTosa;
 
     // Construtor
-    public Relatorio(int id, String cpfUsuario, String dataCheckIn, String dataCheckOut,
+    public ConfirmaçãoReserva(int id, String cpfUsuario, String dataCheckIn, String dataCheckOut,
                      String dataRealizacaoReserva, String pet, double valorPago,
                      boolean checkBoxAlimentacaoEspecial, boolean checkBoxBanho,
                      boolean checkBoxPasseio, boolean checkBoxTosa) {

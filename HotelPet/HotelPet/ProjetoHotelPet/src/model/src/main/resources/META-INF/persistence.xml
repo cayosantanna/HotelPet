@@ -10,6 +10,7 @@
     <class>model.Relatorio</class>
     <class>model.RelatorioFuncionario</class>
     <class>model.Reserva</class>
+
     <properties>
       <!-- Propriedades de conexão com o banco de dados -->
       <property name="javax.persistence.jdbc.url" value="jdbc:mysql://hotelpetserver.mysql.database.azure.com:3306/hotelpet?useSSL=true&amp;requireSSL=true&amp;serverTimezone=UTC"/>

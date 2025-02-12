@@ -9,22 +9,40 @@ import java.util.List;
 import javax.swing.JOptionPane;
 import model.Reserva;
 import java.util.Date;
+import controller.RelatorioFuncionarioController;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+
 
 /**
  *
  * @author cayo
  */
 public class FrMenu extends javax.swing.JDialog {
+    private Connection connection;
+    private ReservaController reservaController;
+    private RelatorioFuncionarioController relatorioController;
 
-    ReservaController reservaController = new ReservaController();
-
-    
     public FrMenu(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
         setLocationRelativeTo(parent);
         
-       
+        try {
+            // Estabelece a conexão com o banco de dados
+            this.connection = DriverManager.getConnection(
+                "jdbc:mysql://hotelpetserver.mysql.database.azure.com:3306/hotelpet?useSSL=true&requireSSL=true&serverTimezone=UTC", "hotelpet", "Hotel123456789");
+            
+            // Inicializa os controllers
+            this.reservaController = new ReservaController();
+            this.relatorioController = new RelatorioFuncionarioController(connection);
+            
+        } catch (SQLException e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Erro ao conectar ao banco: " + e.getMessage());
+        }
+        
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
     }
 
@@ -39,33 +57,61 @@ public class FrMenu extends javax.swing.JDialog {
 
     // Método para verificar alertas de estadias longas
     private void verificarAlertas() {
-        List<Reserva> reservasPendentes = reservaController.verificarReservasSemCheckout();
-        for (Reserva reserva : reservasPendentes) {
-            if (reserva.getCheckIn() == null) {
-                continue;
-            }
-
-            long diasHospedado = (new Date().getTime() - reserva.getCheckIn().getTime()) / (1000 * 60 * 60 * 24);
-
-            if (diasHospedado >= 20) {
-                String mensagem = String.format(
-                        "ALERTA: Pet em estadia prolongada!\n\n"
-                        + "Pet: %s\n"
-                        + "Dias hospedado: %d\n"
-                        + "Cliente: %s\n"
-                        + "Telefone: %s",
+        try {
+            List<Reserva> reservasPendentes = reservaController.verificarReservasSemCheckout();
+            
+            for (Reserva reserva : reservasPendentes) {
+                if (relatorioController.verificarEstadiaLonga(reserva)) {
+                    double valorAdicional = relatorioController.calcularValorAdicional(reserva);
+                    
+                    String mensagem = String.format(
+                        "ATENÇÃO: Pet %s com estadia prolongada\n" +
+                        "Cliente: %s\n" +
+                        "Telefone: %s\n" +
+                        "Dias de estadia: %d\n" +
+                        "Valor adicional: R$ %.2f",
                         reserva.getPet().getNome(),
-                        diasHospedado,
                         reserva.getCliente().getNome(),
-                        reserva.getCliente().getTelefone()
-                );
-
-                JOptionPane.showMessageDialog(this,
-                        mensagem,
-                        "Alerta de Estadia Prolongada",
+                        reserva.getCliente().getTelefone(),
+                        calcularDiasEstadia(reserva.getCheckIn(), new Date()),
+                        valorAdicional
+                    );
+                    
+                    JOptionPane.showMessageDialog(this, 
+                        mensagem, 
+                        "Alerta de Estadia", 
                         JOptionPane.WARNING_MESSAGE);
+                }
             }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this,
+                "Erro ao verificar alertas: " + e.getMessage(),
+                "Erro",
+                JOptionPane.ERROR_MESSAGE);
         }
+    }
+
+    private long calcularDiasEstadia(Date inicio, Date fim) {
+        return (fim.getTime() - inicio.getTime()) / (1000 * 60 * 60 * 24);
+    }
+
+    private void exibirAlerta(Reserva reserva, long diasEstadia, String mensagemAdicional) {
+        String mensagem = String.format(
+            "%s\n\nPet: %s\n" +
+            "Dias hospedado: %d\n" +
+            "Cliente: %s\n" +
+            "Telefone: %s",
+            mensagemAdicional,
+            reserva.getPet().getNome(),
+            diasEstadia,
+            reserva.getCliente().getNome(),
+            reserva.getCliente().getTelefone()
+        );
+        
+        JOptionPane.showMessageDialog(this,
+            mensagem,
+            "Alerta de Estadia",
+            JOptionPane.WARNING_MESSAGE);
     }
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
