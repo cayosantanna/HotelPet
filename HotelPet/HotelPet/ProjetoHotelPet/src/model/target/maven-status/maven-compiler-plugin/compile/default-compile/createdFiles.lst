@@ -33,7 +33,6 @@ com\mycompany\gui\DlgTelaPagamento$8.class
 com\mycompany\gui\FrTelaInicial$3.class
 model\ProjetoHotelPet.class
 com\mycompany\gui\DlgCadCliente$1.class
-controller\HistoricoResevaController.class
 model\exceptions\ReservaException.class
 util\TransactionManager.class
 com\mycompany\gui\DlgBuscaUsuario$4.class
