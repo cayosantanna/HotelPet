@@ -539,6 +539,7 @@ public class DlgReservas extends javax.swing.JDialog {
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void checkBoxBanhoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_checkBoxBanhoActionPerformed

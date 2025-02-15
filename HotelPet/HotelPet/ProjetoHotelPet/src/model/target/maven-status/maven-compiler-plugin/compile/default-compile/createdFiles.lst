@@ -4,6 +4,7 @@ com\mycompany\gui\DlgCadPet$2.class
 com\mycompany\gui\DlgRelatorioFuncionario$2.class
 com\mycompany\gui\DlgReservas$4.class
 dao\PetDAO.class
+controller\TMHistoricoReservas.class
 com\mycompany\gui\DlgTelaPagamento$2.class
 com\mycompany\gui\DlgCadPet$5.class
 controller\ReservaController.class
@@ -33,7 +34,6 @@ com\mycompany\gui\DlgTelaPagamento$8.class
 com\mycompany\gui\FrTelaInicial$3.class
 model\ProjetoHotelPet.class
 com\mycompany\gui\DlgCadCliente$1.class
-controller\HistoricoResevaController.class
 model\exceptions\ReservaException.class
 util\TransactionManager.class
 com\mycompany\gui\DlgBuscaUsuario$4.class

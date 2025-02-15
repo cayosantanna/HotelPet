@@ -215,6 +215,7 @@ private final FuncionarioController funcionarioController;
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnDemissãoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDemissãoActionPerformed
