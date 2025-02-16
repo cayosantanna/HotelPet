@@ -126,6 +126,7 @@ public class DlgBuscaPet extends javax.swing.JDialog {
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void atualizarListaDePets() {

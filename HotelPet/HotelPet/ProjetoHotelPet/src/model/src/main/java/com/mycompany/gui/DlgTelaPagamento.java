@@ -164,7 +164,7 @@ public class DlgTelaPagamento extends javax.swing.JDialog {
         lblValorTotal1.setFont(new java.awt.Font("Liberation Sans", 0, 18)); // NOI18N
         lblValorTotal1.setText("Forma de Pagemento:");
 
-        comboboxMetodoPagamento.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Dinheiro","Debito", "Credito - à vista", "Credito - Parcelado 2x ", "Credito - Parcelado 3x" }));
+        comboboxMetodoPagamento.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Debito", "Credito - à vista", "Credito - Parcelado 2x ", "Credito - Parcelado 3x" }));
         comboboxMetodoPagamento.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 comboboxMetodoPagamentoActionPerformed(evt);
@@ -275,6 +275,7 @@ public class DlgTelaPagamento extends javax.swing.JDialog {
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed

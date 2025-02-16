@@ -4,6 +4,7 @@ com\mycompany\gui\DlgCadPet$2.class
 com\mycompany\gui\DlgRelatorioFuncionario$2.class
 com\mycompany\gui\DlgReservas$4.class
 dao\PetDAO.class
+controller\TMHistoricoReservas.class
 com\mycompany\gui\DlgTelaPagamento$2.class
 com\mycompany\gui\DlgCadPet$5.class
 controller\ReservaController.class
