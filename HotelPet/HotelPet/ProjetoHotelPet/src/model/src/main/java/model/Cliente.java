@@ -15,7 +15,6 @@ import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Transient;
 import lombok.Data;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @Data
 @Entity
@@ -60,12 +59,7 @@ public class Cliente {
         this.telefone = telefone.replaceAll("[^\\d]", "");
         this.endereco = endereco;
         this.cep = (cep != null) ? cep.replaceAll("[^\\d]", "") : null;
-        if (!(senha.isBlank() || senha.isEmpty())) {
-            this.senhaOriginal = senha; // Guarda a senha original
-            BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-            this.senha = encoder.encode(senha); // Guarda a senha criptografada
-        }
-
+        this.senha = senha; 
     }
 
     public int getId() {
@@ -157,24 +151,16 @@ public class Cliente {
      * @return the senha
      */
     public String getSenha() {
-        return this.senhaOriginal != null ? this.senhaOriginal : this.senha;
+        return senha;
     }
 
     /**
      * @param senha the senha to set
      */
     public void setSenha(String senha) {
-        this.senhaOriginal = senha;
-        if (!senha.isEmpty()) {
-            BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-            this.senha = encoder.encode(senha);
-        }
+        this.senha = senha;
     }
     
-    public void setHashedSenha(String hashedSenha){
-        this.senha = hashedSenha;
-        this.senhaOriginal = hashedSenha; // Guarda também como senha original
-    }
     
     @Override
     public String toString() {

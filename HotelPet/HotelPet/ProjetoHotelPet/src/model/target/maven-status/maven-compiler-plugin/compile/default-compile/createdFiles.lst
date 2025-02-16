@@ -3,6 +3,7 @@ com\mycompany\gui\FrMenu$4.class
 com\mycompany\gui\DlgCadPet$2.class
 com\mycompany\gui\DlgRelatorioFuncionario$2.class
 com\mycompany\gui\DlgReservas$4.class
+com\mycompany\gui\FrfuncionarioRH$8.class
 dao\PetDAO.class
 controller\TMHistoricoReservas.class
 com\mycompany\gui\DlgTelaPagamento$2.class
@@ -21,7 +22,6 @@ com\mycompany\gui\DlgFormularioContato$1.class
 util\EntityManagerUtil.class
 com\mycompany\gui\DlgContato.class
 com\mycompany\gui\DlgSobreNós.class
-model\ConfirmaçãoReserva.class
 controller\ContatoController.class
 com\mycompany\gui\DlgRelatorioFuncionario$8.class
 controller\PetController.class
@@ -44,7 +44,6 @@ model\Pagamento.class
 com\mycompany\gui\FrfuncionarioRH$3.class
 model\Funcionario.class
 com\mycompany\gui\DlgConfirmacaoReserva.class
-dao\ConfirmaçãoReservaDAO.class
 com\mycompany\gui\DlgCadFuncionario.class
 com\mycompany\gui\DlgBuscaPet$2.class
 com\mycompany\gui\DlgFormularioContato$3.class
@@ -77,7 +76,6 @@ com\mycompany\gui\DlgReservas$2.class
 util\JPAUtil.class
 com\mycompany\gui\DlgReservas$8.class
 com\mycompany\gui\FrMenu$5.class
-controller\ConfirmaçãoReservaController.class
 com\mycompany\gui\DlgCadFuncionario$5.class
 com\mycompany\gui\DlgCadPet$3.class
 com\mycompany\gui\DlgRelatorioFuncionario$9.class

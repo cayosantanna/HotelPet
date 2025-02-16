@@ -20,7 +20,13 @@ public class ClienteController {
         ValidateCliente.validateEmail(email);
         Cliente cliente = this.clienteDAO.findByEmail(email);
         
-        if (cliente == null || !cliente.getSenha().equals(senha)) {
+        // Verifica se encontrou o cliente e se não é um funcionário
+        if (cliente == null || cliente.getFuncionario()) {
+            throw new LoginException("Email ou senha inválidos.");
+        }
+
+        // Compara as senhas ignorando espaços em branco
+        if (!cliente.getSenha().trim().equals(senha.trim())) {
             throw new LoginException("Email ou senha inválidos.");
         }
         
@@ -72,6 +78,7 @@ public class ClienteController {
         return clienteDAO.findAll(nome, cpf);
     }
 
+    // Método atualizado para permitir alteração de senha: se o campo senha estiver vazio, mantém a senha atual.
     public void atualizarCliente(Cliente novo) throws Exception {
         ValidateCliente.validateCPF(novo.getCpf());
         ValidateCliente.validateEmail(novo.getEmail());
@@ -84,7 +91,15 @@ public class ClienteController {
             throw new Exception("O CPF já está em uso!");
         }
         
-        clienteDAO.update(novo);
+        Cliente antigo = clienteDAO.findById(novo.getId());
+        
+        // Se a senha no objeto novo estiver vazia, mantém a senha atual
+        if (novo.getSenha() == null || novo.getSenha().trim().isEmpty()) {
+            novo.setSenha(antigo.getSenha());
+        }
+
+        
+        clienteDAO.update(antigo, novo);
     }
 
     public void excluirCliente(Cliente cliente) {

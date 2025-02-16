@@ -3,16 +3,25 @@ package model;
 import java.io.Serializable;
 import java.util.Date;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQuery;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 
 @Entity
 @Table(name = "reserva")
+@NamedQuery(
+    name = "Reserva.findAll",
+    query = "SELECT r FROM Reserva r LEFT JOIN FETCH r.cliente LEFT JOIN FETCH r.pet"
+)
 public class Reserva implements Serializable {
 
     @Id
@@ -43,6 +52,10 @@ public class Reserva implements Serializable {
 
     private String descricaoServicosExtras;
     private String statusServico;
+
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinColumn(name = "relatorio_funcionario_id")
+    private RelatorioFuncionario relatorioFuncionario;
 
     public Reserva() {
         // Construtor padrão
@@ -183,6 +196,12 @@ public class Reserva implements Serializable {
     this.statusServico = finalizado ? "Finalizado" : "Em Andamento";
     }
 
-    
+    public RelatorioFuncionario getRelatorioFuncionario() {
+        return this.relatorioFuncionario;
+    }
+
+    public void setRelatorioFuncionario(RelatorioFuncionario relatorioFuncionario) {
+        this.relatorioFuncionario = relatorioFuncionario;
+    }
 
 }

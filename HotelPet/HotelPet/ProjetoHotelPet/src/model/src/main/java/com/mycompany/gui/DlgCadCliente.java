@@ -18,7 +18,6 @@ public class DlgCadCliente extends javax.swing.JDialog {
 
     private int id = 0;
     private ClienteController clienteController;
-    private String hashedSenha;
 
     public DlgCadCliente(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
@@ -35,8 +34,7 @@ public class DlgCadCliente extends javax.swing.JDialog {
         edtTelefone.setText(cliente.getTelefone());
         edtEndereço.setText(cliente.getEndereco());
         edtCEP.setText(cliente.getCep());
-
-        this.hashedSenha = cliente.getSenha();
+        edtSenha.setText(cliente.getSenha());
     }
 
     /**
@@ -203,7 +201,7 @@ public class DlgCadCliente extends javax.swing.JDialog {
             } else {
                 Cliente clienteNovo = new Cliente(id, nome, cpf, email, telefone, endereco, cep, senha);
                 if (clienteNovo.getSenha() == null) {
-                    clienteNovo.setHashedSenha(hashedSenha);
+                    clienteNovo.setSenha(senha);
                 }
                 clienteController.atualizarCliente(clienteNovo);
                 JOptionPane.showMessageDialog(this, "Cliente atualizado com sucesso!");

@@ -1,5 +1,6 @@
 package dao;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -18,7 +19,7 @@ public class ReservaDAO implements IDao<Reserva> {
             return query.getResultList();
         } catch (Exception e) {
             System.out.println("Erro ao buscar todas as reservas: " + e.getMessage());
-            return null;
+            return new ArrayList<>();
         } finally {
             if (entityManager != null) {
                 entityManager.close();

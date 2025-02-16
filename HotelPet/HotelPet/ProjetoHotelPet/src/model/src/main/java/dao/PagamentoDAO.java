@@ -1,6 +1,7 @@
 package dao;
 
 import javax.persistence.EntityManager;
+
 import model.Pagamento;
 import util.EntityManagerUtil;
 
@@ -22,4 +23,6 @@ public class PagamentoDAO {
         }
     }
 }
+
+// Confirme que o processamento dos pagamentos está integrado à emissão dos relatórios e à atualização do status da reserva.
 

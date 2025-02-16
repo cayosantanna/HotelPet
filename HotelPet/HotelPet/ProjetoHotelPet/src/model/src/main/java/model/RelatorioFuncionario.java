@@ -1,25 +1,26 @@
 package model;
 
-import java.sql.Date;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import java.util.Date;
+import javax.persistence.*;
+import lombok.Data;
 
 /**
  *
  * @author thais
  */
+@Data
 @Entity
-@Table(name = "relatoriofuncionario")
+@Table(name = "relatorio_funcionario")
+@NamedQueries({
+    @NamedQuery(name = "RelatorioFuncionario.findById",
+            query = "SELECT r FROM RelatorioFuncionario r WHERE r.id = :id"),
+    // ...existing named queries...
+})
 public class RelatorioFuncionario {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Integer id;
 
     @Column(nullable = false)
     private String cpfResponsavel;
@@ -27,34 +28,36 @@ public class RelatorioFuncionario {
     @Column(nullable = false)
     private String nomePet;
 
+    @Column(length = 1000)
     private String observacoes;
 
-    @Column(nullable = false)
-    private boolean ServicoBanho;
+    private boolean servicoBanho;
 
-    @Column(nullable = false)
-    private boolean ServicoTosa;
+    private boolean servicoTosa;
 
-    @Column(nullable = false)
-    private boolean ServicoPasseio;
+    private boolean servicoPasseio;
 
-    @Column(nullable = false)
-    private boolean ServicoAlimentacaoEspecial;
+    private boolean servicoAlimentacaoEspecial;
 
+    @Column(length = 500)
     private String rotinaEspecial;
-    private String ServicosExtras;
 
-    @Column(nullable = false)
+    @Column(length = 500)
+    private String servicosExtras;
+
+    @Temporal(TemporalType.DATE)
     private Date dataEntrada;
 
-    @Column(nullable = false)
+    @Temporal(TemporalType.DATE)
     private Date dataSaida;
 
-    @Column(nullable = false)
-    private double valorTotal;
+    private Double valorTotal;
 
-    @Column(nullable = false)
     private String statusServico;
+
+    @ManyToOne
+    @JoinColumn(name = "reserva_id")
+    private Reserva reserva;
 
     // Construtores, getters e setters
 
@@ -62,18 +65,18 @@ public class RelatorioFuncionario {
     }
 
     public RelatorioFuncionario(int id, String cpfResponsavel, String nomePet, String observacoes,
-            boolean ServicoBanho, boolean ServicoTosa, boolean ServicoPasseio, boolean ServicoAlimentacaoEspecial,
-            String rotinaEspecial, String ServicosExtras, Date dataEntrada, Date dataSaida, double valorTotal, String statusServico) {
+            boolean servicoBanho, boolean servicoTosa, boolean servicoPasseio, boolean servicoAlimentacaoEspecial,
+            String rotinaEspecial, String servicosExtras, Date dataEntrada, Date dataSaida, double valorTotal, String statusServico) {
         this.id = id;
         this.cpfResponsavel = cpfResponsavel;
         this.nomePet = nomePet;
         this.observacoes = observacoes;
-        this.ServicoBanho = ServicoBanho;
-        this.ServicoTosa = ServicoTosa;
-        this.ServicoPasseio = ServicoPasseio;
-        this.ServicoAlimentacaoEspecial = ServicoAlimentacaoEspecial;
+        this.servicoBanho = servicoBanho;
+        this.servicoTosa = servicoTosa;
+        this.servicoPasseio = servicoPasseio;
+        this.servicoAlimentacaoEspecial = servicoAlimentacaoEspecial;
         this.rotinaEspecial = rotinaEspecial;
-        this.ServicosExtras = ServicosExtras;
+        this.servicosExtras = servicosExtras;
         this.dataEntrada = dataEntrada;
         this.dataSaida = dataSaida;
         this.valorTotal = valorTotal;
@@ -84,10 +87,10 @@ public class RelatorioFuncionario {
         double valorServicos = 0.0;
 
         // Soma dos valores dos serviços selecionados
-        if (ServicoBanho) valorServicos += 90.0;
-        if (ServicoTosa) valorServicos += 70.0;
-        if (ServicoPasseio) valorServicos += 60.0;
-        if (ServicoAlimentacaoEspecial) valorServicos += 100.0;
+        if (servicoBanho) valorServicos += 90.0;
+        if (servicoTosa) valorServicos += 70.0;
+        if (servicoPasseio) valorServicos += 60.0;
+        if (servicoAlimentacaoEspecial) valorServicos += 100.0;
 
         long dias = 0;
 
@@ -135,35 +138,35 @@ public class RelatorioFuncionario {
     }
 
     public boolean isServicoBanho() {
-        return ServicoBanho;
+        return servicoBanho;
     }
 
-    public void setServicoBanho(boolean ServicoBanho) {
-        this.ServicoBanho = ServicoBanho;
+    public void setServicoBanho(boolean servicoBanho) {
+        this.servicoBanho = servicoBanho;
     }
 
     public boolean isServicoTosa() {
-        return ServicoTosa;
+        return servicoTosa;
     }
 
-    public void setServicoTosa(boolean ServicoTosa) {
-        this.ServicoTosa = ServicoTosa;
+    public void setServicoTosa(boolean servicoTosa) {
+        this.servicoTosa = servicoTosa;
     }
 
     public boolean isServicoPasseio() {
-        return ServicoPasseio;
+        return servicoPasseio;
     }
 
-    public void setServicoPasseio(boolean ServicoPasseio) {
-        this.ServicoPasseio = ServicoPasseio;
+    public void setServicoPasseio(boolean servicoPasseio) {
+        this.servicoPasseio = servicoPasseio;
     }
 
     public boolean isServicoAlimentacaoEspecial() {
-        return ServicoAlimentacaoEspecial;
+        return servicoAlimentacaoEspecial;
     }
 
-    public void setServicoAlimentacaoEspecial(boolean ServicoAlimentacaoEspecial) {
-        this.ServicoAlimentacaoEspecial = ServicoAlimentacaoEspecial;
+    public void setServicoAlimentacaoEspecial(boolean servicoAlimentacaoEspecial) {
+        this.servicoAlimentacaoEspecial = servicoAlimentacaoEspecial;
     }
 
     public String getRotinaEspecial() {
@@ -175,11 +178,11 @@ public class RelatorioFuncionario {
     }
 
     public String getServicosExtras() {
-        return ServicosExtras;
+        return servicosExtras;
     }
 
-    public void setServicosExtras(String ServicosExtras) {
-        this.ServicosExtras = ServicosExtras;
+    public void setServicosExtras(String servicosExtras) {
+        this.servicosExtras = servicosExtras;
     }
 
     public Date getDataEntrada() {
@@ -187,7 +190,11 @@ public class RelatorioFuncionario {
     }
 
     public void setDataEntrada(Date dataEntrada) {
-        this.dataEntrada = dataEntrada;
+        if (dataEntrada instanceof java.sql.Date) {
+            this.dataEntrada = new Date(dataEntrada.getTime());
+        } else {
+            this.dataEntrada = dataEntrada;
+        }
     }
 
     public Date getDataSaida() {
@@ -195,7 +202,11 @@ public class RelatorioFuncionario {
     }
 
     public void setDataSaida(Date dataSaida) {
-        this.dataSaida = dataSaida;
+        if (dataSaida instanceof java.sql.Date) {
+            this.dataSaida = new Date(dataSaida.getTime());
+        } else {
+            this.dataSaida = dataSaida;
+        }
     }
 
     public double getValorTotal() {

@@ -162,35 +162,39 @@ private void abrirTelaCadastroRH() {
     private void btnEntrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEntrarActionPerformed
     try {
         String email = inputEmail.getText().trim();
-        String senha = new String(inputSenha.getPassword());
+        String senha = new String(inputSenha.getPassword()).trim();
 
         if (email.isEmpty() || senha.isEmpty()) {
             throw new IllegalArgumentException("Email e senha são obrigatórios");
         }
 
-        // Tenta primeiro como funcionário
-        Funcionario funcionario = funcionarioController.loginFuncionario(email, senha);
-        if (funcionario != null) {
-            System.out.println("Cargo do funcionário: " + funcionario.getCargo()); // Debug
-            // Limpa os campos antes de abrir a próxima tela
-            inputEmail.setText("");
-            inputSenha.setText("");
-            
-            if(funcionario.getCargo().contains("RH") || 
-                funcionario.getCargo().contains("gestor") || 
-                funcionario.getCargo().equalsIgnoreCase("Gestor de RH")){ //Conta da equipe do suporte da aplicação
-            if(funcionario.getEmail().contains("projetohotelpet@vuket.org")){
-            abrirMenuSupport(funcionario);
-        }else{abrirMenuFuncionarioRH(funcionario);
-            }}else {
-                JOptionPane.showMessageDialog(this, "Bem-vindo, " + funcionario.getNome() + "!");
-                abrirMenuFuncionario(funcionario);
+        // Primeiro tenta fazer login como funcionário
+        try {
+            Funcionario funcionario = funcionarioController.loginFuncionario(email, senha);
+            if (funcionario != null) {
+                // Limpa os campos antes de abrir a próxima tela
+                inputEmail.setText("");
+                inputSenha.setText("");
+                
+                if (funcionario.getCargo().contains("RH") || 
+                    funcionario.getCargo().contains("gestor") || 
+                    funcionario.getCargo().equalsIgnoreCase("Gestor de RH")) {
+                    if (funcionario.getEmail().contains("projetohotelpet@vuket.org")) {
+                        abrirMenuSupport(funcionario);
+                    } else {
+                        abrirMenuFuncionarioRH(funcionario);
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(this, "Bem-vindo, " + funcionario.getNome() + "!");
+                    abrirMenuFuncionario(funcionario);
+                }
+                return;
             }
-            return;
+        } catch (Exception e) {
+            // Se não conseguiu logar como funcionário, tenta como cliente
         }
-        
 
-        // Se não encontrou funcionário, tenta como cliente
+        // Se não é funcionário, tenta login como cliente
         Cliente cliente = clienteController.login(email, senha);
         if (cliente != null) {
             // Limpa os campos antes de abrir a próxima tela
@@ -202,7 +206,8 @@ private void abrirTelaCadastroRH() {
             return;
         }
 
-        throw new LoginException("Email ou senha inválidos.");
+    } catch (LoginException e) {
+        JOptionPane.showMessageDialog(this, "Email ou senha inválidos.", "Erro", JOptionPane.WARNING_MESSAGE);
     } catch (Exception e) {
         JOptionPane.showMessageDialog(this, e.getMessage(), "Erro", JOptionPane.WARNING_MESSAGE);
     }

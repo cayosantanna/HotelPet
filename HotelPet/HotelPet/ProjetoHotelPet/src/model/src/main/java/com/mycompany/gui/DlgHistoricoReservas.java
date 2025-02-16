@@ -8,41 +8,165 @@ package com.mycompany.gui;
 import controller.ReservaController;
 import controller.TMHistoricoReservas;
 import javax.swing.JOptionPane;
+
+import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JTable;
 import model.RelatorioFuncionario;
 import model.Reserva;
+import java.text.SimpleDateFormat;
+import javax.swing.table.DefaultTableModel;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import javax.swing.Timer;
 
 
 public class DlgHistoricoReservas extends javax.swing.JDialog {
 
-    private Reserva reserva;
-
-    private final JTable tabelaReservas;
+    private final ReservaController reservaController;
+    private final Timer atualizacaoTimer;
 
     public DlgHistoricoReservas(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
-        tabelaReservas = new JTable();  // Inicializando a JTable
-        jScrollPane1.setViewportView(tabelaReservas);  // Associando ao JScrollPane
-        this.reserva = reserva;
-        // Configurações iniciais
-        this.limparCampos();
-
+        
+        // Garante que os componentes estejam habilitados logo após a criação
+        grdHistReser.setEnabled(true);
+        grdHistReser.setFocusable(true);
+        jbtnVisualizar.setEnabled(false);
+        btnRelatorioEstadiaPet.setEnabled(false);
+        
+        reservaController = new ReservaController();
+        
+        // Configurar timer para atualização automática a cada 30 segundos
+        atualizacaoTimer = new Timer(30000, e -> refreshListaReservas());
+        atualizacaoTimer.start();
+        
+        // Primeira carga de dados
+        refreshListaReservas();
+        
+        configurarEventos();
     }
 
-    
-  
-
-    // Método para limpar os campos de entrada
-    public void limparCampos() {
-        edtNomePet.setText("");
-        edtCPF.setText("");
+    @Override
+    public void dispose() {
+        if (atualizacaoTimer != null) {
+            atualizacaoTimer.stop();
+        }
+        super.dispose();
     }
 
+    public void refreshListaReservas() {
+        try {
+            // Busca a lista de reservas
+            List<Reserva> reservas = reservaController.findAll();
+            
+            // Define o modelo da tabela
+            TMHistoricoReservas model = new TMHistoricoReservas(reservas);
+            grdHistReser.setModel(model);
+    
+            // Força atualização da interface
+            grdHistReser.setAutoCreateRowSorter(true);
+            grdHistReser.setRowSelectionAllowed(true);
+            grdHistReser.setColumnSelectionAllowed(false);
+            grdHistReser.revalidate();
+            grdHistReser.repaint();
+    
+            // Reseta o estado dos botões
+            jbtnVisualizar.setEnabled(false);
+            btnRelatorioEstadiaPet.setEnabled(false);
+    
+        } catch (NullPointerException e) {
+            JOptionPane.showMessageDialog(this, 
+                "Erro: Dados nulos encontrados.", 
+                "Erro", JOptionPane.ERROR_MESSAGE);
+            
+            grdHistReser.setModel(new TMHistoricoReservas(new ArrayList<>()));
+    
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, 
+                "Erro ao atualizar lista de reservas: " + e.getMessage(),
+                "Erro", JOptionPane.ERROR_MESSAGE);
+            
+            grdHistReser.setModel(new TMHistoricoReservas(new ArrayList<>()));
+        }
+    }
     
 
-    
+    public void atualizarTabelaReservas() {
+        List<Reserva> reservas = reservaController.findAll();
+        TMHistoricoReservas model = new TMHistoricoReservas(reservas);
+        grdHistReser.setModel(model);
+    }
+
+    private Reserva obterReservaSelecionada() {
+        int row = grdHistReser.getSelectedRow();
+        if (row < 0) {
+            return null;
+        }
+        int modelRow = grdHistReser.convertRowIndexToModel(row);
+        if (grdHistReser.getModel() instanceof TMHistoricoReservas model) {
+            return model.getReserva(modelRow);
+        }
+        return null;
+    }
+
+    private void configurarEventos() {
+        grdHistReser.getSelectionModel().addListSelectionListener(e -> {
+            if (!e.getValueIsAdjusting()) {
+                boolean linhaSelecionada = grdHistReser.getSelectedRow() != -1;
+                jbtnVisualizar.setEnabled(linhaSelecionada);
+                btnRelatorioEstadiaPet.setEnabled(linhaSelecionada);
+            }
+        });
+
+        jbtnVisualizar.addActionListener((ActionEvent e) -> {
+            Reserva reservaSelecionada = obterReservaSelecionada();
+            if (reservaSelecionada != null) {
+                try {
+                    DlgConfirmacaoReserva dlgConf = new DlgConfirmacaoReserva((java.awt.Frame)getParent(), true);
+                    dlgConf.preencherCampos(reservaSelecionada, "visualizar");
+                    dlgConf.setVisible(true);
+                } catch (Exception ex) {
+                    JOptionPane.showMessageDialog(this, 
+                        "Erro ao abrir detalhes: " + ex.getMessage(),
+                        "Erro",
+                        JOptionPane.ERROR_MESSAGE);
+                }
+            } else {
+                JOptionPane.showMessageDialog(this, "Selecione uma reserva!");
+            }
+        });
+
+        btnRelatorioEstadiaPet.addActionListener((ActionEvent e) -> {
+            Reserva reservaSelecionada = obterReservaSelecionada();
+            if (reservaSelecionada != null) {
+                try {
+                    DlgRelatorioFuncionario dlgRel = new DlgRelatorioFuncionario((java.awt.Frame)getParent(), true);
+                    dlgRel.setDadosReserva(reservaSelecionada);
+                    dlgRel.setVisible(true);
+                    dlgRel.setLocationRelativeTo(null);
+                    refreshListaReservas();
+                } catch (Exception ex) {
+                    JOptionPane.showMessageDialog(this,
+                        "Erro ao abrir relatório: " + ex.getMessage(),
+                        "Erro",
+                        JOptionPane.ERROR_MESSAGE);
+                }
+            } else {
+                JOptionPane.showMessageDialog(this, "Selecione uma reserva!");
+            }
+        });
+    }
+
+    public void notificarNovaReserva() {
+        atualizarTabelaReservas();
+    }
+
+    public void notificarNovaReserva(Reserva novaReserva) {
+        refreshListaReservas();
+    }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -139,12 +263,13 @@ public class DlgHistoricoReservas extends javax.swing.JDialog {
                                 .addComponent(edtCPF, javax.swing.GroupLayout.PREFERRED_SIZE, 152, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addComponent(jbtnBuscar)
                             .addComponent(jLabel2)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(jbtnVisualizar)
-                                .addGap(18, 18, 18)
-                                .addComponent(btnRelatorioEstadiaPet))
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 770, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addContainerGap(16, Short.MAX_VALUE))
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 938, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(34, 34, 34)
+                        .addComponent(jbtnVisualizar)
+                        .addGap(18, 18, 18)
+                        .addComponent(btnRelatorioEstadiaPet)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -162,12 +287,12 @@ public class DlgHistoricoReservas extends javax.swing.JDialog {
                 .addGap(18, 18, 18)
                 .addComponent(jbtnBuscar)
                 .addGap(27, 27, 27)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 203, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 318, Short.MAX_VALUE)
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jbtnVisualizar)
-                    .addComponent(btnRelatorioEstadiaPet))
-                .addContainerGap(147, Short.MAX_VALUE))
+                    .addComponent(btnRelatorioEstadiaPet)
+                    .addComponent(jbtnVisualizar))
+                .addGap(32, 32, 32))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -177,7 +302,7 @@ public class DlgHistoricoReservas extends javax.swing.JDialog {
             .addGroup(layout.createSequentialGroup()
                 .addGap(18, 18, 18)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(30, Short.MAX_VALUE))
+                .addContainerGap(15, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -237,71 +362,30 @@ public class DlgHistoricoReservas extends javax.swing.JDialog {
     }//GEN-LAST:event_jbtnBuscarActionPerformed
 
     private void jbtnVisualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbtnVisualizarActionPerformed
-        // Obter a reserva selecionada na tabela
-        System.out.println("entrei no botao visualizar");
-        
-        Reserva reservaSelecionada = ReservaSelecionada();
-        
-        System.out.println("v"+ ReservaSelecionada());
-         
-
-        // Verificar se uma reserva foi selecionada
-        if (reservaSelecionada != null) {
-            
-            // Abrir a tela de confirmação com os detalhes da reserva
-         DlgConfirmacaoReserva confirmacaoReserva = new DlgConfirmacaoReserva((java.awt.Frame) getParent(), true);
-           confirmacaoReserva.setVisible(true);
-        } else {
-            // Exibir mensagem de aviso se nenhuma reserva foi selecionada
+        Reserva reservaSelecionada = obterReservaSelecionada();
+if (reservaSelecionada != null) {
+    // Abre a tela de confirmação com os dados da reserva preenchidos
+    DlgConfirmacaoReserva confirmacaoReserva = new DlgConfirmacaoReserva((java.awt.Frame) getParent(), true);
+    confirmacaoReserva.preencherCampos(reservaSelecionada, "visualizar"); 
+    confirmacaoReserva.setVisible(true);
+} else {
             JOptionPane.showMessageDialog(this, "Nenhuma reserva selecionada.", "Atenção", JOptionPane.WARNING_MESSAGE);
         }
     }//GEN-LAST:event_jbtnVisualizarActionPerformed
 
-    private Reserva ReservaSelecionada() {
-      
-        // Obter o índice da linha selecionada
-        System.out.println("Entrei na getReservaSelecionada");
-
-        int linhaSelecionada = grdHistReser.getSelectedRow();
-
-        System.out.println("Índice da linha selecionada: " + linhaSelecionada);
-
-
-        // Verificar se alguma linha foi selecionada
-        if (linhaSelecionada != -1) {  // Verificar se há uma linha selecionada (não -1)
-            // Obter o modelo da tabela e recuperar a reserva associada
-            TMHistoricoReservas modelo = (TMHistoricoReservas) grdHistReser.getModel();
-            System.out.println("Modelo da tabela: " + modelo);
-
-            // Acessar a lista de reservas e retornar a reserva da linha selecionada
-            return modelo.getLista().get(linhaSelecionada); 
-        } else {
-            // Se nenhuma linha foi selecionada, retornar null
-            System.out.println("Nenhuma linha selecionada");
-            return null;
-        }
-
-
-}
-    
     private void btnRelatorioEstadiaPetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRelatorioEstadiaPetActionPerformed
-                                                     
-       Reserva historicoSelecionado = ReservaSelecionada();
-        if (historicoSelecionado != null) {
-            RelatorioFuncionario relatorioFuncionario = new RelatorioFuncionario();
+    Reserva reservaSelecionada = obterReservaSelecionada();
+    if (reservaSelecionada != null) {
+        DlgRelatorioFuncionario dlg = new DlgRelatorioFuncionario(new javax.swing.JFrame(), true);
+        dlg.setDadosReserva(reservaSelecionada);
+        dlg.setVisible(true);
 
-            relatorioFuncionario.setCpfResponsavel(historicoSelecionado.getCliente().getCpf());
-            relatorioFuncionario.setNomePet(historicoSelecionado.getPet().getNome());
-
-            DlgRelatorioFuncionario dlgRelatorioFuncionario = new DlgRelatorioFuncionario(new javax.swing.JFrame(), true);
-            dlgRelatorioFuncionario.setRelatorioFuncionario(relatorioFuncionario);
-            dlgRelatorioFuncionario.carregarRelatorioExistente(relatorioFuncionario);
-            dlgRelatorioFuncionario.setVisible(true);
+        // Atualiza a tabela após fechar o relatório para refletir mudanças no status do checkout
+        refreshListaReservas();
     } else {
         JOptionPane.showMessageDialog(this, "Nenhum histórico selecionado.", "Atenção", JOptionPane.WARNING_MESSAGE);
     }
-
-    }//GEN-LAST:event_btnRelatorioEstadiaPetActionPerformed
+}//GEN-LAST:event_btnRelatorioEstadiaPetActionPerformed
 
     private void grdHistReserMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_grdHistReserMouseClicked
         
@@ -344,7 +428,19 @@ public class DlgHistoricoReservas extends javax.swing.JDialog {
 
     public void atualizarTabelaReservas(List<Reserva> reservas) {
         TMHistoricoReservas model = new TMHistoricoReservas(reservas);  // Criando o modelo com a lista de Reservas
-        tabelaReservas.setModel(model);  // Definindo o modelo da tabela
+        grdHistReser.setModel(model);  // Definindo o modelo da tabela
+    }
+
+    private void limparCampos() {
+        edtNomePet.setText("");
+        edtCPF.setText("");
+    }
+
+    public void atualizarAposCadastro() {
+        atualizarTabelaReservas();
+        limparCampos();
+        btnRelatorioEstadiaPet.setEnabled(false);
+        jbtnVisualizar.setEnabled(false);
     }
 
 

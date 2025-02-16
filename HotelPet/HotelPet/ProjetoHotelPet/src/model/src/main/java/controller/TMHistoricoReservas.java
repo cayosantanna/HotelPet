@@ -4,8 +4,15 @@
  */
 package controller;
 
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+
 import javax.swing.table.AbstractTableModel;
+
+import model.RelatorioFuncionario;
 import model.Reserva;
 
 /**
@@ -13,19 +20,13 @@ import model.Reserva;
  * @author neidi
  */
 public class TMHistoricoReservas extends AbstractTableModel {
-    
     private List<Reserva> lista;
-    
-    private final int COL_PET_NOME = 0;
-    private final int COL_CHECK_IN = 1;
-    private final int COL_CHECK_OUT = 2;
-    private final int COL_SERVICOS = 3;
-    private final int COL_VALOR_TOTAL = 4; 
-    private final int COL_RESPONSAVEL = 5;
-    private final int COL_CPF = 6;
+
+    private final String[] colunas = {"CPF Cliente", "Nome Pet", "Check-In", "Check-Out", "Status Checkout"};
+    private final SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
 
     public TMHistoricoReservas(List<Reserva> listaReserva) {        
-        lista = listaReserva;        
+        this.lista = listaReserva != null ? listaReserva : new ArrayList<>();
     }
 
     @Override
@@ -35,52 +36,43 @@ public class TMHistoricoReservas extends AbstractTableModel {
 
     @Override
     public int getColumnCount() {
-        return 7;
+        return colunas.length;
     }
 
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {               
-        Reserva reserva = new Reserva();
-        if (lista.isEmpty()) {
-            return reserva;
-        } else {
-            reserva = lista.get(rowIndex);
+        Reserva reserva = lista.get(rowIndex);
 
-            //verifica qual valor deve ser retornado
-            switch (columnIndex) {
-                case COL_PET_NOME -> {
-                    return reserva.getPet().getNome(); // Nome do pet
+        switch (columnIndex) {
+            case 0:
+                return reserva.getCliente().getCpf();
+            case 1:
+                return reserva.getPet().getNome();
+            case 2:
+                return sdf.format(reserva.getCheckIn());
+            case 3:
+                if (reserva.getRelatorioFuncionario() != null && reserva.getRelatorioFuncionario().isFinalizado()) {
+                    return sdf.format(reserva.getRelatorioFuncionario().getDataSaida());
                 }
-                case COL_CHECK_IN -> {
-                    return reserva.getCheckIn(); // Data de check-in
-                }
-                case COL_CHECK_OUT -> {
-                    return reserva.getCheckOut(); // Data de check-out
-                }
-                case COL_SERVICOS -> {
-                    // Combine os serviços selecionados em uma única string
-                    StringBuilder servicos = new StringBuilder();
-                    if (reserva.isServicoBanho()) servicos.append("Banho ");
-                    if (reserva.isServicoTosa()) servicos.append("Tosa ");
-                    if (reserva.isServicoPasseio()) servicos.append("Passeio ");
-                    if (reserva.isServicoAlimentacaoEspecial()) servicos.append("Alimentação Especial");
-                    return servicos.toString().trim(); // Serviços concatenados
-                }
-                case COL_VALOR_TOTAL -> {
-                    return reserva.getValorTotal(); // Valor total da reserva
-                }
-                case COL_RESPONSAVEL ->{
-                    return reserva.getCliente().getNome();
-                }
-                case COL_CPF ->{
-                    return reserva.getCliente().getCpf();
-                }
-                default -> {
-                    return null;
-                }
-            }
+                return "Previsto: " + sdf.format(calcularPrevisaoCheckOut(reserva.getCheckIn()));
+            case 4:
+                return formatarStatus(reserva.getRelatorioFuncionario());
+            default:
+                return null;
         }
+    }
 
+    private Date calcularPrevisaoCheckOut(Date checkIn) {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(checkIn);
+        cal.add(Calendar.DAY_OF_MONTH, 20);
+        return cal.getTime();
+    }
+
+    private String formatarStatus(RelatorioFuncionario relatorio) {
+        if (relatorio == null) return "Aguardando Check-in";
+        if (relatorio.isFinalizado()) return "Checkout Realizado";
+        return "Em andamento desde " + sdf.format(relatorio.getDataEntrada());
     }
 
     @Override
@@ -90,29 +82,17 @@ public class TMHistoricoReservas extends AbstractTableModel {
 
     @Override
     public String getColumnName(int column) {
-        
-        switch (column) {
-            case COL_PET_NOME:
-                return "Nome do Pet";
-            case COL_CHECK_IN:
-                return "Check-In";
-            case COL_CHECK_OUT:
-                return "Check-Out";
-            case COL_SERVICOS:
-                return "Serviços";
-            case COL_VALOR_TOTAL:
-                return "Valor Total";
-            case COL_RESPONSAVEL:
-                return "Responsavel";
-            case COL_CPF:
-                return "CPF";
-            default:
-                return "";
+        return colunas[column];
     }
-
-}
 
     public List<Reserva> getLista() {
         return lista;
+    }
+
+    public Reserva getReserva(int index) {
+        if (index < 0 || index >= lista.size()) {
+            throw new IndexOutOfBoundsException("Índice inválido: " + index);
+        }
+        return lista.get(index);
     }
 }

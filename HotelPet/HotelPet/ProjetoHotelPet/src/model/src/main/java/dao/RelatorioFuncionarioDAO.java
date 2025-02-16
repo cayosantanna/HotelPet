@@ -7,18 +7,27 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
+import javax.persistence.PersistenceContext;
+
+import org.springframework.stereotype.Repository;
+
+import factory.Persistencia;
 import model.RelatorioFuncionario;
 
-
+@Repository
 public class RelatorioFuncionarioDAO implements IDao<RelatorioFuncionario> {
     
+    @PersistenceContext
+    private EntityManager em;
 
-    private final Connection connection;
+    private Connection connection;
 
     // Construtor para conectar ao banco de dados
-    public RelatorioFuncionarioDAO(Connection connection) {
-        this.connection = connection;
+    public RelatorioFuncionarioDAO() {
     }
+
     public void testConnection() {
     String sql = "SELECT 1";
     try (Statement stmt = connection.createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
@@ -32,53 +41,44 @@ public class RelatorioFuncionarioDAO implements IDao<RelatorioFuncionario> {
 
     @Override
     public void save(RelatorioFuncionario obj) {
-        String sql = "INSERT INTO relatorio_funcionario (cpf_responsavel, nome_pet, observacoes, servico_banho, servico_tosa, servico_passeio, " +
-                     "servico_alimentacao_especial, rotina_especial, servicos_extras, data_entrada, data_saida, valor_total, status_servico) " +
-                     "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-
-        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-            stmt.setString(1, obj.getCpfResponsavel());
-            stmt.setString(2, obj.getNomePet());
-            stmt.setString(3, obj.getObservacoes());
-            stmt.setBoolean(4, obj.isServicoBanho());
-            stmt.setBoolean(5, obj.isServicoTosa());
-            stmt.setBoolean(6, obj.isServicoPasseio());
-            stmt.setBoolean(7, obj.isServicoAlimentacaoEspecial());
-            stmt.setString(8, obj.getRotinaEspecial());
-            stmt.setString(9, obj.getServicosExtras());
-            stmt.setDate(10, obj.getDataEntrada());
-            stmt.setDate(11, obj.getDataSaida());
-            stmt.setDouble(12, obj.getValorTotal());
-            stmt.setString(13, obj.getStatusServico());
-            stmt.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
+        EntityManager em = Persistencia.getEntityManager();
+        try {
+            em.getTransaction().begin();
+            if (obj.getId() == 0) {
+                em.persist(obj);
+            } else {
+                em.merge(obj);
+            }
+            em.getTransaction().commit();
+        } finally {
+            em.close();
         }
     }
 
-    public void update(RelatorioFuncionario antigo, RelatorioFuncionario novo) {
-        String sql = "UPDATE relatorio_funcionario SET " +
-                    "observacoes = ?, servicos_extras = ?, rotina_especial = ?, " +
-                    "valor_total = ?, status_servico = ?, data_saida = ?, " +
-                    "finalizado = ? " +
-                    "WHERE id = ?";
-                    
-        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-            stmt.setString(1, novo.getObservacoes());
-            stmt.setString(2, novo.getServicosExtras());
-            stmt.setString(3, novo.getRotinaEspecial());
-            stmt.setDouble(4, novo.getValorTotal());
-            stmt.setString(5, novo.getStatusServico());
-            stmt.setDate(6, novo.getDataSaida());
-            stmt.setBoolean(7, novo.isFinalizado());
-            stmt.setInt(8, antigo.getId());
+    public void update(RelatorioFuncionario oldRelatorio, RelatorioFuncionario newRelatorio) {
+        EntityManager em = Persistencia.getEntityManager();
+        try {
+            em.getTransaction().begin();
             
-            int rowsUpdated = stmt.executeUpdate();
-            if (rowsUpdated == 0) {
-                throw new SQLException("Nenhuma linha foi atualizada.");
+            // Converte as datas para java.util.Date
+            if (newRelatorio.getDataEntrada() != null) {
+                oldRelatorio.setDataEntrada(new java.util.Date(newRelatorio.getDataEntrada().getTime()));
             }
-        } catch (SQLException e) {
-            throw new RuntimeException("Erro ao atualizar relatório: " + e.getMessage());
+            if (newRelatorio.getDataSaida() != null) {
+                oldRelatorio.setDataSaida(new java.util.Date(newRelatorio.getDataSaida().getTime()));
+            }
+            
+            // Atualiza os outros campos
+            oldRelatorio.setObservacoes(newRelatorio.getObservacoes());
+            oldRelatorio.setRotinaEspecial(newRelatorio.getRotinaEspecial());
+            oldRelatorio.setServicosExtras(newRelatorio.getServicosExtras());
+            oldRelatorio.setStatusServico(newRelatorio.getStatusServico());
+            oldRelatorio.setValorTotal(newRelatorio.getValorTotal());
+            
+            em.merge(oldRelatorio);
+            em.getTransaction().commit();
+        } finally {
+            em.close();
         }
     }
 
@@ -158,5 +158,16 @@ public class RelatorioFuncionarioDAO implements IDao<RelatorioFuncionario> {
             e.printStackTrace();
         }
         return funcionarios;
+    }
+
+    public RelatorioFuncionario findById(Integer id) {
+        EntityManager em = Persistencia.getEntityManager();
+        try {
+            return em.find(RelatorioFuncionario.class, id);
+        } catch (NoResultException e) {
+            return null;
+        } finally {
+            em.close();
+        }
     }
 }

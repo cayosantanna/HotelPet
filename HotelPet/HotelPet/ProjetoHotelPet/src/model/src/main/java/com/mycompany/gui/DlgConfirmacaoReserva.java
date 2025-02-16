@@ -24,53 +24,63 @@ public class DlgConfirmacaoReserva extends javax.swing.JDialog {
 
     public DlgConfirmacaoReserva(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
-        this.cpfResponsavel = cpfResponsavel;
-        try {
-            connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/your_database", "username", "password");
-            relatorioFuncionarioDAO = new RelatorioFuncionarioDAO(connection);
-            relatorioFuncionarioController = new RelatorioFuncionarioController(connection);
-            initComponents();
-        } catch (SQLException e) {
-            JOptionPane.showMessageDialog(this, "Error connecting to database: " + e.getMessage());
-        }
-        
-        edtCliente.setText(cpfResponsavel);
-        
-        // Desativando todos os campos
+        initComponents();
+    }
+    
+    public void preencherCampos(Reserva reserva, String modo) {
+        // Preenche os campos com os dados da reserva (somente leitura)
+        edtCliente.setText(reserva.getCliente().getCpf());
+        edtPet.setText(reserva.getPet().getNome());
+        edtDataCheckIn.setText(new SimpleDateFormat("dd/MM/yyyy").format(reserva.getCheckIn()));
+        edtDataCheckOut.setText(reserva.getCheckOut() != null 
+                ? new SimpleDateFormat("dd/MM/yyyy").format(reserva.getCheckOut()) 
+                : "N/A");
+        // Disable field editing
         edtCliente.setEditable(false);
         edtPet.setEditable(false);
         edtDataCheckIn.setEditable(false);
         edtDataCheckOut.setEditable(false);
+        
+        // Preencher data da realização da reserva
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+        if (reserva.getDataReserva() != null) {
+            edtDataRealizaçãoReserva.setText(sdf.format(reserva.getDataReserva()));
+        } else {
+            edtDataRealizaçãoReserva.setText("N/A");
+        }
+        
+        // Preencher valor pago
+        edtValorPago.setText(String.format("%.2f", reserva.getValorTotal()));
+        
+        // Preencher serviços realizados (supondo a existência dos checkboxes correspondentes)
+        checkBoxBanho.setSelected(reserva.isServicoBanho());
+        checkBoxTosa.setSelected(reserva.isServicoTosa());
+        checkBoxPasseio.setSelected(reserva.isServicoPasseio());
+        checkBoxAlimentacaoEspecial.setSelected(reserva.isServicoAlimentacaoEspecial());
+        
+        // Desabilitar edição dos campos específicos
         edtDataRealizaçãoReserva.setEditable(false);
         edtValorPago.setEditable(false);
-        comboboxMetodoPagamento.setEnabled(false);
-        
         checkBoxBanho.setEnabled(false);
         checkBoxTosa.setEnabled(false);
         checkBoxPasseio.setEnabled(false);
         checkBoxAlimentacaoEspecial.setEnabled(false);
+        
+        if("visualizar".equalsIgnoreCase(modo)) {
+            // Bloqueia a edição dos componentes para visualização
+            edtCliente.setEditable(false);
+            edtPet.setEditable(false);
+            edtDataCheckIn.setEditable(false);
+            edtDataCheckOut.setEditable(false);
+            checkBoxBanho.setEnabled(false);
+            checkBoxTosa.setEnabled(false);
+            checkBoxPasseio.setEnabled(false);
+            checkBoxAlimentacaoEspecial.setEnabled(false);
+            comboboxMetodoPagamento.setEnabled(false);
+            edtValorPago.setEditable(false);
+            edtDataRealizaçãoReserva.setEditable(false);
+        }
     }
-    
-public void preencherCampos(Reserva reserva, String metodoPagamento) {
-    // Preenche os campos com os dados da reserva
-    edtCliente.setText(reserva.getCliente().getCpf());
-    edtPet.setText(reserva.getPet().getNome());
-    
-    SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-    edtDataCheckIn.setText(sdf.format(reserva.getCheckIn()));
-    edtDataCheckOut.setText(reserva.getCheckOut() != null ? sdf.format(reserva.getCheckOut()) : "");
-    edtDataRealizaçãoReserva.setText(sdf.format(reserva.getDataReserva()));
-    
-    edtValorPago.setText(String.format("%.2f", reserva.getValorTotal()));
-    comboboxMetodoPagamento.setSelectedItem(metodoPagamento);
-
-    // Preenche os checkboxes dos serviços realizados
-    checkBoxBanho.setSelected(reserva.isServicoBanho());
-    checkBoxTosa.setSelected(reserva.isServicoTosa());
-    checkBoxPasseio.setSelected(reserva.isServicoPasseio());
-    checkBoxAlimentacaoEspecial.setSelected(reserva.isServicoAlimentacaoEspecial());
-}
-
 
     /**
      * This method is called from within the constructor to initialize the form.

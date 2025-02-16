@@ -5,225 +5,155 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 
+import factory.Persistencia;
 import model.Cliente;
-import util.EntityManagerUtil;
 
 public class ClienteDAO implements IDao<Cliente> {
 
     @Override
     public List<Cliente> findAll() {
-        EntityManager entityManager = EntityManagerUtil.getEntityManager();
+        EntityManager em = Persistencia.getEntityManager();
         try {
-            TypedQuery<Cliente> query = entityManager.createNamedQuery("Cliente.findAll", Cliente.class);
+            TypedQuery<Cliente> query = em.createNamedQuery("Cliente.findAll", Cliente.class);
             return query.getResultList();
-        } catch (Exception e) {
-            entityManager.getTransaction().rollback();
-            System.out.println("Erro: " + e.getMessage());
-            return null;
         } finally {
-            if (entityManager != null) {
-                entityManager.close();
-            }
+            em.close();
         }
     }
 
     public List<Cliente> findAll(String nome, String cpf) {
-        EntityManager entityManager = EntityManagerUtil.getEntityManager();
+        EntityManager em = Persistencia.getEntityManager();
         try {
-            TypedQuery<Cliente> query = entityManager.createNamedQuery("Cliente.findAllByNameCpf", Cliente.class);
-            if (nome != null && !nome.trim().isEmpty()) {
-                query.setParameter("nome", "%" + nome + "%");
-            } else {
-                query.setParameter("nome", null);
-            }
-
-            if (cpf != null && !cpf.trim().isEmpty()) {
-                query.setParameter("cpf", "%" + cpf + "%");
-            } else {
-                query.setParameter("cpf", null);
-            }
-
+            TypedQuery<Cliente> query = em.createNamedQuery("Cliente.findAllByNameCpf", Cliente.class);
+            query.setParameter("nome", nome != null && !nome.trim().isEmpty() ? "%" + nome + "%" : null);
+            query.setParameter("cpf", cpf != null && !cpf.trim().isEmpty() ? "%" + cpf + "%" : null);
             return query.getResultList();
-        } catch (Exception e) {
-            entityManager.getTransaction().rollback();
-            System.out.println("Erro: " + e.getMessage());
-            return null;
         } finally {
-            if (entityManager != null) {
-                entityManager.close();
-            }
+            em.close();
         }
     }
 
     @Override
     public Cliente find(Cliente obj) {
-        EntityManager entityManager = EntityManagerUtil.getEntityManager();
+        EntityManager em = Persistencia.getEntityManager();
         try {
-            return entityManager.find(Cliente.class, obj.getId());
-        } catch (Exception e) {
-            System.out.println("Erro: " + e.getMessage());
-            return null;
+            return em.find(Cliente.class, obj.getId());
         } finally {
-            if (entityManager != null) {
-                entityManager.close();
-            }
+            em.close();
         }
     }
 
     public Cliente findById(Integer id) {
-        EntityManager entityManager = EntityManagerUtil.getEntityManager();
+        EntityManager em = Persistencia.getEntityManager();
         try {
-            return entityManager.find(Cliente.class, id);
-        } catch (Exception e) {
-            System.out.println("Erro: " + e.getMessage());
-            return null;
+            return em.find(Cliente.class, id);
         } finally {
-            if (entityManager != null) {
-                entityManager.close();
-            }
+            em.close(); 
         }
     }
 
     @Override
     public void save(Cliente cliente) {
-        EntityManager entityManager = EntityManagerUtil.getEntityManager();
+        EntityManager em = Persistencia.getEntityManager();
         try {
-            entityManager.getTransaction().begin();
-            entityManager.persist(cliente);
-            entityManager.getTransaction().commit();
+            em.getTransaction().begin();
+            em.persist(cliente);
+            em.getTransaction().commit();
         } catch (Exception e) {
-            entityManager.getTransaction().rollback();
+            em.getTransaction().rollback();
+            throw e;
         } finally {
-            if (entityManager != null) {
-                entityManager.close();
-            }
+            em.close();
         }
     }
 
     @Override
     public void update(Cliente cliente, Cliente novo) {
-        EntityManager entityManager = EntityManagerUtil.getEntityManager();
+        EntityManager em = Persistencia.getEntityManager();
         try {
-            entityManager.getTransaction().begin();
-            entityManager.merge(novo);
-            entityManager.getTransaction().commit();
+            em.getTransaction().begin();
+            em.merge(novo);
+            em.getTransaction().commit();
         } catch (Exception e) {
-            entityManager.getTransaction().rollback();
-            System.out.println("Erro: " + e.getMessage());
+            em.getTransaction().rollback();
+            throw e;
         } finally {
-            if (entityManager != null) {
-                entityManager.close();
-            }
-        }
-    }
-
-    public void update(Cliente novo) {
-        EntityManager entityManager = EntityManagerUtil.getEntityManager();
-        try {
-            entityManager.getTransaction().begin();
-            entityManager.merge(novo);
-            entityManager.getTransaction().commit();
-        } catch (Exception e) {
-            entityManager.getTransaction().rollback();
-            System.out.println("Erro: " + e.getMessage());
-        } finally {
-            if (entityManager != null) {
-                entityManager.close();
-            }
+            em.close();
         }
     }
 
     @Override
     public boolean delete(Cliente obj) {
-        EntityManager entityManager = EntityManagerUtil.getEntityManager();
+        EntityManager em = Persistencia.getEntityManager();
         try {
-            Cliente cliente = find(obj);
+            em.getTransaction().begin();
+            Cliente cliente = em.find(Cliente.class, obj.getId());
             if (cliente != null) {
-                entityManager.getTransaction().begin();
-                entityManager.remove(cliente);
-                entityManager.getTransaction().commit();
+                em.remove(cliente);
+                em.getTransaction().commit();
                 return true;
             }
+            return false;
         } catch (Exception e) {
-            entityManager.getTransaction().rollback();
-            System.out.println("Erro: " + e.getMessage());
+            em.getTransaction().rollback();
+            throw e;
         } finally {
-            if (entityManager != null) {
-                entityManager.close();
-            }
+            em.close();
         }
-        return false;
     }
 
     public Cliente findByCPF(String cpf) {
-        EntityManager entityManager = EntityManagerUtil.getEntityManager();
+        EntityManager em = Persistencia.getEntityManager();
         try {
-            TypedQuery<Cliente> query = entityManager.createNamedQuery("Cliente.findByCpf", Cliente.class);
+            TypedQuery<Cliente> query = em.createNamedQuery("Cliente.findByCpf", Cliente.class);
             query.setParameter("cpf", cpf);
             return query.getSingleResult();
         } catch (Exception e) {
-            System.out.println("Erro: " + e.getMessage());
             return null;
         } finally {
-            if (entityManager != null) {
-                entityManager.close();
-            }
+            em.close();
         }
     }
 
     public Cliente findByCPF(String cpf, Integer ignoreId) {
-        EntityManager entityManager = EntityManagerUtil.getEntityManager();
+        EntityManager em = Persistencia.getEntityManager();
         try {
-            TypedQuery<Cliente> query = entityManager.createNamedQuery("Cliente.findByCpfIgnoringId", Cliente.class);
+            TypedQuery<Cliente> query = em.createNamedQuery("Cliente.findByCpfIgnoringId", Cliente.class);
             query.setParameter("cpf", cpf);
             query.setParameter("ignoreId", ignoreId);
-
             return query.getSingleResult();
         } catch (Exception e) {
-            System.out.println("Erro: " + e.getMessage());
             return null;
         } finally {
-            if (entityManager != null) {
-                entityManager.close();
-            }
+            em.close();
         }
     }
 
     public Cliente findByEmail(String email) {
-        EntityManager entityManager = EntityManagerUtil.getEntityManager();
+        EntityManager em = Persistencia.getEntityManager();
         try {
-            TypedQuery<Cliente> query = entityManager.createNamedQuery("Cliente.findByEmail", Cliente.class);
+            TypedQuery<Cliente> query = em.createNamedQuery("Cliente.findByEmail", Cliente.class);
             query.setParameter("email", email);
-
             return query.getSingleResult();
         } catch (javax.persistence.NoResultException e) {
-            // Não exibe erro para ausência de resultado
-            return null;
-        } catch (Exception e) {
-            System.out.println("Erro ao buscar por email: " + e.getMessage());
             return null;
         } finally {
-            if (entityManager != null) {
-                entityManager.close();
-            }
+            em.close();
         }
     }
 
     public Cliente findByEmail(String email, Integer ignoreId) {
-        EntityManager entityManager = EntityManagerUtil.getEntityManager();
+        EntityManager em = Persistencia.getEntityManager();
         try {
-            TypedQuery<Cliente> query = entityManager.createNamedQuery("Cliente.findByEmailIgnoringId", Cliente.class);
+            TypedQuery<Cliente> query = em.createNamedQuery("Cliente.findByEmailIgnoringId", Cliente.class);
             query.setParameter("email", email);
             query.setParameter("ignoreId", ignoreId);
-
             return query.getSingleResult();
         } catch (Exception e) {
-            System.out.println("Erro: " + e.getMessage());
             return null;
         } finally {
-            if (entityManager != null) {
-                entityManager.close();
-            }
+            em.close();
         }
     }
 }
+

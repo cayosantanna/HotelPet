@@ -98,6 +98,7 @@ private final FuncionarioController funcionarioController;
         lblTitulo = new javax.swing.JLabel();
         btnSair = new javax.swing.JButton();
         btnContatos = new javax.swing.JButton();
+        btnServicos = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -153,6 +154,13 @@ private final FuncionarioController funcionarioController;
             }
         });
 
+        btnServicos.setText("Serviços");
+        btnServicos.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnServicosActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -164,28 +172,35 @@ private final FuncionarioController funcionarioController;
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(btnSair)
                         .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(btnBuscar)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(txtNomeFuncionario, javax.swing.GroupLayout.PREFERRED_SIZE, 251, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jLabel1))
-                                .addGap(46, 46, 46)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(txtCPFfuncionario, javax.swing.GroupLayout.PREFERRED_SIZE, 249, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jLabel2)))
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                .addGroup(layout.createSequentialGroup()
-                                    .addComponent(btnNovoFuncionario)
-                                    .addGap(50, 50, 50)
-                                    .addComponent(btnEditarFuncionario)
-                                    .addGap(50, 50, 50)
-                                    .addComponent(btnDemissão)
-                                    .addGap(50, 50, 50)
-                                    .addComponent(btnContatos))
-                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 560, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addContainerGap(48, Short.MAX_VALUE))))
+                                .addGap(0, 0, Short.MAX_VALUE)
+                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 716, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                                .addGap(1, 1, 1)
+                                .addComponent(btnNovoFuncionario)
+                                .addGap(50, 50, 50)
+                                .addComponent(btnEditarFuncionario)
+                                .addGap(50, 50, 50)
+                                .addComponent(btnDemissão)
+                                .addGap(50, 50, 50)
+                                .addComponent(btnContatos)
+                                .addGap(50, 50, 50)
+                                .addComponent(btnServicos, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(btnBuscar, javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(txtNomeFuncionario, javax.swing.GroupLayout.PREFERRED_SIZE, 251, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(jLabel1))
+                                        .addGap(46, 46, 46)
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(txtCPFfuncionario, javax.swing.GroupLayout.PREFERRED_SIZE, 249, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(jLabel2))))
+                                .addGap(0, 0, Short.MAX_VALUE)))
+                        .addGap(48, 48, 48))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -196,7 +211,8 @@ private final FuncionarioController funcionarioController;
                     .addComponent(btnNovoFuncionario)
                     .addComponent(btnEditarFuncionario)
                     .addComponent(btnDemissão)
-                    .addComponent(btnContatos))
+                    .addComponent(btnContatos)
+                    .addComponent(btnServicos))
                 .addGap(30, 30, 30)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
@@ -333,6 +349,11 @@ private final FuncionarioController funcionarioController;
       telaCtt.setVisible(true);   
     }//GEN-LAST:event_btnContatosActionPerformed
 
+    private void btnServicosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnServicosActionPerformed
+        DlgServicos telaServiços = new DlgServicos(new javax.swing.JFrame(), true);
+        telaServiços.setVisible(true);         // TODO add your handling code here:
+    }//GEN-LAST:event_btnServicosActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnBuscar;
@@ -341,6 +362,7 @@ private final FuncionarioController funcionarioController;
     private javax.swing.JButton btnEditarFuncionario;
     private javax.swing.JButton btnNovoFuncionario;
     private javax.swing.JButton btnSair;
+    private javax.swing.JButton btnServicos;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JScrollPane jScrollPane1;

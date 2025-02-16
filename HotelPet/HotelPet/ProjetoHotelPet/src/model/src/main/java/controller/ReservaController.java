@@ -2,6 +2,7 @@ package controller;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -25,6 +26,10 @@ public class ReservaController {
 
     public List<Reserva> verificarReservasSemCheckout() {
         return reservaDAO.findReservasSemCheckout();
+    }
+    public List<Reserva> findAll() {
+        List<Reserva> reservas = reservaDAO.findAll();
+        return reservas != null ? reservas : new ArrayList<>();
     }
 
     public int calcularDiasEstadia(Date checkIn, Date checkOut) {
@@ -115,13 +120,25 @@ public class ReservaController {
     }
     
 
-
     public List<Reserva> buscarReservasPorCpfOuNomePet(String cpfCliente, String nomePet) {
-        return reservaDAO.findByCpfOrPetName(cpfCliente, nomePet);
+        if ((cpfCliente == null || cpfCliente.trim().isEmpty()) && (nomePet == null || nomePet.trim().isEmpty())) {
+            return findAll();
+        }
+
+        List<Reserva> reservas = reservaDAO.findAll();
+        if (cpfCliente != null && !cpfCliente.trim().isEmpty()) {
+            reservas = reservas.stream()
+                .filter(r -> r.getCliente() != null && cpfCliente.equals(r.getCliente().getCpf()))
+                .collect(java.util.stream.Collectors.toList());
+        }
+        if (nomePet != null && !nomePet.trim().isEmpty()) {
+            reservas = reservas.stream()
+                .filter(r -> r.getPet() != null && nomePet.equalsIgnoreCase(r.getPet().getNome()))
+                .collect(java.util.stream.Collectors.toList());
+        }
+
+        return reservas;
     }
-    
-    public List<Reserva> findAll() {
-        return reservaDAO.findAll();
-    }
+
     
 }

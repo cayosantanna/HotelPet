@@ -118,11 +118,6 @@ public class DlgReservas extends javax.swing.JDialog {
             // Garantir que a máscara esteja aplicada corretamente
             ((JFormattedTextField)edtCheckOut).setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(maskData));
             
-            if (edtCheckOut instanceof javax.swing.JFormattedTextField) {
-                ((javax.swing.JFormattedTextField) edtCheckOut)
-                    .setFocusLostBehavior(javax.swing.JFormattedTextField.PERSIST);
-            }
-            
         } catch (ParseException ex) {
             JOptionPane.showMessageDialog(this, "Erro ao configurar máscaras: " + ex.getMessage());
         }
@@ -539,7 +534,6 @@ public class DlgReservas extends javax.swing.JDialog {
         );
 
         pack();
-        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void checkBoxBanhoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_checkBoxBanhoActionPerformed
@@ -637,7 +631,6 @@ public class DlgReservas extends javax.swing.JDialog {
 
     private void txtServicosExtrasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtServicosExtrasActionPerformed
      atualizarValorTotal();
-     btnSalvar.setEnabled(false); // Bloqueia salvar ao alterar serviços extras
     }//GEN-LAST:event_txtServicosExtrasActionPerformed
 
     private void btnAtualizarValorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAtualizarValorActionPerformed
